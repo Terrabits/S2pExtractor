@@ -1,0 +1,132 @@
+
+import numpy as np
+import math
+
+ZVA_local = VXI11_Localhost;
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'DIRECTIVITY',1,2");
+a_list_float = [float(i) for i in a_list_str];
+EDF = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'REFLTRACK',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ERF = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'SRCMATCH',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ESF = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'DIRECTIVITY',1,2");
+a_list_float = [float(i) for i in a_list_str];
+EDFfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'REFLTRACK',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ERFfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'SRCMATCH',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ESFfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+freq = np.linspace(300E6, 8E9, 401);
+S11 = (EDFfix-EDF)/(ERF+ESF*(EDFfix-EDF));
+S21 = np.sqrt(ERF*ERFfix)/(ERF+ESF*(EDFfix-EDF));
+S22 = ESFfix-((ESF*ERFfix)/(ERF+ESF*(EDFfix-EDF)));
+
+def fixPhase(values) :
+    for i in range(1, len(values)):
+        current = values[i];
+        previous = values[i-1];
+        difference = np.angle(current*np.conj(previous), deg=True);
+        if abs(difference) > 90:
+            values[i] = -1*current;
+    return values;
+
+def bValues(x, y):
+    b = range(1, len(x)-1);
+    for i in range(1, len(x)-1):
+        x1 = x[i-1];
+        y1 = y[i-1];
+        x2 = x[i];
+        y2 = y[i];
+        b[i-1] = (x2*y1 - x1*y2)/(x2 - x1);
+    return(b);
+
+def mValues(x, y):
+    m = range(1, len(x)-1);
+    for i in range(1, len(x)-1):
+        x1 = x[i-1];
+        y1 = y[i-1];
+        x2 = x[i];
+        y2 = y[i];
+        m[i-1] = 1E9*(y2 - y1)/(x2 - x1);
+    return(m);
+
+def phaseOffset(b):
+    bin = 20; # degrees
+    plusPi = 0;
+    zeros = 0;
+    minusPi = 0;
+    for i in range(0, len(b)):
+        if abs(b - 180) <= bin:
+            plusPi += 1;
+        elif abs(b) <= bin:
+            zeros += 1;
+        elif abs(b + 180) <= bin:
+            minusPi += 1;
+    if plusPi > zeros and plusPi > minusPi:
+         return 180;
+    if minusPi > zeros and minusPi > plusPi:
+         return -180;
+
+
+
+fig = flib.pltframe.figure;
+fig.clear();
+
+# Create plot
+ax = fig.add_subplot(211);
+ax.patch.set_facecolor('black' );
+ax.grid(color = 'green' , linestyle = '-');
+
+ax.plot(freq, np.angle(S21, deg=True), lw = 2, color = 'red' );
+
+unwrapPhase = 180/math.pi*np.unwrap(np.angle(fixPhase(S21)));
+ax.plot(freq, unwrapPhase, lw = 2, color = 'red');
+# ax.plot(bValues(freq, unwrapPhase), lw = 2, color = 'green');
+# ax.plot(mValues(freq, unwrapPhase), lw = 2, color = 'white');
+
+# Create plot
+ax = fig.add_subplot(212);
+ax.patch.set_facecolor('black');
+ax.grid(color = 'green', linestyle = '-');
+ax.plot(20*np.log10(abs(S21)), lw = 2, color = 'red');
+
+
+# Show plot
+flib.pltframe.Show();
+
+print unwrapPhase[0];
+print len(unwrapPhase);
+
+# y1 = mx1 + b
+# y2 = mx2 + b
+# m = (y1 - b)/x1
+# m = (y2 - b)/x2
+# (y1 - b)/x1 = (y2 - b)/x2
+# x2(y1 -b) = x1(y2 - b)
+# x2*y1 - x2*b = x1*y2 - x1*b
+# x2*y1 - x1*y2 = x2*b - x1*b
+# x2*y1 - x1*y2 = b(x2 - x1)
+# (x2*y1 - x1*y2)/(x2 - x1)
+
+# y = m*x + b
+# y - m*x = b
+
+# y1 = mx1 + b
+# y2 = mx2 + b
+# y1 - m*x1 = y2 - m*x2
+# y1 - y2 = m*x1 - m*x2
+# y1 - y2 = m(x1 - x2)
+# (y1 - y2)/(x1 - x2) = m
+# m = (y2 - y1)/(x2 - x1)

@@ -1,0 +1,125 @@
+
+import numpy as np
+import math
+
+# Script requires
+#   Channel 1: "Outer Ports 1-2.cal" applied
+#   Channel 2: "Inner P1 3 dB P2 10 dB" applied
+
+# ZVA_local = VXI11_Localhost;
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'DIRECTIVITY',1,2");
+a_list_float = [float(i) for i in a_list_str];
+EDF = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'REFLTRACK',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ERF = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'SRCMATCH',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ESF = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'DIRECTIVITY',1,2");
+a_list_float = [float(i) for i in a_list_str];
+EDFfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'REFLTRACK',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ERFfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'SRCMATCH',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ESFfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+freq = np.linspace(10E6, 20E9, 401);
+S11 = (EDFfix-EDF)/(ERF+ESF*(EDFfix-EDF));
+S21 = np.sqrt(ERF*ERFfix)/(ERF+ESF*(EDFfix-EDF));
+S22 = ESFfix-((ESF*ERFfix)/(ERF+ESF*(EDFfix-EDF)));
+
+def addPropagate(x, start, value):
+    for i in range(start, len(x)):
+        x[i] += value;
+    return x;
+        
+def subtractPropagate(x, start, value):
+    for i in range(start, len(x)):
+        x[i] -= value;
+    return x;
+
+def myUnwrap(x, bounds = 2*math.pi):
+    size = len(x);
+    cutoff = bounds/2;
+    unwrapped = np.empty_like(x);
+    np.copyto(unwrapped, x);
+    for i in range(1, size):
+        difference = x[i] - x[i-1];
+        if difference > cutoff:
+            unwrapped = subtractPropagate(unwrapped, i, bounds);
+        elif abs(difference) > cutoff:
+            unwrapped = addPropagate(unwrapped, i, bounds);
+    return unwrapped;
+
+# Attempt to fix square root phase suppression issue
+def fixPhase(values) :
+    for i in range(1, len(values)):
+        current = values[i];
+        previous = values[i-1];
+        difference = np.angle(current*np.conj(previous), deg=True); # subtract phases
+        if abs(difference) > 90:
+            values[i] = -1*current;
+    return values;
+
+def smoothSqrt(x):
+    x = np.sqrt(x);
+    x = fixPhase(x);
+    return(x);
+
+def bValues(x, y):
+    size = len(x);
+    yPhase = myUnwrap(np.angle(y));
+    b = range(0, size-1);
+    for i in range(1, size):
+        y1 = yPhase[i-1];
+        x1 = x[i-1];
+        y2 = yPhase[i];
+        x2 = x[i];
+        m = (y2 - y1)/(x2 - x1);
+        b[i-1] = y2 - m*x2;
+    return(b);
+
+def phaseCorrection(x, y):
+    b = bValues(x, y);
+    size = len(b);
+    weights = np.linspace(1, 0, size);
+    total = sum(weights);
+    average = sum(b*weights)/total;
+    if average > math.pi/2:
+        average = math.pi;
+    elif average < -1*math.pi/2:
+        average = -1*math.pi;
+    return(y*np.exp(-1j*average));
+
+S21Fixed = smoothSqrt(ERF*ERFfix)/(ERF+ESF*(EDFfix-EDF));
+S21Fixed = phaseCorrection(freq, S21Fixed);
+
+# Figure 1
+fig = flib.pltframe.figure;
+fig.clear();
+
+# Plot 1 (smoothSqrt)
+ax = fig.add_subplot(211);
+ax.patch.set_facecolor('black');
+ax.grid(color = 'green', linestyle = '-');
+ax.plot(freq, np.angle(smoothSqrt(ERF*ERFfix), deg=True), lw = 2, color = 'blue');
+
+# Plot 1 (smoothSqrt)
+ax = fig.add_subplot(212);
+ax.patch.set_facecolor('black');
+ax.grid(color = 'green', linestyle = '-');
+ax.plot(freq, np.angle(1/(ERF+ESF*(EDFfix-EDF)), deg=True), lw = 2, color = 'blue');
+
+
+
+# Show plot
+flib.pltframe.Show();

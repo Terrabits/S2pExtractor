@@ -1,0 +1,97 @@
+import numpy as np
+import math
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'DIRECTIVITY',1,2");
+a_list_float = [float(i) for i in a_list_str];
+EDF = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'REFLTRACK',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ERF = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'SRCMATCH',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ESF = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'DIRECTIVITY',1,2");
+a_list_float = [float(i) for i in a_list_str];
+EDFfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'REFLTRACK',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ERFfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'SRCMATCH',1,2");
+a_list_float = [float(i) for i in a_list_str];
+ESFfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+S11 = (EDFfix-EDF)/(ERF+ESF*(EDFfix-EDF));
+S21 = np.sqrt(ERF*ERFfix)/(ERF+ESF*(EDFfix-EDF));
+S22 = ESFfix-((ESF*ERFfix)/(ERF+ESF*(EDFfix-EDF)));
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'DIRECTIVITY',2,1");
+a_list_float = [float(i) for i in a_list_str];
+EDR = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'REFLTRACK',2,1");
+a_list_float = [float(i) for i in a_list_str];
+ERR = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe1:CORRection:CDATa? 'SRCMATCH',2,1");
+a_list_float = [float(i) for i in a_list_str];
+ESR = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'DIRECTIVITY',2,1");
+a_list_float = [float(i) for i in a_list_str];
+EDRfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'REFLTRACK',2,1");
+a_list_float = [float(i) for i in a_list_str];
+ERRfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+a_list_str = ZVA_local.ask(":SENSe2:CORRection:CDATa? 'SRCMATCH',2,1");
+a_list_float = [float(i) for i in a_list_str];
+ESRfix = np.array(a_list_float[0::2])+1j*np.array(a_list_float[1::2]);
+
+S11_R = (EDRfix-EDR)/(ERR+ESR*(EDRfix-EDR));
+S21_R = np.sqrt(ERR*ERRfix)/(ERR+ESR*(EDRfix-EDR));
+S22_R = ESRfix-((ESR*ERRfix)/(ERR+ESR*(EDRfix-EDR)));
+
+
+fig = flib.pltframe.figure
+fig.clear()
+
+ax = fig.add_subplot(221);
+ax.patch.set_facecolor('black' )
+ax.grid(color = 'green' , linestyle = '-')
+# Create plot
+ax.plot(20*np.log10(np.abs(S21)), lw = 2, color = 'orange' )
+ax.plot(20*np.log10(np.abs(S11)), lw = 2, color = 'red' )
+ax.plot(20*np.log10(np.abs(S22)), lw = 2, color = 'blue' )
+
+ax = fig.add_subplot(223);
+ax.patch.set_facecolor('black' )
+ax.grid(color = 'green' , linestyle = '-')
+# Create plot
+ax.plot(180/math.pi*np.angle(S21), lw = 2, color = 'orange' )
+ax.plot(180/math.pi*np.angle(S11), lw = 2, color = 'red' )
+ax.plot(180/math.pi*np.angle(S22), lw = 2, color = 'blue' )
+
+ax = fig.add_subplot(222);
+ax.patch.set_facecolor('black' )
+ax.grid(color = 'green' , linestyle = '-')
+# Create plot
+ax.plot(20*np.log10(np.abs(S21_R)), lw = 2, color = 'orange' )
+ax.plot(20*np.log10(np.abs(S11_R)), lw = 2, color = 'red' )
+ax.plot(20*np.log10(np.abs(S22_R)), lw = 2, color = 'blue' )
+
+ax = fig.add_subplot(224);
+ax.patch.set_facecolor('black' )
+ax.grid(color = 'green' , linestyle = '-')
+# Create plot
+ax.plot(180/math.pi*np.angle(S21_R), lw = 2, color = 'orange' )
+ax.plot(180/math.pi*np.angle(S11_R), lw = 2, color = 'red' )
+ax.plot(180/math.pi*np.angle(S22_R), lw = 2, color = 'blue' )
+
+# Show plot
+flib.pltframe.Show()
