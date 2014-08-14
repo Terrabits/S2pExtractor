@@ -1,7 +1,7 @@
-RSA Deembed Version 1.0.0
-(C) 2013 Rohde & Schwarz America
+RSA S2P Extractor Version 1.1.4
+(C) 2014 Rohde & Schwarz America
 
-Wed Feb 19 02:53:33 2014
+Thu Aug 14 08:30:56 2014
 
 VNA INSTRUMENT INFO
 Connection:       TCPIP
@@ -38,116 +38,6 @@ ibsta:    0x2100 (IBSTA_CMPL)
 iberr:    0
 ibcntl:   51 (bytes)
 
-Write:    ":MMEM:CDIR?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   12 (bytes)
-
-Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   45 (bytes)
-
-Write:    ":MMEM:CDIR DEF"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   15 (bytes)
-
-Write:    ":MMEM:CDIR '.\Calibration\Data'"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   32 (bytes)
-
-Write:    ":MMEM:CAT?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   11 (bytes)
-
-Read:     " 174454, 178269216768, cal group 1.cal, , 53646, inner p1 3 db p2 10 db.cal, , 60194, outer ports 1-..."
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   139 (bytes)
-
-Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   57 (bytes)
-
-Write:    ":CONF:CHAN:CAT?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   16 (bytes)
-
-Read:     "'1,Ch1'"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Write:    ":SENS1:CORR:DATA:PAR:COUN?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   1 (bytes)
-
-Write:    ":MMEM:CDIR?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   12 (bytes)
-
-Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   45 (bytes)
-
-Write:    ":MMEM:CDIR DEF"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   15 (bytes)
-
-Write:    ":MMEM:CDIR '.\Calibration\Data'"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   32 (bytes)
-
-Write:    ":MMEM:CAT?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   11 (bytes)
-
-Read:     " 174454, 178269216768, cal group 1.cal, , 53646, inner p1 3 db p2 10 db.cal, , 60194, outer ports 1-..."
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   139 (bytes)
-
-Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   57 (bytes)
-
-Write:    ":CONF:CHAN:CAT?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   16 (bytes)
-
-Read:     "'1,Ch1'"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Write:    ":SENS1:CORR:DATA:PAR:COUN?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   1 (bytes)
-
 Write:    "*IDN?"
 ibsta:    0x100 (IBSTA_CMPL)
 iberr:    0
@@ -168,16 +58,6 @@ ibsta:    0x2100 (IBSTA_CMPL)
 iberr:    0
 ibcntl:   1 (bytes)
 
-Write:    "*IDN?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6 (bytes)
-
-Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,1.93.2.45"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   51 (bytes)
-
 Write:    ":MMEM:CDIR?"
 ibsta:    0x100 (IBSTA_CMPL)
 iberr:    0
@@ -193,20 +73,20 @@ ibsta:    0x100 (IBSTA_CMPL)
 iberr:    0
 ibcntl:   15 (bytes)
 
-Write:    ":MMEM:CDIR '.\Deembedding'"
+Write:    ":MMEM:CDIR '.\Calibration\Data'"
 ibsta:    0x100 (IBSTA_CMPL)
 iberr:    0
-ibcntl:   27 (bytes)
+ibcntl:   32 (bytes)
 
-Write:    ":MMEM:CDIR?"
+Write:    ":MMEM:CAT?"
 ibsta:    0x100 (IBSTA_CMPL)
 iberr:    0
-ibcntl:   12 (bytes)
+ibcntl:   11 (bytes)
 
-Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\Vna\Deembedding'"
+Read:     " 0, 227441606656, "
 ibsta:    0x2100 (IBSTA_CMPL)
 iberr:    0
-ibcntl:   57 (bytes)
+ibcntl:   18 (bytes)
 
 Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
 ibsta:    0x100 (IBSTA_CMPL)
@@ -223,743 +103,68 @@ ibsta:    0x2100 (IBSTA_CMPL)
 iberr:    0
 ibcntl:   7 (bytes)
 
-Write:    ":CONF:CHAN2 1"
+Write:    ":SENS1:CORR:DATA:PAR:COUN?"
 ibsta:    0x100 (IBSTA_CMPL)
 iberr:    0
-ibcntl:   14 (bytes)
+ibcntl:   27 (bytes)
 
-Write:    ":MMEM:LOAD:CORR 2,'outer ports 1-2.cal'"
+Read:     "0"
+ibsta:    0x2100 (IBSTA_CMPL)
+iberr:    0
+ibcntl:   1 (bytes)
+
+Write:    ":MMEM:CDIR?"
 ibsta:    0x100 (IBSTA_CMPL)
 iberr:    0
-ibcntl:   40 (bytes)
+ibcntl:   12 (bytes)
+
+Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
+ibsta:    0x2100 (IBSTA_CMPL)
+iberr:    0
+ibcntl:   45 (bytes)
+
+Write:    ":MMEM:CDIR DEF"
+ibsta:    0x100 (IBSTA_CMPL)
+iberr:    0
+ibcntl:   15 (bytes)
+
+Write:    ":MMEM:CDIR '.\Calibration\Data'"
+ibsta:    0x100 (IBSTA_CMPL)
+iberr:    0
+ibcntl:   32 (bytes)
+
+Write:    ":MMEM:CAT?"
+ibsta:    0x100 (IBSTA_CMPL)
+iberr:    0
+ibcntl:   11 (bytes)
+
+Read:     " 0, 227441606656, "
+ibsta:    0x2100 (IBSTA_CMPL)
+iberr:    0
+ibcntl:   18 (bytes)
+
+Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
+ibsta:    0x100 (IBSTA_CMPL)
+iberr:    0
+ibcntl:   57 (bytes)
 
 Write:    ":CONF:CHAN:CAT?"
 ibsta:    0x100 (IBSTA_CMPL)
 iberr:    0
 ibcntl:   16 (bytes)
 
-Read:     "'1,Ch1,2,Ch2'"
+Read:     "'1,Ch1'"
 ibsta:    0x2100 (IBSTA_CMPL)
 iberr:    0
-ibcntl:   13 (bytes)
+ibcntl:   7 (bytes)
 
-Write:    ":CONF:CHAN3 1"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":MMEM:LOAD:CORR 3,'inner p1 3 db p2 10 db.cal'"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   47 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
+Write:    ":SENS1:CORR:DATA:PAR:COUN?"
 ibsta:    0x100 (IBSTA_CMPL)
 iberr:    0
 ibcntl:   27 (bytes)
 
-Read:     "401"
+Read:     "0"
 ibsta:    0x2100 (IBSTA_CMPL)
 iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? PORT"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "1,2"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? STAR"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "300000"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? STOP"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "8000000000"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? STYP"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "LIN"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? PORT"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "1,2"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? STAR"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "300000"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? STOP"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "8000000000"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? STYP"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "LIN"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS2:CORR:CDAT? 'DIRECTIVITY',1,2"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   36 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS2:CORR:CDAT? 'REFLTRACK',1,2"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   34 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS2:CORR:CDAT? 'SRCMATCH',1,2"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   33 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS3:CORR:CDAT? 'DIRECTIVITY',1,2"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   36 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS3:CORR:CDAT? 'REFLTRACK',1,2"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   34 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS3:CORR:CDAT? 'SRCMATCH',1,2"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   33 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS2:CORR:CDAT? 'DIRECTIVITY',2,1"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   36 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS2:CORR:CDAT? 'REFLTRACK',2,1"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   34 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS2:CORR:CDAT? 'SRCMATCH',2,1"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   33 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS3:CORR:CDAT? 'DIRECTIVITY',2,1"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   36 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS3:CORR:CDAT? 'REFLTRACK',2,1"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   34 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":SENS3:CORR:DATA:PAR? POIN"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   27 (bytes)
-
-Read:     "401"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   3 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM?"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   7 (bytes)
-
-Read:     "ASC,0"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   5 (bytes)
-
-Write:    ":FORM REAL,64"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":SENS3:CORR:CDAT? 'SRCMATCH',2,1"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   33 (bytes)
-
-Read:     "#46416"
-ibsta:    0x2100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   6422 (bytes)
-
-Write:    ":FORM ASC"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   10 (bytes)
-
-Write:    ":CONF:CHAN2 0"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
-
-Write:    ":CONF:CHAN3 0"
-ibsta:    0x100 (IBSTA_CMPL)
-iberr:    0
-ibcntl:   14 (bytes)
+ibcntl:   1 (bytes)
 

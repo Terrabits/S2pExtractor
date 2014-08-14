@@ -10,6 +10,8 @@
 #include <QString>
 #include <QStringList>
 #include <QVariant>
+#include <QMap>
+#include <QMapIterator>
 
 // C++ std lib
 #include <complex>
@@ -21,6 +23,7 @@ namespace RsaToolbox {
 double toDouble(SiPrefix prefix);
 QString toString(ComplexFormat format);
 QString toString(NetworkParameter parameter);
+QString toString(NetworkParameter parameter, uint outputPort, uint inputPort);
 QString toString(SiPrefix prefix);
 QString toString(Units units);
 QString toString(SiPrefix prefix, Units units);
@@ -112,14 +115,19 @@ ComplexDouble fromRealImag(double real, double imag);
 ComplexDouble fromMagDegrees(double magnitude, double angle_deg);
 ComplexDouble fromDbDegrees(double dB, double angle_deg);
 
-
-QVector<int> range(int start, int stop);
-QVector<uint> range(uint start, uint stop);
+QVector<int> range(int start, int stop, int stepSize = 1);
+QVector<uint> range(uint start, uint stop, uint stepSize = 1);
 QRowVector linearSpacing(double start, double stop, int points);
 void linearSpacing(QRowVector &result, double start, double stop, int points);
 void linearSpacing(RowVector &result, double start, double stop, int points);
 void logSpacing(QRowVector &result, double start, double stop, int points);
 
+bool isInfinity(double value);
+bool isNotInfinity(double value);
+bool isNaN(double value);
+bool isNotNaN(double value);
+double roundInf(double value, double toValue = DBL_MAX);
+QRowVector roundInf(QRowVector values, double toValue = DBL_MAX);
 double round(double value);
 double round(double value, uint decimal_places);
 double floor(double value, double interval);
@@ -131,6 +139,8 @@ void roundAxis(RowVector values, double interval, double &axis_min, double &axis
 
 double linearInterpolateX(double x1, double y1, double x2, double y2, double y_desired);
 double linearInterpolateY(double x1, double y1, double x2, double y2, double x_desired);
+ComplexDouble linearInterpolateY(double x1, ComplexDouble y1, double x2, ComplexDouble y2, double x_desired);
+
 
 ComplexRowVector exp(ComplexRowVector x);
 double sum(QRowVector x);
@@ -204,6 +214,23 @@ void resize(ComplexMatrix3D &matrix, uint dimension1, uint dimension2, uint dime
 ComplexRowVector serialize(ComplexMatrix2D const &matrix);
 ComplexMatrix2D toComplexMatrix2D(ComplexRowVector const &data, uint rows, uint columns);
 ComplexMatrix3D toComplexMatrix3D(ComplexRowVector const &data, uint dimension1, uint dimension2, uint dimension3);
+
+ComplexMatrix2D subsection(ComplexMatrix2D matrix, QVector<uint> rows, QVector<uint> columns);
+ComplexMatrix2D subsection(ComplexMatrix2D matrix, QVector<uint> indices);
+void insert(ComplexMatrix2D &matrix, ComplexMatrix2D data, QVector<uint> toRows, QVector<uint> toColumns);
+void insert(ComplexMatrix2D &matrix, ComplexMatrix2D data, QVector<uint> indices);
+
+template <class T, class U, class V>
+QMap<T,V> cascade(QMap<T,U> a, QMap<U,V> b) {
+    QMap<T,V> result;
+    QMapIterator<T,U> i(a);
+    while (i.hasNext()) {
+        i.next();
+        if (b.contains(i.value()))
+            result[i.key()] = b.value(i.value());
+    }
+    return(result);
+}
 
 template <class T>
 T max(QVector<T> vector) {

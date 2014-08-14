@@ -87,6 +87,16 @@ QString RsaToolbox::toString(NetworkParameter parameter) {
     // Default
     return("S");
 }
+QString RsaToolbox::toString(NetworkParameter parameter, uint outputPort, uint inputPort) {
+    QString outputString = QVariant(outputPort).toString();
+    QString inputString = QVariant(inputPort).toString();
+    int zeros = outputString.length() - inputString.length();
+    if (zeros > 0)
+        inputString.prepend(QString(zeros, '0'));
+    else if (zeros < 0)
+        outputString.prepend(QString(-zeros, '0'));
+    return(toString(parameter) + outputString + inputString);
+}
 QString RsaToolbox::toString(SiPrefix prefix) {
     switch(prefix) {
     case TERA_PREFIX:
@@ -628,7 +638,7 @@ ComplexDouble RsaToolbox::fromDbDegrees(double dB, double angle_deg) {
 
 
 // Math
-QVector<int> RsaToolbox::range(int start, int stop) {
+QVector<int> RsaToolbox::range(int start, int stop, int stepSize) {
     QVector<int> range;
     if (start == stop) {
         range.append(start);
@@ -636,14 +646,14 @@ QVector<int> RsaToolbox::range(int start, int stop) {
     }
 
     if (start < stop) {
-        for (int i = start; i <= stop; i++)
+        for (int i = start; i <= stop; i += stepSize)
             range.append(i);
 
         return(range);
     }
 
     if (start > stop) {
-        for (int i = start; i >= stop; i--)
+        for (int i = start; i >= stop; i -= stepSize)
             range.append(i);
 
         return(range);
@@ -652,7 +662,7 @@ QVector<int> RsaToolbox::range(int start, int stop) {
     // This will never happen
     return(range);
 }
-QVector<uint> RsaToolbox::range(uint start, uint stop) {
+QVector<uint> RsaToolbox::range(uint start, uint stop, uint stepSize) {
     QVector<uint> range;
     if (start == stop) {
         range.append(start);
@@ -660,14 +670,14 @@ QVector<uint> RsaToolbox::range(uint start, uint stop) {
     }
 
     if (start < stop) {
-        for (uint i = start; i <= stop; i++)
+        for (uint i = start; i <= stop; i += stepSize)
             range.append(i);
 
         return(range);
     }
 
     if (start > stop) {
-        for (uint i = start; i >= stop; i--)
+        for (uint i = start; i >= stop; i -= stepSize)
             range.append(i);
 
         return(range);
@@ -704,6 +714,42 @@ void RsaToolbox::logSpacing(QRowVector &result, double start, double stop, int p
         result[i] = pow(double(10), geoPowers[i]);
     }
 }
+
+bool RsaToolbox::isInfinity(double value) {
+    return(value == DBL_INF || value == DBL_NEG_INF);
+}
+bool RsaToolbox::isNotInfinity(double value) {
+    return(!isInfinity(value));
+}
+bool RsaToolbox::isNaN(double value) {
+    return(value != value);
+}
+bool RsaToolbox::isNotNaN(double value) {
+    return(!isNaN(value));
+}
+double RsaToolbox::roundInf(double value, double toValue) {
+    if (toValue < 0)
+        toValue = -toValue;
+
+    if (isNaN(value) || isNotInfinity(value))
+        return(value);
+
+    if (value == DBL_INF)
+        value = toValue;
+    else if (value == DBL_NEG_INF)
+        value = -toValue;
+    return(value);
+}
+QRowVector RsaToolbox::roundInf(QRowVector values, double toValue) {
+    if (toValue < 0)
+        toValue = -toValue;
+
+    QRowVector result(values.size());
+    int size = values.size();
+    for (int i = 0; i < size; i++)
+        result[i] = roundInf(values[i], toValue);
+    return(result);
+}
 double RsaToolbox::round(double value) {
     if (value >= 0)
         return(std::floor(value + 0.5));
@@ -719,7 +765,7 @@ double RsaToolbox::floor(double value, double interval) {
     return(std::floor(value/interval)*interval);
 }
 double RsaToolbox::ceiling(double value, double interval) {
-    return(ceil(value/interval)*interval);
+    return(std::ceil(value/interval)*interval);
 }
 void RsaToolbox::roundAxis(double min, double max, double interval, double &axis_min, double &axis_max) {
     axis_min = floor(min, interval);
@@ -732,11 +778,15 @@ void RsaToolbox::roundAxis(RowVector values, double interval, double &axis_min, 
     roundAxis(min(values), max(values), interval, axis_min, axis_max);
 }
 double RsaToolbox::linearInterpolateX(double x1, double y1, double x2, double y2, double y_desired) {
-    double slope = (y2 - y1)/(x2 - x1);
-    return((y_desired - y1)/slope + x1);
+    double invSlope = (x2 - x1)/(y2 - y1);
+    return(x1 + invSlope*(y_desired - y1));
 }
 double RsaToolbox::linearInterpolateY(double x1, double y1, double x2, double y2, double x_desired) {
     double slope = (y2 - y1)/(x2 - x1);
+    return(y1 + slope*(x_desired - x1));
+}
+ComplexDouble RsaToolbox::linearInterpolateY(double x1, ComplexDouble y1, double x2, ComplexDouble y2, double x_desired) {
+    ComplexDouble slope = (y2 - y1)/(x2 - x1);
     return(y1 + slope*(x_desired - x1));
 }
 
@@ -1367,6 +1417,41 @@ ComplexMatrix3D RsaToolbox::toComplexMatrix3D(const ComplexRowVector &data, uint
             for (uint i = 0; i < dimension1; i++)
                 matrix[i][j][k] = data[n++];
     return(matrix);
+}
+
+ComplexMatrix2D RsaToolbox::subsection(ComplexMatrix2D matrix, QVector<uint> rows, QVector<uint> columns) {
+    ComplexMatrix2D result;
+
+    uint numberOfRows = rows.size();
+    uint numberOfColumns = columns.size();
+
+    result.resize(numberOfRows);
+    for (uint i = 0; i < numberOfRows; i++) {
+        result[i].resize(numberOfColumns);
+        for (uint j = 0; j < numberOfColumns; j++) {
+            uint row = rows[i];
+            uint col = columns[j];
+            result[i][j] = matrix[row][col];
+        }
+    }
+    return(result);
+}
+ComplexMatrix2D RsaToolbox::subsection(ComplexMatrix2D matrix, QVector<uint> indices) {
+    return(subsection(matrix, indices, indices));
+}
+void RsaToolbox::insert(ComplexMatrix2D &matrix, ComplexMatrix2D data, QVector<uint> toRows, QVector<uint> toColumns) {
+    uint numberOfRows = toRows.size();
+    uint numberOfColumns = toColumns.size();
+    for (uint i = 0; i < numberOfRows; i++) {
+        for (uint j = 0; j < numberOfColumns; j++) {
+            uint row = toRows[i];
+            uint col = toColumns[i];
+            matrix[row][col] = data[i][j];
+        }
+    }
+}
+void RsaToolbox::insert(ComplexMatrix2D &matrix, ComplexMatrix2D data, QVector<uint> indices) {
+    insert(matrix, data, indices, indices);
 }
 
 QDataStream& operator<<(QDataStream &stream, ComplexDouble value) {

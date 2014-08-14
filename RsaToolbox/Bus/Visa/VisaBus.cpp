@@ -79,7 +79,11 @@ VisaBus::VisaBus(ConnectionType connectionType, QString address,
                  QObject *parent)
     :GenericBus(connectionType, address,
                 bufferSize_B, timeout_ms,
-                parent) {
+                parent)
+{
+    char buffer[500];
+    _resourceManager = NULL;
+    _instrument = NULL;
     visa_library.setFileName(FILENAME);
     QString resource_string;
     if (visa_library.load()) {
@@ -93,26 +97,28 @@ VisaBus::VisaBus(ConnectionType connectionType, QString address,
             resource_string = QString("USB::") + address + QString("::INSTR");
         }
         else {
-            unknownDevice();
+            notConnected();
             return;
         }
         retrieveFunctors();
         _status = _viOpenDefaultRM(&_resourceManager);
-        if (_status < VI_SUCCESS) {
-            unknownDevice();
+        _viStatusDesc(_resourceManager, _status, buffer);
+        if (_status != VI_SUCCESS) {
+            notConnected();
             return;
         }
         QByteArray c_string = resource_string.toUtf8();
         _status = _viOpen(_resourceManager, c_string.data(), (ViUInt32)VI_NULL, (ViUInt32)timeout_ms, &_instrument);
-        if (_status < VI_SUCCESS) {
-            unknownDevice();
+        _viStatusDesc(_instrument, _status, buffer);
+        if (_status != VI_SUCCESS) {
+            notConnected();
             return;
         }
         return;
     }
     else {
         // VISA dll cannot be found on the system.
-        unknownDevice();
+        notConnected();
     }
 }
 
@@ -186,7 +192,7 @@ bool VisaBus::_read(char *buffer, uint bufferSize) {
     QTextStream stream(&text);
     _status = _viRead(_instrument, (uchar *)buffer, (ViUInt32)bufferSize, &_bytesRead);
     if (_status >= VI_SUCCESS) {
-        terminateCString(buffer, bufferSize, _bytesRead);
+        terminateCString(buffer, bufferSize);
         stream << "Received: ";
         stream << truncateCString(buffer);
         stream << endl;
@@ -430,7 +436,7 @@ void VisaBus::printStatus(QTextStream &stream) const {
     stream.flush();
 }
 
-void VisaBus::unknownDevice() {
+void VisaBus::notConnected() {
     // Handle unknown/unconnectable device situation
     _connectionType = NO_CONNECTION;
     _resourceManager = NULL;
@@ -440,6 +446,8 @@ void VisaBus::retrieveFunctors() {
     _viStatusDesc = (_statusDescFuncter)visa_library.resolve("viStatusDesc");
     _viOpenDefaultRM = (_openDefaultRmFuncter)visa_library.resolve("viOpenDefaultRM");
     _viOpen = (_openFuncter)visa_library.resolve("viOpen");
+    _viGetAttribute = (_getAttributeFuncter)visa_library.resolve("viGetAttribute");
+    _viSetAttribute = (_setAttributeFuncter)visa_library.resolve("viSetAttribute");
     _viRead = (_readFuncter)visa_library.resolve("viRead");
     _viWrite = (_writeFuncter)visa_library.resolve("viWrite");
     _viClear = (_clearFuncter)visa_library.resolve("viClear");
@@ -450,13 +458,15 @@ void VisaBus::retrieveFunctors() {
 bool VisaBus::isError() {
     return(_status < VI_SUCCESS);
 }
-void VisaBus::terminateCString(char *buffer, uint buffer_size, uint read_size) {
+void VisaBus::terminateCString(char *buffer, uint buffer_size) {
     // Null-terminate string:
-    // NI-VISA seems to terminate with '\n' by default
-    if (read_size >= buffer_size)
-        buffer[buffer_size - 1] = '\0';
+    // R&S VNA firmware adds '\n' to the VERY END of a transfer
+    // (ie only one '\n' at the ver end if multiple reads are necessary
+    // to retrieve a single query response)
+    if (_bytesRead < buffer_size)
+        buffer[_bytesRead] = '\0';
     else
-        /*buffer[read_size - 1] = '\0'*/; // Could overwrite data?
+        /*buffer[buffer_size - 1] = '\0'*/; // Could overwrite data?
 }
 QString VisaBus::truncateCString(const char *buffer) {
     QString text = QString(buffer).trimmed();

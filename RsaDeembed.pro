@@ -19,11 +19,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = RsaDeembed
 TEMPLATE = app
 
-include(RsaToolbox/base.pri)
-include(RsaToolbox/Bus/Rsib/rsib.pri)
-include(RsaToolbox/Bus/Visa/visa.pri)
-include(RsaToolbox/Instruments/Vna/vna.pri)
-include(RsaToolbox/QCustomPlot/qcustomplot.pri)
+include(RsaToolbox/rsatoolbox.pri)
 
 SOURCES +=  main.cpp \
             mainwindow.cpp \
