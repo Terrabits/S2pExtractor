@@ -1,0 +1,9 @@
+Hi Nick,
+
+One of our customers is trying to use the RSA S2P extractor macro you wrote with a setup including a switch matrix. In its actual form, the macro can't work in this circumstance because a different SCPI command is necessary to read the error terms. Basically, we are using the command ":SENSe<Ch>:CORRection:CDATa? <ErrorTerm>, <SourcePort>, <LoadPort>" at the moment. With a switch matrix, we need to use the command ":SENSe<Ch>:CORRection:SMATrix:CDATa <ErrorTerm>, <SourceTestPort>,<LoadTestPort>, <SourceVNAPort>, <LoadVNAPort>" to specify which ports of the switch matrix and VNA are used during calibration. The customer is using a 2-port VNA, so <SourceVNAPort> and <LoadVNAPort> will always be 1 or 2. Could you please give me a call when you have a chance to talk about how we can help the customer?
+
+For your reference, I have attached the two calibration files.
+
+Regards,
+
+Mathieu
