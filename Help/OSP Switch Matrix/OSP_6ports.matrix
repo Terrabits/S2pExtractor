@@ -1,0 +1,110 @@
+;*******************************************************************************
+;
+; COPYRIGHT: (c) 2012 Rohde & Schwarz, Munich
+;
+; Matrix description file
+; 
+; supports OSP switching modules:  2 ->  6
+;
+; +------------------------------------------------------------------------+
+; | This file must not be modified!. Future changes by R&S without notice. |
+; +------------------------------------------------------------------------+
+;
+;********************************************************************************/
+[VERSION]
+Version=1.00
+
+
+[GENERAL_INFORMATION]
+
+;  Matrix number of Input Ports ; Matrix Output Ports
+NOF_MATRIX_VNA_PORTS  = 2
+NOF_MATRIX_TEST_PORTS = 6
+
+; order of VNA ports from left to right for default assignment
+ORDER_OF_VNA_PORTS	= 1, 2
+; VNA port identifier in the same order as ORDER_OF_VNA_PORTS
+VNA_PORT_IDENTIFIER	= 1A, 2B
+
+MATRIX_NOF_TEST_PORT_ROWS = 1
+; ORDER_OF_TEST_PORTS  	= order of test ports from left to right for default assignment
+; TEST_PORT_IDENTIFIER 	= test port identifier in the same order as ORDER_OF_TEST_PORTS
+ORDER_OF_TEST_PORTS_1	= 1, 2, 3, 4, 5, 6
+TEST_PORT_IDENTIFIER_1	= 1, 2, 3, 4, 5, 6
+IDENTIFIER_SEPARATORS 	= 
+SHIFTED_TEST_PORT_ROWS  =
+
+
+; connector type and gender of RF out Ports
+; "N 50", "N 75", "7 mm", "3.5 mm", "2.92 mm" or "SMA"
+MATRIX_TEST_PORT_CONNECTOR_TYPE	= 2.92 mm
+; "Female" or "Male"
+MATRIX_TEST_PORT_CONNECTOR_GENDER = Female
+
+
+; This sequence is sent to the matrix to initialize it.
+; Clear and reset status. 
+; Set the (frequency and) power to initialization values.
+; Set trigger and blank polarity. ...
+; No settings for signal generator reference frequency are allowed.
+MATRIX_INIT = *RST\;*WAI\;MMEMORY:LOAD:STATE 0,"ospPanelPath.savrcl"
+
+; time needed after initialization [sec]
+MATRIX_INITDELAY = 0.5
+
+; select operation complete synchronization method
+; 0 = Use delay time
+; 1 = Use *OPC IEEE 488 command
+; 3 = Use *OPC? IEEE 488 command
+MATRIX_USEOPC = 3
+
+; time needed after setting a route [sec]
+; is used only in case of MATRIX_USEOPC = 0
+;MATRIX_SWITCH_STATE_DELAY = 0.0
+
+; the common part of a command, 
+; e.g. to set the ROUTE 1 and 10 the complete command looks like this: "Route B1, D5"
+MATRIX_COMMON_CMD_PART = ROUTE:CLOSE "Res"\;*WAI\;
+
+;  minimum frequency      [Hz]
+MATRIX_MINFRQ		= 0
+;  maximum frequency      [Hz]
+MATRIX_MAXFRQ		= 40e9
+
+; optional key "LAN PORT NUMBER" has the valid numbers: [0 - 65535]
+; set to invalid with -1
+; Ports 0–1023      (System Ports, Standardisierte Ports)
+; Ports 1024–49151  (User Ports, Registrierte Ports)
+; Ports 49152–65535 (Dynamic Ports, frei verfügbare Ports)
+LAN_PORT_NUMBER = 5025
+
+; optional key "ROUTE COMMAND DELIMITER" with hexadecimal coding with 2 chars ("20", "2C", "3B")
+; the parenthesis "" or '' must be used to bracket the delimiter
+; set to invalid with "" or ''
+; use "2C" for "," or "3B" for ";" or "20" for " " ...
+ROUTE_COMMAND_DELIMITER = '3B'
+
+
+[ROUTE_TABLE]
+MATRIX_NOF_ROUTES = 14
+;     VnaPort	TestPort	Prio		Command
+R1  = 1, 	1, 		1,		ROUTE:CLOSE "Pa1"\;*WAI
+R2  = 1, 	2, 		1,		ROUTE:CLOSE "Pa2"\;*WAI
+R3  = 1, 	3, 		1,		ROUTE:CLOSE "Pa3"\;*WAI
+R4  = 1, 	4, 		1,		ROUTE:CLOSE "Pa4"\;*WAI
+R5  = 1, 	5, 		1,		ROUTE:CLOSE "Pa5"\;*WAI
+R6  = 1, 	6, 		1,		ROUTE:CLOSE "Pa6"\;*WAI
+R7  = 2, 	1, 		1,		ROUTE:CLOSE "Pa7"\;*WAI
+R8  = 2, 	2, 		1,		ROUTE:CLOSE "Pa8"\;*WAI
+R9  = 2, 	3, 		1,		ROUTE:CLOSE "Pa9"\;*WAI
+R10  = 2, 	4, 		1,		ROUTE:CLOSE "Pa10"\;*WAI
+R11  = 2, 	5, 		1,		ROUTE:CLOSE "Pa11"\;*WAI
+R12  = 2, 	6, 		1,		ROUTE:CLOSE "Pa12"\;*WAI
+R13  = 1,    	0,      	1,      	ROUTE:CLOSE "B0"\;*WAI
+R14  = 2,    	0,      	1,      	ROUTE:CLOSE "D0"\;*WAI
+
+
+[TIMEOUTS]
+; timeout times in milliseconds
+TMO_OPEN_SOCKET       = 1000
+TMO_LAN_COMMUNICATION = 100
