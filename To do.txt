@@ -1,0 +1,5 @@
+1. Handle correction data with/without switch matrix:
+   Instrument uses different commands for each
+   See Mathieu's note
+2. Fix touchstone newlines for two port file (s2p):
+   Should have all four S-parameters on one line.
