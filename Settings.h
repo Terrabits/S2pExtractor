@@ -9,7 +9,7 @@
 
 // Application settings
 const QString APP_NAME = "RSA S2P Extractor";
-const QString APP_VERSION = "1.1.4"; //http://semver.org/
+const QString APP_VERSION = "1.1.5"; //http://semver.org/
 const QString APP_FOLDER = "RSA S2P Extractor";
 
 // Log, Key

@@ -8,7 +8,7 @@
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   
   <!-- Definition of my application -->
-	<Product Id="14c45f64-4abd-4277-b83a-a1372d5d635b" Name="R&amp;S RSA S2P Extractor" Language="1033" Version="1.1.4.0" Manufacturer="Rohde &amp; Schwarz America" UpgradeCode="ca98bc5f-7344-448a-b765-f33a9db7903a">  
+	<Product Id="2ef48eb7-27bd-4b47-a32b-3c4500be4220" Name="R&amp;S RSA S2P Extractor" Language="1033" Version="1.1.5.0" Manufacturer="Rohde &amp; Schwarz America" UpgradeCode="ca98bc5f-7344-448a-b765-f33a9db7903a">  
 		
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -69,7 +69,7 @@
     <Component Id="AppComponent" Guid="6bf85b4f-a4fa-4a49-80b6-c8e8108963dc" Directory="INSTALLFOLDER">
       <CreateFolder Directory="SettingsFolder" />
       <CreateFolder Directory="PlatformsFolder" />
-      <File Id="AppExecutable" Name="RSA S2P Extractor.exe" Source="C:\Users\lalic\Documents\Qt\build-RsaDeembed-Desktop_Qt_5_1_1_MSVC2010_32bit-Release\release\RsaDeembed.exe" KeyPath="yes">
+      <File Id="AppExecutable" Name="RSA S2P Extractor.exe" Source="C:\Users\Lalic\Documents\Qt\build-RsaDeembed-Desktop_Qt_5_2_1_MSVC2010_32bit-Release\release\RsaDeembed.exe" KeyPath="yes">
         <Shortcut Id="AppShortcut" Name="R&amp;S RSA S2P Extractor" Directory="ApplicationStartMenuFolder" Description="Extracts the characteristics of a probe or fixture path by taking the difference of two calibrations." Advertise="yes" Icon="RS.ico"/>
         <Shortcut Id="ZNBShortcut" Name="RSA S2P Extractor" Directory="ZNBExternalToolsFolder" Advertise="yes" Icon="RS.ico"/>
         <Shortcut Id="ZVAShortcut" Name="RSA S2P Extractor" Directory="ZVAExternalToolsFolder" Advertise="yes" Icon="RS.ico"/>
@@ -86,29 +86,29 @@
       <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
     </Component>
     <Component Id="RSIB" Guid="f3006ec6-ebfd-4b9e-bf64-a338786848f5" Directory="INSTALLFOLDER">
-      <File Id="rsib32.dll" Name="rsib32.dll" Source="..\rsib32.dll" KeyPath="yes"/>
+      <File Id="rsib32.dll" Name="rsib32.dll" Source="..\RsaToolbox\Bus\Rsib\rsib32.dll" KeyPath="yes"/>
     </Component>
     <Component Id="QCustomPlots" Guid="70c10cd5-122f-46e1-9e80-5e6eb833e82c" Directory="INSTALLFOLDER">
-    	<File Id="qcustomplot1.dll" Name="qcustomplot1.dll" Source="..\qcustomplot1.dll" KeyPath="yes" />
+    	<File Id="qcustomplot.dll" Name="qcustomplot.dll" Source="..\RsaToolbox\QCustomPlot\qcustomplot.dll" KeyPath="yes" />
     </Component>
     <Component Id="VC2010Runtime" Guid="a003fdca-a84d-45af-a53b-d4de048ea930" Directory="INSTALLFOLDER">
-      <File Id="msvcr100.dll" Name="msvcr100.dll" Source="C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x86\Microsoft.VC100.CRT\msvcr100.dll" KeyPath="yes"/>
-      <File Id="msvcp100.dll" Name="msvcp100.dll" Source="C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\redist\x86\Microsoft.VC100.CRT\msvcp100.dll" />
+      <File Id="msvcr100.dll" Name="msvcr100.dll" Source="C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\Redist\msvcr100.dll" KeyPath="yes"/>
+      <File Id="msvcp100.dll" Name="msvcp100.dll" Source="C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\Redist\msvcp100.dll" />
     </Component>
     <Component Id="QtRuntime" Guid="361dda68-54ec-4601-9fea-db6bbb263269" Directory="INSTALLFOLDER">
-      <File Id="Qt5Core.dll" Name="Qt5Core.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\Qt5Core.dll" KeyPath="yes" />
-      <File Id="Qt5Gui.dll" Name="Qt5Gui.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\Qt5Gui.dll" />
-      <File Id="Qt5Widgets.dll" Name="Qt5Widgets.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\Qt5Widgets.dll" />
-      <File Id="libGLESv2.dll" Name="libGLESv2.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\libGLESv2.dll" />
-      <File Id="libEGL.dll" Name="libEGL.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\libEGL.dll" />
-      <File Id="D3DCompiler_43.dll" Name="D3DCompiler_43.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\D3DCompiler_43.dll" />
-      <File Id="icudt51.dll" Name="icudt51.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\icudt51.dll" />
-      <File Id="icuin51.dll" Name="icuin51.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\icuin51.dll" />
-      <File Id="icuuc51.dll" Name="icuuc51.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\icuuc51.dll" />
-      <File Id="Qt5PrintSupport.dll" Name="Qt5PrintSupport.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\Qt5PrintSupport.dll" />
+      <File Id="Qt5Core.dll" Name="Qt5Core.dll" Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Core.dll" KeyPath="yes" />
+      <File Id="Qt5Gui.dll" Name="Qt5Gui.dll" Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Gui.dll" />
+      <File Id="Qt5Widgets.dll" Name="Qt5Widgets.dll" Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Widgets.dll" />
+      <File Id="libGLESv2.dll" Name="libGLESv2.dll" Source="C:\Qt\5.2.1\msvc2010\bin\libGLESv2.dll" />
+      <File Id="libEGL.dll" Name="libEGL.dll" Source="C:\Qt\5.2.1\msvc2010\bin\libEGL.dll" />
+      <File Id="D3DCompiler_43.dll" Name="D3DCompiler_43.dll" Source="C:\Qt\5.2.1\msvc2010\bin\D3DCompiler_43.dll" />
+      <File Id="icudt51.dll" Name="icudt51.dll" Source="C:\Qt\5.2.1\msvc2010\bin\icudt51.dll" />
+      <File Id="icuin51.dll" Name="icuin51.dll" Source="C:\Qt\5.2.1\msvc2010\bin\icuin51.dll" />
+      <File Id="icuuc51.dll" Name="icuuc51.dll" Source="C:\Qt\5.2.1\msvc2010\bin\icuuc51.dll" />
+      <File Id="Qt5PrintSupport.dll" Name="Qt5PrintSupport.dll" Source="C:\Qt\5.2.1\msvc2010\bin\Qt5PrintSupport.dll" />
     </Component>
     <Component Id="QtPlatformPlugin" Guid="c4b6afb0-4926-434b-91c5-1fbfb32ff08e" Directory="PlatformsFolder">
-      <File Id="qwindows.dll" Name="qwindows.dll" Source="C:\Qt\Qt5.1.1\5.1.1\msvc2010\bin\..\plugins\platforms\qwindows.dll" KeyPath="yes" />
+      <File Id="qwindows.dll" Name="qwindows.dll" Source="C:\Qt\5.2.1\msvc2010\bin\..\plugins\platforms\qwindows.dll" KeyPath="yes" />
     </Component>
     <Component Id="UninstallShortcutComponent" Guid="9cefcb65-be78-4750-8261-47e31c4e0095" Directory="ApplicationStartMenuFolder">
       <RegistryKey Root="HKCU" Key="Software\Rohde-Schwarz\RSA S2P Extractor\Uninstall">

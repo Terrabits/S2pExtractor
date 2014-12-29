@@ -261,7 +261,7 @@ VnaCorrections::CorrectionState VnaCorrections::toCorrectionState(QString scpi) 
     return(NO_CORRECTIONS);
 }
 ComplexRowVector VnaCorrections::errorValues(QString term, uint outputPort, uint inputPort) {
-    QString scpi = ":SENS%1:CORR:CDAT? \'%2\',%3,%4\n";
+    QString scpi = ":SENS%1:CORR:SMAT:CDAT? \'%2\',%3,%4,1,2\n"; // MODIFIED FOR CIENA'S SWITCH MATRIX!!!
     scpi = scpi.arg(_channelIndex);
     scpi = scpi.arg(term);
     scpi = scpi.arg(inputPort);

@@ -26,7 +26,7 @@ MainWindow::MainWindow(Vna &vna, Key &key, QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QString title = APP_NAME + " " + APP_VERSION;
+    QString title = APP_VERSION + " BETA: CIENA MATRIX ONLY!";
     setWindowTitle(title);
 
     ui->portsEdit->clear();
@@ -123,21 +123,26 @@ void MainWindow::on_portsButton_clicked() {
     _updatePorts();
 }
 void MainWindow::on_generateButton_clicked() {
+    qDebug() << "MainWindow::generate";
     if (_isReadyToGenerate() && _isMatchingCalibrations()
             && _isCalibratedPorts())
     {
+        qDebug() << "  Going for it.";
         _constructX();
         QVector<uint> ports = _portsDialog.selectedPorts();
 
         QString directory;
         directory = vna.fileSystem().directory(TRACES_DIRECTORY);
-        getFilenamesDialog filenameDialog(ports, directory);
+        getFilenamesDialog filenameDialog(ports, directory, this);
         filenameDialog.exec();
         if (filenameDialog.isOkClicked()) {
             directory = filenameDialog.directory();
             QStringList filenames = filenameDialog.filenames();
             int size = filenames.size();
             for (int i = 0; i < size; i++) {
+                qDebug() << i;
+                qDebug() << "ports: " << ports[i];
+                qDebug() << "file: " << filenames[i];
                 NetworkData data = _calculateNetwork(ports[i]);
                 QFileInfo file(QDir(directory), filenames[i]);
                 Touchstone::Write(data, file.filePath());
@@ -313,6 +318,8 @@ bool MainWindow::_isCalibratedPorts() {
     return(true);
 }
 NetworkData MainWindow::_calculateNetwork(uint port) {
+    qDebug() << "MainWindow::_calulateNetwork " << port;
+    qDebug() << "_ports: " << _ports;
     uint otherPort;
     if (_ports.first() == port)
         otherPort = _ports.last();
@@ -358,6 +365,7 @@ void MainWindow::_constructX() {
         _x_Hz.clear();
 }
 void MainWindow::_constructMatrix(ComplexMatrix3D &matrix, ComplexRowVector &s11, ComplexRowVector &s21, ComplexRowVector &s22) {
+    qDebug() << "points: " << _points;
     matrix.resize(_points);
     for (uint i = 0; i < _points; i++) {
         matrix[i].resize(2);

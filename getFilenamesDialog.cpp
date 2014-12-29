@@ -28,8 +28,7 @@ getFilenamesDialog::getFilenamesDialog(QVector<uint> ports, QString directory, Q
     header << "Filename";
     ui->table->setColumnCount(2);
     ui->table->setHorizontalHeaderLabels(header);
-    ui->table->setColumnWidth(0, 98);
-    ui->table->setColumnWidth(1, 200);
+    ui->table->setColumnWidth(0, 30);
     ui->table->setRowCount(_numberOfPorts);
     QString label = "%1";
     QString filename = "Port %1";

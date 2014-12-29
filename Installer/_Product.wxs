@@ -86,10 +86,10 @@
       <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
     </Component>
     <Component Id="RSIB" Guid="f3006ec6-ebfd-4b9e-bf64-a338786848f5" Directory="INSTALLFOLDER">
-      <File Id="rsib32.dll" Name="rsib32.dll" Source="..\rsib32.dll" KeyPath="yes"/>
+      <File Id="rsib32.dll" Name="rsib32.dll" Source="..\RsaToolbox\Bus\Rsib\rsib32.dll" KeyPath="yes"/>
     </Component>
     <Component Id="QCustomPlots" Guid="70c10cd5-122f-46e1-9e80-5e6eb833e82c" Directory="INSTALLFOLDER">
-    	<File Id="qcustomplot1.dll" Name="qcustomplot1.dll" Source="..\qcustomplot1.dll" KeyPath="yes" />
+    	<File Id="qcustomplot.dll" Name="qcustomplot.dll" Source="..\RsaToolbox\QCustomPlot\qcustomplot.dll" KeyPath="yes" />
     </Component>
     <Component Id="VC2010Runtime" Guid="a003fdca-a84d-45af-a53b-d4de048ea930" Directory="INSTALLFOLDER">
       <File Id="msvcr100.dll" Name="msvcr100.dll" Source="%MSVC2010_CPP_RUNTIME%\msvcr100.dll" KeyPath="yes"/>

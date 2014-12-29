@@ -7,3 +7,12 @@ For your reference, I have attached the two calibration files.
 Regards,
 
 Mathieu
+
+SUMMARY---
+
+If is switch matrix, use
+:SENSe<Ch>:CORRection:SMATrix:CDATa <ErrorTerm>, <SourceTestPort>,<LoadTestPort>, <SourceVNAPort>, <LoadVNAPort>
+instead of
+:SENSe<Ch>:CORRection:CDATa? <ErrorTerm>, <SourcePort>, <LoadPort>
+
+- Does this 
