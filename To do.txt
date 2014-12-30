@@ -1,5 +1,24 @@
-1. Handle correction data with/without switch matrix:
-   Instrument uses different commands for each
-   See Mathieu's note
+1. Algorithm for determining corrections with switch matrix
+
+OUT = output test port
+IN = input test port
+
+Organization #1
+MatrixToVna[matrix] -> Vna Port
+MatrixToTestPort[matrix] -> test port
+MatrixToTestPort.key(testPort, 1) -> matrix port
+
+Organization #2
+VnaToMatrix[vna] -> matrix input
+TestPortToMatrix[test port] -> matrix output
+
+
+Problem #1 (Using Organization #1)
+Have: test port
+Want: vna port
+
+MatrixToTestPort.key(test port) -> matrix port
+MatrixToVna.key(matrix port, 1) -> vna port
+
 2. Fix touchstone newlines for two port file (s2p):
    Should have all four S-parameters on one line.
