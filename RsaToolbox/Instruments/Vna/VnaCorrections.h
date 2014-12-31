@@ -4,7 +4,8 @@
 
 // RsaToolbox
 #include "Definitions.h"
-// Etc
+#include "VnaChannel.h"
+//#include "VnaCalibrate.h"
 
 // Qt
 #include <QObject>
@@ -13,19 +14,18 @@
 
 namespace RsaToolbox {
 class Vna;
-class VnaChannel;
-enum VnaSweepType;
-enum VnaCalType;
+//class VnaChannel;
 
 class VnaCorrections : public QObject
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit VnaCorrections(QObject *parent = 0);
     VnaCorrections(VnaCorrections &other);
     VnaCorrections(Vna *vna, VnaChannel *channel, QObject *parent = 0);
     VnaCorrections(Vna *vna, uint channelIndex, QObject *parent = 0);
+    ~VnaCorrections();
 
     bool isOn();
     bool isOff();
@@ -42,8 +42,8 @@ public:
     void clear(); //?
 
     // Correction values
-    VnaCalType calibrationType();
-    VnaSweepType sweepType();
+    VnaCalibrate::CalType calibrationType();
+    VnaChannel::SweepType sweepType();
     QVector<uint> ports();
     uint points();
     double startFrequency_Hz();
@@ -51,15 +51,30 @@ public:
     double power_dBm();
 
     ComplexRowVector directivity(uint outputPort, uint inputPort);
-    void setDirectivity(ComplexRowVector corrections, uint outputPort, uint inputPort);
     ComplexRowVector sourceMatch(uint outputPort, uint inputPort);
-    void setSourceMatch(ComplexRowVector corrections, uint outputPort, uint inputPort);
     ComplexRowVector reflectionTracking(uint outputPort, uint inputPort);
-    void setReflectionTracking(ComplexRowVector corrections, uint outputPort, uint inputPort);
     ComplexRowVector loadMatch(uint outputPort, uint inputPort);
-    void setLoadMatch(ComplexRowVector corrections, uint outputPort, uint inputPort);
     ComplexRowVector transmissionTracking(uint outputPort, uint inputPort);
+
+    void setDirectivity(ComplexRowVector corrections, uint outputPort, uint inputPort);
+    void setSourceMatch(ComplexRowVector corrections, uint outputPort, uint inputPort);
+    void setReflectionTracking(ComplexRowVector corrections, uint outputPort, uint inputPort);
+    void setLoadMatch(ComplexRowVector corrections, uint outputPort, uint inputPort);
     void setTransmissionTracking(ComplexRowVector corrections, uint outputPort, uint inputPort);
+
+    // With switch matrix paths
+    ComplexRowVector directivity(uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+    ComplexRowVector sourceMatch(uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+    ComplexRowVector reflectionTracking(uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+    ComplexRowVector loadMatch(uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+    ComplexRowVector transmissionTracking(uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+
+    void setDirectivity(ComplexRowVector corrections, uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+    void setSourceMatch(ComplexRowVector corrections, uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+    void setReflectionTracking(ComplexRowVector corrections, uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+    void setLoadMatch(ComplexRowVector corrections, uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+    void setTransmissionTracking(ComplexRowVector corrections, uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
+
 
     void operator=(VnaCorrections const &other);
 
@@ -73,16 +88,20 @@ private:
         APPLIED_CORRECTIONS,
         INTERPOLATED_CORRECTIONS,
         DISABLED_CORRECTIONS,
-        NO_CORRECTIONS };
+        NO_CORRECTIONS
+    };
     
     bool isFullyInitialized() const;
     CorrectionState correctionState();
     CorrectionState toCorrectionState(QString scpi);
     ComplexRowVector errorValues(QString term, uint outputPort, uint inputPort);
+    ComplexRowVector errorValues(QString term, uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
     void setErrorValues(QString term, ComplexRowVector corrections, uint outputPort, uint inputPort);
+    void setErrorValues(QString term, ComplexRowVector corrections, uint outputTestPort, uint vnaGeneratorPort, uint inputTestPort, uint vnaReceiverPort);
     uint bufferSize(uint sfk = 1);
     uint complexBufferSize(uint sfk = 1);
 };
-}
+} // RsaToolbox
+
 
 #endif // VnaCorrections_H

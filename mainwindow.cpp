@@ -7,9 +7,6 @@
 
 // RsaToolbox
 #include "Touchstone.h"
-#include "Figure.h"
-#include "getCalibrationDialog.h"
-#include "getPortsDialog.h"
 #include "getFilenamesDialog.h"
 using namespace RsaToolbox;
 
@@ -19,22 +16,28 @@ using namespace RsaToolbox;
 #include <QFileDialog>
 
 
-MainWindow::MainWindow(Vna &vna, Key &key, QWidget *parent) :
-    vna(vna), key(key),
-    _portsDialog(vna, this),
-    _outerCalDialog(vna, this), _innerCalDialog(vna, this),
-    QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(Vna &vna, RsaToolbox::Keys &keys, QWidget *parent) :
+    _vna(vna),
+    _keys(keys),
+//    _portsDialog(vna, this),
+//    _outerCalDialog(vna, this),
+//    _innerCalDialog(vna, this),
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
 {
+    qDebug() << "MainWindow constructor";
     ui->setupUi(this);
-    QString title = APP_VERSION + " BETA: CIENA MATRIX ONLY!";
+    QString title = APP_NAME + " " + APP_VERSION;
     setWindowTitle(title);
 
+    qDebug() << "1";
     ui->portsEdit->clear();
     ui->outerCalEdit->clear();
     ui->innerCalEdit->clear();
     // ui->directoryEdit->clear();
     ui->portOrderCheckbox->setVisible(false);
 
+    qDebug() << "2";
     _deleteOuterChannel = false;
     _deleteInnerChannel = false;
     _outerChannel = 0;
@@ -42,21 +45,25 @@ MainWindow::MainWindow(Vna &vna, Key &key, QWidget *parent) :
     _outerPorts.clear();
     _innerPorts.clear();
 
+    qDebug() << "3";
     _points = 0;
     _ports.clear();
     _start_Hz = 0;
     _stop_Hz = 0;
-    _sweepType = LINEAR_SWEEP;
+    _sweepType = VnaChannel::SweepType::Linear;
     _x_Hz.clear();
 
+    qDebug() << "4";
     _outerCalDialog.setDefaultChannel(1);
     _outerCalDialog.selectDefault();
     _updateOuterCal();
 
+    qDebug() << "5";
     _innerCalDialog.setDefaultChannel(2);
     _innerCalDialog.selectDefault();
     _updateInnerCal();
 
+    qDebug() << "6";
     if (_innerCalDialog.isCalibrationSelected()
             && _outerCalDialog.isCalibrationSelected()
             && _commonPorts().isEmpty() == false)
@@ -86,12 +93,12 @@ void MainWindow::on_portOrderCheckbox_toggled(bool checked) {
         ui->diagramLabel->setPixmap(QPixmap(":/diagrams/Graphics/CalPlanes_150.png"));
 }
 void MainWindow::on_outerCalButton_clicked() {
-    _outerCalDialog.exec(vna);
+    _outerCalDialog.exec(_vna);
     if (_outerCalDialog.isOkClicked())
         _updateOuterCal();
 }
 void MainWindow::on_innerCalButton_clicked() {
-    _innerCalDialog.exec(vna);
+    _innerCalDialog.exec(_vna);
     if (_innerCalDialog.isOkClicked())
         _updateInnerCal();
 }
@@ -119,7 +126,7 @@ void MainWindow::on_portsButton_clicked() {
         _portsDialog.addDefault(2);
     }
 
-    _portsDialog.exec(vna);
+    _portsDialog.exec(_vna);
     _updatePorts();
 }
 void MainWindow::on_generateButton_clicked() {
@@ -132,7 +139,7 @@ void MainWindow::on_generateButton_clicked() {
         QVector<uint> ports = _portsDialog.selectedPorts();
 
         QString directory;
-        directory = vna.fileSystem().directory(TRACES_DIRECTORY);
+        directory = _vna.fileSystem().directory(VnaFileSystem::Directory::TRACES_DIRECTORY);
         getFilenamesDialog filenameDialog(ports, directory, this);
         filenameDialog.exec();
         if (filenameDialog.isOkClicked()) {
@@ -238,11 +245,11 @@ void MainWindow::_loadOuterCorrections() {
     }
     else {
         _deleteOuterChannel = true;
-        _outerChannel = vna.createChannel();
+        _outerChannel = _vna.createChannel();
         QString calGroup = _outerCalDialog.calGroup();
-        vna.channel(_outerChannel).setCalGroup(calGroup);
+        _vna.channel(_outerChannel).setCalGroup(calGroup);
     }
-    _outerCorrections = vna.channel(_outerChannel).corrections();
+    _outerCorrections = _vna.channel(_outerChannel).corrections();
 }
 void MainWindow::_loadInnerCorrections() {
     if (_innerCalDialog.isCalibratedChannel()) {
@@ -251,11 +258,11 @@ void MainWindow::_loadInnerCorrections() {
     }
     else {
         _deleteInnerChannel = true;
-        _innerChannel = vna.createChannel();
+        _innerChannel = _vna.createChannel();
         QString calGroup = _innerCalDialog.calGroup();
-        vna.channel(_innerChannel).setCalGroup(calGroup);
+        _vna.channel(_innerChannel).setCalGroup(calGroup);
     }
-    _innerCorrections = vna.channel(_innerChannel).corrections();
+    _innerCorrections = _vna.channel(_innerChannel).corrections();
 }
 QVector<uint> MainWindow::_commonPorts() {
     QVector<uint> ports;
@@ -350,15 +357,15 @@ NetworkData MainWindow::_calculateNetwork(uint port) {
 
     NetworkData data;
     data.setComment("");
-    data.setParameter(S_PARAMETER);
-    data.setXUnits(HERTZ_UNITS);
+    data.setParameter(NetworkParameter::S);
+    data.setXUnits(Units::Hertz);
     data.setData(_x_Hz, y);
     return(data);
 }
 void MainWindow::_constructX() {
-    if (_sweepType == LINEAR_SWEEP)
+    if (_sweepType == VnaChannel::SweepType::Linear)
         linearSpacing(_x_Hz, _start_Hz, _stop_Hz, _points);
-    else if (_outerCorrections.sweepType() == LOG_SWEEP)
+    else if (_outerCorrections.sweepType() == VnaChannel::SweepType::Log)
         logSpacing(_x_Hz, _start_Hz, _stop_Hz, _points);
     else
         // Cannot calculate frequency points!
@@ -380,11 +387,11 @@ void MainWindow::_constructMatrix(ComplexMatrix3D &matrix, ComplexRowVector &s11
 void MainWindow::_deleteChannels() {
     if (_deleteOuterChannel) {
         _deleteOuterChannel = false;
-        vna.deleteChannel(_outerChannel);
+        _vna.deleteChannel(_outerChannel);
     }
     if (_deleteInnerChannel) {
         _deleteInnerChannel = false;
-        vna.deleteChannel(_innerChannel);
+        _vna.deleteChannel(_innerChannel);
     }
 }
 

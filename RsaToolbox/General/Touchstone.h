@@ -17,6 +17,10 @@
 #include <vector>
 
 
+// ToDo: Rewrite Touchstone/NetworkData to
+// not rely on NetworkData::setNumberOfPorts().
+// This is bad form: Should be derived from setData();
+
 namespace RsaToolbox
 {
 
@@ -45,15 +49,15 @@ private:
     static bool ReadOptions(NetworkData &network, QTextStream &snpFile);
     static bool ReadFrequencyPrefix(NetworkData &network, QString units);
     static bool ReadDataType(NetworkData &network, QString dataType);
-    static bool ReadFormat(NetworkData &network, QString format);
+    static bool ReadFormat(QString format);
 
     // Read data
     static bool ReadData(NetworkData &network, QTextStream &snpFile);
     static bool ReadRow(NetworkData &network, QTextStream &snpFile, ComplexMatrix2D &dataRow, double &frequencyPoint);
-    static std::complex<double> (*ReadDatum)(double, double);
-    static std::complex<double> ReadRI(double word1, double word2);
-    static std::complex<double> ReadMA(double word1, double word2);
-    static std::complex<double> ReadDB(double word1, double word2);
+    static ComplexDouble (*ReadDatum)(double, double);
+    static ComplexDouble ReadRI(double word1, double word2);
+    static ComplexDouble ReadMA(double word1, double word2);
+    static ComplexDouble ReadDB(double word1, double word2);
 
     // Functions to help read a line, ignore comments and parse line into whitespace-delimited words
     static bool ReadLine(QTextStream &snpFile, QStringList &words);

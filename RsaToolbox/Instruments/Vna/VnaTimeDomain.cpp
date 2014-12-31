@@ -1,14 +1,16 @@
+#include "VnaTimeDomain.h"
 
 
 // RsaToolbox includes
 #include "General.h"
-#include "VnaTimeDomain.h"
-#include "VnaChannel.h"
 #include "Vna.h"
+#include "VnaChannel.h"
+#include "VnaScpi.h"
 using namespace RsaToolbox;
 
 // Qt includes
-// #include <Qt>
+#include <QDebug>
+
 
 /*!
  * \class RsaToolbox::VnaTimeDomain
@@ -17,6 +19,7 @@ using namespace RsaToolbox;
  * controls the conversion to the time
  * domain of a particular trace.
  */
+
 
 VnaTimeDomain::VnaTimeDomain(QObject *parent) :
     QObject(parent)
@@ -57,13 +60,17 @@ VnaTimeDomain::VnaTimeDomain(Vna *vna, QString traceName, QObject *parent) :
     _trace.reset(new VnaTrace(vna, traceName));
     _traceName = traceName;
 }
+VnaTimeDomain::~VnaTimeDomain() {
+
+}
+
 
 bool VnaTimeDomain::isOn() {
     _trace->select();
 
     QString scpi = ":CALC%1:TRAN:TIME:STAT?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi) == "1");
+    return(_vna->query(scpi).trimmed() == "1");
 }
 bool VnaTimeDomain::isOff() {
     return(!isOn());
@@ -141,7 +148,7 @@ void VnaTimeDomain::setLowpassStepResponse() {
 double VnaTimeDomain::startValue() {
     QString scpi = ":CALC%1:TRAN:TIME:STAR?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi).toDouble());
+    return(_vna->query(scpi).trimmed().toDouble());
 }
 void VnaTimeDomain::setStart(double value, SiPrefix prefix) {
     value *= toDouble(prefix);
@@ -153,7 +160,7 @@ void VnaTimeDomain::setStart(double value, SiPrefix prefix) {
 double VnaTimeDomain::stopValue() {
     QString scpi = ":CALC%1:TRAN:TIME:STOP?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi).toDouble());
+    return(_vna->query(scpi).trimmed().toDouble());
 }
 void VnaTimeDomain::setStop(double value, SiPrefix prefix) {
     value *= toDouble(prefix);
@@ -168,7 +175,7 @@ bool VnaTimeDomain::isAutomaticDcExtrapolation() {
 
     QString scpi = ":CALC%1:TRAN:TIME:LPAS:DCSP:CONT?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi) == "1");
+    return(_vna->query(scpi).trimmed() == "1");
 }
 bool VnaTimeDomain::isManualDcExtrapolation() {
     return(!isAutomaticDcExtrapolation());
@@ -192,7 +199,7 @@ double VnaTimeDomain::extrapolatedDcValue() {
 
     QString scpi = ":CALC%1:TRAN:TIME:LPAS:DCSP?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi).toDouble());
+    return(_vna->query(scpi).trimmed().toDouble());
 }
 void VnaTimeDomain::setExtrapolatedDcValue(double dcValue) {
     _trace->select();
@@ -214,7 +221,7 @@ double VnaTimeDomain::resolutionEnhancementFactor() {
 
     QString scpi = ":CALC%1:TRAN:TIME:RES:EFAC?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi).toDouble());
+    return(_vna->query(scpi).trimmed().toDouble());
 }
 void VnaTimeDomain::resolutionEnhancementOff() {
     setResolutionEnhancement(1.0);
@@ -231,40 +238,40 @@ void VnaTimeDomain::setResolutionEnhancement(double factor) {
     _vna->write(scpi);
 }
 
-bool VnaTimeDomain::isWindow(VnaWindowFunction window) {
+bool VnaTimeDomain::isWindow(Window window) {
     Q_UNUSED(window);
     return(false);
 }
-VnaWindowFunction VnaTimeDomain::window() {
+VnaTimeDomain::Window VnaTimeDomain::window() {
     _trace->select();
 
     QString scpi = ":CALC%1:TRAN:TIME:WIND?\n";
     scpi = scpi.arg(_trace->channel());
-    return(toWindow(_vna->query(scpi)));
+    return(VnaScpi::toTimeDomainWindow(_vna->query(scpi).trimmed()));
 }
-void VnaTimeDomain::setWindow(VnaWindowFunction window) {
+void VnaTimeDomain::setWindow(VnaTimeDomain::Window window) {
     _trace->select();
 
     QString scpi = ":CALC%1:TRAN:TIME:WIND %2\n";
     scpi = scpi.arg(_trace->channel());
-    scpi = scpi.arg(toScpi(window));
+    scpi = scpi.arg(VnaScpi::toString(window));
     _vna->write(scpi);
 }
 
-double VnaTimeDomain::slowestRiseTime_s(RiseTimeDefinition definition) {
+double VnaTimeDomain::slowestRiseTime_s(VnaTimeDomain::RiseTime definition) {
     double factor = 1.0/2.0;
-    if (definition == RISETIME_20_TO_80)
+    if (definition == VnaTimeDomain::RiseTime::TwentyToEighty)
         factor = 1.0/2.0;
-    else if (definition == RISETIME_10_TO_90)
+    else if (definition == VnaTimeDomain::RiseTime::TenToNinety)
         factor = 1.5/2.0;
 
     return(factor/(11*_vna->properties().minimumFrequency_Hz()));
 }
-double VnaTimeDomain::fastestRiseTime_s(RiseTimeDefinition definition) {
+double VnaTimeDomain::fastestRiseTime_s(VnaTimeDomain::RiseTime definition) {
     double factor = 1.0/2.0;
-    if (definition == RISETIME_20_TO_80)
+    if (definition == VnaTimeDomain::RiseTime::TwentyToEighty)
         factor = 1.0/2.0;
-    else if (definition == RISETIME_10_TO_90)
+    else if (definition == VnaTimeDomain::RiseTime::TenToNinety)
         factor = 1.5/2.0;
 
     return(factor/(_vna->properties().maximumFrequency_Hz()));
@@ -274,11 +281,11 @@ double VnaTimeDomain::longestRange_s() {
     double minFrequency = _vna->properties().minimumFrequency_Hz();
     return((maxPoints-1) / (10.0 * minFrequency));
 }
-double VnaTimeDomain::longestRange_s(double riseTime_s, RiseTimeDefinition definition) {
+double VnaTimeDomain::longestRange_s(double riseTime_s, VnaTimeDomain::RiseTime definition) {
     double factor = 1.0/2.0;
-    if (definition == RISETIME_20_TO_80)
+    if (definition == VnaTimeDomain::RiseTime::TwentyToEighty)
         factor = 1.0/2.0;
-    else if (definition == RISETIME_10_TO_90)
+    else if (definition == VnaTimeDomain::RiseTime::TenToNinety)
         factor = 1.5/2.0;
 
     double stopFrequency_Hz = factor/riseTime_s;
@@ -289,11 +296,11 @@ double VnaTimeDomain::shortestRange_s() {
     double maxFrequency = _vna->properties().maximumFrequency_Hz();
     return(11.0/maxFrequency);
 }
-double VnaTimeDomain::shortestRange_s(double riseTime_s, RiseTimeDefinition definition) {
+double VnaTimeDomain::shortestRange_s(double riseTime_s, VnaTimeDomain::RiseTime definition) {
     double factor = 1.0/2.0;
-    if (definition == RISETIME_20_TO_80)
+    if (definition == VnaTimeDomain::RiseTime::TwentyToEighty)
         factor = 1.0/2.0;
-    else if (definition == RISETIME_10_TO_90)
+    else if (definition == VnaTimeDomain::RiseTime::TenToNinety)
         factor = 1.5/2.0;
 
     double stopFrequency = factor/riseTime_s;
@@ -305,11 +312,11 @@ double VnaTimeDomain::unambiguousRange_s() {
     VnaLinearSweep sweep = _vna->channel(channel).linearSweep();
     return(1.0/sweep.spacing_Hz());
 }
-double VnaTimeDomain::riseTime_s(RiseTimeDefinition definition) {
+double VnaTimeDomain::riseTime_s(VnaTimeDomain::RiseTime definition) {
     double factor = 1.0/2.0;
-    if (definition == RISETIME_20_TO_80)
+    if (definition == VnaTimeDomain::RiseTime::TwentyToEighty)
         factor = 1.0/2.0;
-    else if (definition == RISETIME_10_TO_90)
+    else if (definition == VnaTimeDomain::RiseTime::TenToNinety)
         factor = 1.5/2.0;
 
     uint channel = _trace->channel();
@@ -317,27 +324,27 @@ double VnaTimeDomain::riseTime_s(RiseTimeDefinition definition) {
     return(factor/sweep.stop_Hz());
 }
 
-void VnaTimeDomain::setupChannel(double riseTime_s, RiseTimeDefinition definition, double unambiguousRange_s) {
+void VnaTimeDomain::setupChannel(double riseTime_s, VnaTimeDomain::RiseTime definition, double unambiguousRange_s) {
     double factor = 1.0/2.0;
-    if (definition == RISETIME_20_TO_80)
+    if (definition == VnaTimeDomain::RiseTime::TwentyToEighty)
         factor = 1.0/2.0;
-    else if (definition == RISETIME_10_TO_90)
+    else if (definition == VnaTimeDomain::RiseTime::TenToNinety)
         factor = 1.5/2.0;
 
     double stopFrequency_Hz = factor/riseTime_s;
     double spacing_Hz = 1/unambiguousRange_s;
 
     uint channel = _trace->channel();
-    _vna->channel(channel).setSweepType(LINEAR_SWEEP);
+    _vna->channel(channel).setSweepType(VnaChannel::SweepType::Linear);
     setHarmonicGrid(stopFrequency_Hz, spacing_Hz);
 }
 void VnaTimeDomain::setupTrace() {
-    _trace->setFormat(LINEAR_MAGNITUDE_TRACE);
+    _trace->setFormat(TraceFormat::Magnitude);
     on();
     setLowpassStepResponse();
     automaticDcExtrapolationOn();
     resolutionEnhancementOff();
-    setWindow(HAMMING_WINDOW_FUNCTION);
+    setWindow(Window::Hamming);
     setStart(0);
     setStop(unambiguousRange_s());
 }
@@ -417,37 +424,12 @@ QString VnaTimeDomain::filterTypeScpi() {
 
     QString scpi = ":CALC%1:TRAN:TIME?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi).toUpper());
+    return(_vna->query(scpi).trimmed().toUpper());
 }
 QString VnaTimeDomain::responseTypeScpi() {
     _trace->select();
 
     QString scpi = ":CALC%1:TRAN:TIME:STIM?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi).toUpper());
-}
-QString VnaTimeDomain::toScpi(VnaWindowFunction window) {
-    switch(window) {
-    case REGULAR_WINDOW_FUNCTION: return("RECT");
-    case HAMMING_WINDOW_FUNCTION: return("HAMM");
-    case HANN_WINDOW_FUNCTION: return("HANN");
-    case BOHMAN_WINDOW_FUNCTION: return("BOHM");
-    case DOLPH_CHEBYCHEV_WINDOW_FUNCTION: return("DCH");
-    default: return("RECT");
-    }
-}
-VnaWindowFunction VnaTimeDomain::toWindow(QString scpi) {
-    scpi = scpi.toUpper();
-    if (scpi == "RECT")
-        return(REGULAR_WINDOW_FUNCTION);
-    if (scpi == "HAMM")
-        return(HAMMING_WINDOW_FUNCTION);
-    if (scpi == "HANN")
-        return(HANN_WINDOW_FUNCTION);
-    if (scpi ==  "BOHM")
-        return(BOHMAN_WINDOW_FUNCTION);
-    if (scpi == "DCH")
-        return(DOLPH_CHEBYCHEV_WINDOW_FUNCTION);
-    // else
-        return(REGULAR_WINDOW_FUNCTION);
+    return(_vna->query(scpi).trimmed().toUpper());
 }

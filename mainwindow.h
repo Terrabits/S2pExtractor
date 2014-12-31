@@ -3,11 +3,11 @@
 
 
 // RsaToolbox
-#include "Key.h"
-#include "Vna.h"
+#include "Keys.h"
 #include "NetworkData.h"
 #include "getPortsDialog.h"
 #include "getCalibrationDialog.h"
+#include "Vna.h"
 
 // Qt
 #include <QMainWindow>
@@ -23,7 +23,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(RsaToolbox::Vna &vna, RsaToolbox::Key &key, QWidget *parent = 0);
+    explicit MainWindow(RsaToolbox::Vna &_vna, RsaToolbox::Keys &_keys, QWidget *parent = 0);
     ~MainWindow();
 
 private slots:
@@ -36,8 +36,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    RsaToolbox::Vna &vna;
-    RsaToolbox::Key &key;
+    RsaToolbox::Vna &_vna;
+    RsaToolbox::Keys &_keys;
 
     getPortsDialog _portsDialog;
     getCalibrationDialog _outerCalDialog;
@@ -67,7 +67,7 @@ private:
     QVector<uint> _ports;
     double _start_Hz;
     double _stop_Hz;
-    RsaToolbox::VnaSweepType _sweepType;
+    RsaToolbox::VnaChannel::SweepType _sweepType;
     RsaToolbox::QRowVector _x_Hz;
 
     bool _isReadyToGenerate();

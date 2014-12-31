@@ -38,6 +38,7 @@ public:
     QString timestamp();
 
     uint numberOfPorts();
+    void setNumberOfPorts(uint ports);
     QString portComment(uint port);
     void setPortComment(uint port, QString comment);
 
@@ -46,11 +47,12 @@ public:
 
     Units xUnits();
     SiPrefix xPrefix();
-    void setXUnits(Units units, SiPrefix prefix = NO_PREFIX);
+    void setXUnits(Units units, SiPrefix prefix = SiPrefix::None);
 
     uint points();
-    QRowVector x();
+    QRowVector &x();
     ComplexMatrix3D &y();
+    ComplexRowVector y(uint outputPort, uint inputPort);
     QRowVector y_dB(uint outputPort, uint inputPort);
     QRowVector y_magnitude(uint outputPort, uint inputPort);
     QRowVector y_phase_deg(uint outputPort, uint inputPort);
@@ -62,9 +64,8 @@ public:
 
     // Operators
     void operator=(const NetworkData &other);
-    QDataStream& operator<<(QDataStream &stream);
-    QDataStream& operator>>(QDataStream &stream);
-
+    void write(QDataStream &stream) const;
+    void read(QDataStream &stream);
 
 private:
     QDateTime _timestamp;
@@ -84,10 +85,12 @@ private:
 };
 
 }
+QDataStream& operator<<(QDataStream &stream, const RsaToolbox::NetworkData &data);
+QDataStream& operator>>(QDataStream &stream, RsaToolbox::NetworkData &data);
 Q_DECLARE_METATYPE(RsaToolbox::NetworkData)
 
 
-#endif
+#endif // NETWORK_DATA_H
 
 
 

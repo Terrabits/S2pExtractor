@@ -17,13 +17,14 @@ class VnaChannel;
 
 class VnaPowerSweep : public QObject
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit VnaPowerSweep(QObject *parent = 0);
     VnaPowerSweep(VnaPowerSweep &other);
     VnaPowerSweep(Vna *vna, VnaChannel *channel, QObject *parent = 0);
     VnaPowerSweep(Vna *vna, uint channelIndex, QObject *parent = 0);
+    ~VnaPowerSweep();
 
     uint points();
     void setPoints(uint numberOfPoints);
@@ -33,13 +34,18 @@ public:
     void setStop(double power_dBm);
     QVector<double> powers_dBm();
     double frequency_Hz();
-    void setFrequency(double frequency, SiPrefix prefix = NO_PREFIX);
+    void setFrequency(double frequency, SiPrefix prefix = SiPrefix::None);
     double ifBandwidth_Hz();
-    void setIfbandwidth(double bandwidth, SiPrefix prefix = NO_PREFIX);
+    void setIfbandwidth(double bandwidth, SiPrefix prefix = SiPrefix::None);
+
+    bool isAutoSweepTimeOn();
+    bool isAutoSweepTimeOff();
+    void autoSweepTimeOn(bool isOn = true);
+    void autoSweepTimeOff(bool isOff = true);
+    uint sweepTime_ms();
+    void setSweepTime(uint time_ms);
 
     void operator=(VnaPowerSweep const &other);
-
-//    void moveToThread(QThread *thread);
 
 private:
     Vna *_vna;

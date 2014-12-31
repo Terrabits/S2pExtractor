@@ -1,14 +1,15 @@
-#include <QDebug>
+
 
 // RsaToolbox includes
 #include "General.h"
 #include "IndexName.h"
-#include "VnaChannel.h"
 #include "Vna.h"
+#include "VnaChannel.h"
+#include "VnaScpi.h"
 using namespace RsaToolbox;
 
 // Qt includes
-// #include <Qt>
+#include <QDebug>
 
 /*!
  * \class RsaToolbox::VnaChannel
@@ -41,6 +42,9 @@ VnaChannel::VnaChannel(Vna *vna, uint index, QObject *parent) :
     _vna = vna;
     _index = index;
 }
+VnaChannel::~VnaChannel() {
+
+}
 
 uint VnaChannel::index() {
     return(_index);
@@ -48,7 +52,7 @@ uint VnaChannel::index() {
 QString VnaChannel::name() {
     QString scpi = ":CONF:CHAN%1:NAME?\n";
     scpi = scpi.arg(_index);
-    return(_vna->query(scpi).remove("\'").trimmed());
+    return(_vna->query(scpi).trimmed().remove("\'"));
 }
 void VnaChannel::setName(QString name) {
     QString scpi = ":CONF:CHAN%1:NAME \'%2\'\n";
@@ -66,7 +70,7 @@ QStringList VnaChannel::traces() {
 
     QString scpi = ":CONF:CHAN%1:TRAC:CAT?";
     scpi = scpi.arg(_index);
-    QString result = _vna->query(scpi, 1000, 1000);
+    QString result = _vna->query(scpi, 1000, 1000).trimmed();
     QVector<IndexName> indexNames;
     indexNames = IndexName::parse(result, ",", "\'");
     return(IndexName::names(indexNames));
@@ -140,74 +144,107 @@ void VnaChannel::continuousSweepOn(bool isOn) {
 void VnaChannel::manualSweepOn(bool isOn) {
     continuousSweepOn(!isOn);
 }
-
-// Sweep
-bool VnaChannel::isLinearSweep() {
-    return(sweepType() == LINEAR_SWEEP);
-}
-bool VnaChannel::isLogarithmicSweep() {
-    return(sweepType() == LOG_SWEEP);
-}
-bool VnaChannel::isSegmentedSweep() {
-    return(sweepType() == SEGMENTED_SWEEP);
-}
-bool VnaChannel::isPowerSweep() {
-    return(sweepType() == POWER_SWEEP);
-}
-bool VnaChannel::isCwSweep() {
-    return(sweepType() == CW_SWEEP);
-}
-bool VnaChannel::isTimeSweep() {
-    return(sweepType() == TIME_SWEEP);
-}
-VnaSweepType VnaChannel::sweepType() {
-    QString scpi = ":SENS%1:SWE:TYPE?\n";
+uint VnaChannel::sweepCount() {
+    QString scpi = ":SENS%1:SWE:COUN?\n";
     scpi = scpi.arg(_index);
-    return(toVnaSweepType(_vna->query(scpi)));
+    return _vna->query(scpi).trimmed().toUInt();
 }
-void VnaChannel::setSweepType(VnaSweepType sweepType) {
-    QString scpi = ":SENS%1:SWE:TYPE %2\n";
-    scpi = scpi.arg(_index).arg(toScpi(sweepType));
+void VnaChannel::setSweepCount(uint count) {
+    QString scpi = ":SENS%1:SWE:COUN %2\n";
+    scpi = scpi.arg(_index);
+    scpi = scpi.arg(count);
     _vna->write(scpi);
 }
 
+// Sweep
+bool VnaChannel::isFrequencySweep() {
+    VnaChannel::SweepType type = sweepType();
+    switch(type) {
+    case SweepType::Linear:
+    case SweepType::Log:
+    case SweepType::Segmented:
+        return true;
+    default:
+        return false;
+    }
+}
+bool VnaChannel::isLinearSweep() {
+    return(sweepType() == SweepType::Linear);
+}
+bool VnaChannel::isLogarithmicSweep() {
+    return(sweepType() == SweepType::Log);
+}
+bool VnaChannel::isSegmentedSweep() {
+    return(sweepType() == SweepType::Segmented);
+}
+bool VnaChannel::isPowerSweep() {
+    return(sweepType() == SweepType::Power);
+}
+bool VnaChannel::isCwSweep() {
+    return(sweepType() == SweepType::Cw);
+}
+bool VnaChannel::isTimeSweep() {
+    return(sweepType() == SweepType::Time);
+}
+VnaChannel::SweepType VnaChannel::sweepType() {
+    QString scpi = ":SENS%1:SWE:TYPE?\n";
+    scpi = scpi.arg(_index);
+    return(VnaScpi::toSweepType(_vna->query(scpi).trimmed()));
+}
+void VnaChannel::setSweepType(VnaChannel::SweepType sweepType) {
+    QString scpi = ":SENS%1:SWE:TYPE %2\n";
+    scpi = scpi.arg(_index).arg(VnaScpi::toString(sweepType));
+    _vna->write(scpi);
+}
+void VnaChannel::setFrequencies(QRowVector values, SiPrefix prefix) {
+    VnaSegmentedSweep sweep = segmentedSweep();
+    sweep.deleteSegments();
+    int points = values.size();
+    for (int i = 0; i < points; i++) {
+        uint s = segmentedSweep().addSegment();
+        sweep.segment(s).setPoints(1);
+        sweep.segment(s).setStop(values[i], prefix);
+    }
+    setSweepType(SweepType::Segmented);
+}
+
 VnaLinearSweep &VnaChannel::linearSweep() {
-    _frequencySweep.reset(new VnaLinearSweep(_vna, this, this));
+    _frequencySweep.reset(new VnaLinearSweep(_vna, this));
     return(*_frequencySweep);
 }
 VnaLinearSweep *VnaChannel::takeLinearSweep() {
-    return(new VnaLinearSweep(_vna, _index, this));
+    return(new VnaLinearSweep(_vna, _index));
 }
 VnaLogSweep &VnaChannel::logSweep() {
-    _logSweep.reset(new VnaLogSweep(_vna, this, this));
+    _logSweep.reset(new VnaLogSweep(_vna, this));
     return(*_logSweep);
 }
 VnaLogSweep *VnaChannel::takeLogSweep() {
     return(new VnaLogSweep(_vna, _index));
 }
 VnaSegmentedSweep &VnaChannel::segmentedSweep() {
-    _segmentedSweep.reset(new VnaSegmentedSweep(_vna, this, this));
+    _segmentedSweep.reset(new VnaSegmentedSweep(_vna, this));
     return(*_segmentedSweep);
 }
 VnaSegmentedSweep *VnaChannel::takeSegmentedSweep() {
     return(new VnaSegmentedSweep(_vna, _index));
 }
 VnaPowerSweep &VnaChannel::powerSweep() {
-    _powerSweep.reset(new VnaPowerSweep(_vna, this, this));
+    _powerSweep.reset(new VnaPowerSweep(_vna, this));
     return(*_powerSweep);
 }
 VnaPowerSweep *VnaChannel::takePowerSweep() {
     return(new VnaPowerSweep(_vna, _index));
 }
 VnaCwSweep &VnaChannel::cwSweep() {
-    _cwSweep.reset(new VnaCwSweep(_vna, this, this));
+    _cwSweep.reset(new VnaCwSweep(_vna, this));
     return(*_cwSweep);
 }
 VnaCwSweep *VnaChannel::takeCwSweep() {
     return(new VnaCwSweep(_vna, _index));
 }
 VnaTimeSweep &VnaChannel::timeSweep() {
-    _timeSweep.reset(new VnaTimeSweep(_vna, this, this));
+    _timeSweep.reset(new VnaTimeSweep(_vna, this));
     return(*_timeSweep);
 }
 VnaTimeSweep *VnaChannel::takeTimeSweep() {
@@ -240,7 +277,7 @@ QVector<uint> VnaChannel::physicalPorts(uint logicalPort) {
     QString scpi = ":SOUR%1:LPOR%2?\n";
     scpi = scpi.arg(_index);
     scpi = scpi.arg(logicalPort);
-    return(parseUints(_vna->query(scpi), ","));
+    return(parseUints(_vna->query(scpi).trimmed(), ","));
 }
 void VnaChannel::physicalPorts(uint logicalPort, uint &physicalPort1, uint &physicalPort2) {
     QVector<uint> ports = physicalPorts(logicalPort);
@@ -303,7 +340,7 @@ void VnaChannel::userDefinedPortOff(uint physicalPort) {
     _vna->write(scpi);
 }
 bool VnaChannel::isUserDefinedPort(uint physicalPort) {
-    return(isUserDefinedPortOn(physicalPort));
+    return isUserDefinedPortOn(physicalPort);
 }
 bool VnaChannel::isNotUserDefinedPort(uint physicalPort) {
     return(isUserDefinedPortOff(physicalPort));
@@ -313,13 +350,14 @@ VnaUserDefinedPort VnaChannel::userDefinedPort(uint physicalPort) {
     scpi = scpi.arg(_index);
     scpi = scpi.arg(physicalPort);
 
-    return(toUserDefinedPort(_vna->query(scpi).trimmed().remove("\'")));
+    QString result = _vna->query(scpi).trimmed().remove("\'");
+    return VnaScpi::toUserDefinedPort(result);
 }
 void VnaChannel::setUserDefinedPort(uint physicalPort, VnaUserDefinedPort userDefinedPort) {
     QString scpi = ":SENS%1:UDSP%2:PAR \'%3\'\n";
     scpi = scpi.arg(_index);
     scpi = scpi.arg(physicalPort);
-    scpi = scpi.arg(toScpi(userDefinedPort));
+    scpi = scpi.arg(VnaScpi::toString(userDefinedPort));
     _vna->write(scpi);
     userDefinedPortOn(physicalPort);
 }
@@ -342,7 +380,7 @@ void VnaChannel::deleteUserDefinedPorts() {
 
 // Averaging
 VnaAveraging& VnaChannel::averaging() {
-    _averaging.reset(new VnaAveraging(_vna, this, this));
+    _averaging.reset(new VnaAveraging(_vna, this));
     return(*_averaging);
 }
 
@@ -350,7 +388,7 @@ VnaAveraging& VnaChannel::averaging() {
 bool VnaChannel::isCalibrated() {
     QString scpi = ":SENS%1:CORR:DATA:PAR:COUN?\n";
     scpi = scpi.arg(_index);
-    return(_vna->query(scpi).toInt() > 0);
+    return(_vna->query(scpi).trimmed().toInt() > 0);
 }
 bool VnaChannel::isCalGroup() {
     return(calGroup().isEmpty() == false);
@@ -376,13 +414,13 @@ void VnaChannel::setCalGroup(QString calGroup) {
 QString VnaChannel::calGroup() {
     QString scpi = ":MMEM:LOAD:CORR? %1\n";
     scpi = scpi.arg(_index);
-    return(_vna->query(scpi).remove("\'").remove(".cal"));
+    return(_vna->query(scpi).trimmed().remove("\'").remove(".cal"));
 }
 QString VnaChannel::calGroupFile() {
     QString scpi = ":MMEM:LOAD:CORR? %1\n";
     scpi = scpi.arg(_index);
-    QString filePathName = _vna->query(scpi).remove("\'");
-    filePathName = _vna->fileSystem().directory(CAL_GROUP_DIRECTORY) + "\\" + filePathName;
+    QString filePathName = _vna->query(scpi).trimmed().remove("\'");
+    filePathName = _vna->fileSystem().directory(VnaFileSystem::CAL_GROUP_DIRECTORY) + "\\" + filePathName;
     return(filePathName);
 }
 void VnaChannel::dissolveCalGroup() {
@@ -391,12 +429,50 @@ void VnaChannel::dissolveCalGroup() {
     _vna->write(scpi);
 }
 
+// Delay Offsets
+double VnaChannel::delayOffset_s(uint port) {
+    QString scpi = ":SENS%1:CORR:EDEL%2:TIME?\n";
+    scpi = scpi.arg(_index);
+    scpi = scpi.arg(port);
+    return _vna->query(scpi).trimmed().toDouble();
+}
+QRowVector VnaChannel::delayOffsets_s() {
+    uint ports = _vna->testPorts();
+    QRowVector delays;
+    for (uint i = 1; i <= ports; i++)
+        delays << delayOffset_s(i);
+    return delays;
+}
+void VnaChannel::setDelayOffset(uint port, double delay, SiPrefix prefix) {
+    delay *= toDouble(prefix);
+    QString scpi = ":SENS%1:CORR:EDEL%2:TIME %3\n";
+    scpi = scpi.arg(_index);
+    scpi = scpi.arg(port);
+    scpi = scpi.arg(delay);
+    _vna->write(scpi);
+}
+void VnaChannel::setDelayOffsets(QRowVector delays, SiPrefix prefix) {
+    int ports = _vna->testPorts();
+    if (delays.size() > ports)
+        delays.resize(ports);
+    for (int i = 0; i < delays.size(); i++)
+        setDelayOffset(i+1, delays[i], prefix);
+}
+void VnaChannel::clearDelayOffset(uint port) {
+    setDelayOffset(port, 0);
+}
+void VnaChannel::clearDelayOffsets() {
+    for (uint i = 1; i <= _vna->testPorts(); i++)
+        clearDelayOffset(i);
+}
+
+// Corrections
 VnaCorrections &VnaChannel::corrections() {
-    _corrections.reset(new VnaCorrections(_vna, this, this));
+    _corrections.reset(new VnaCorrections(_vna, this));
     return(*_corrections);
 }
 VnaCalibrate &VnaChannel::calibrate() {
-    _calibrate.reset(new VnaCalibrate(_vna, this, this));
+    _calibrate.reset(new VnaCalibrate(_vna, this));
     return(*_calibrate);
 }
 VnaCalibrate *VnaChannel::takeCalibrate() {
@@ -449,40 +525,4 @@ QStringList VnaChannel::zvaTraces() {
 //            result << trace;
 //    }
     return(result);
-}
-
-QString RsaToolbox::toScpi(VnaSweepType sweepType) {
-    switch(sweepType) {
-    case LINEAR_SWEEP:
-        return("LIN");
-    case LOG_SWEEP:
-        return("LOG");
-    case SEGMENTED_SWEEP:
-        return("SEGM");
-    case POWER_SWEEP:
-        return("POW");
-    case CW_SWEEP:
-        return("CW");
-    case TIME_SWEEP:
-        return("POIN");
-    default:
-        return("LIN");
-    }
-}
-VnaSweepType RsaToolbox::toVnaSweepType(QString scpi) {
-    scpi = scpi.toUpper();
-    if (scpi == "LIN")
-            return(LINEAR_SWEEP);
-        if (scpi == "LOG")
-            return(LOG_SWEEP);
-        if (scpi == "SEGM")
-            return(SEGMENTED_SWEEP);
-        if (scpi == "POW")
-            return(POWER_SWEEP);
-        if (scpi == "CW")
-            return(CW_SWEEP);
-        if (scpi == "POIN")
-            return(TIME_SWEEP);
-        // Default
-        return(LINEAR_SWEEP);
 }

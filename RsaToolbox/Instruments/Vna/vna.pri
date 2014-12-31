@@ -1,10 +1,15 @@
 # RsaToolbox::Vna includes
 # Note: Requires
-#   base.pri
-#   rsib.pri
+#   core.pri
+#   tcp.pri
 #   visa.pri
+#   ... a lot of other things I need to add!
 
-QT += gui
+QT += core gui widgets
+
+include($$PWD/Dialogs/vnadialogs.pri)
+include($$PWD/Models/vnamodels.pri)
+include($$PWD/Views/vnaviews.pri)
 
 HEADERS += $$PWD/VnaUserDefinedPort.h \
            $$PWD/VnaStandardModel.h \
@@ -31,13 +36,13 @@ HEADERS += $$PWD/VnaUserDefinedPort.h \
            $$PWD/VnaTrace.h \
            $$PWD/VnaMarker.h \
            $$PWD/VnaReferenceMarker.h \
+           $$PWD/VnaLimits.h \
+           $$PWD/VnaMath.h \
            $$PWD/VnaTimeDomain.h \
            $$PWD/VnaDiagram.h \
-           $$PWD/Vna.h \
-           $$PWD/Dialogs/getCalibrationDialog.h \
-           $$PWD/Dialogs/getChannelDialog.h \
-           $$PWD/Dialogs/getPortsDialog.h
-
+           $$PWD/VnaScpi.h \
+           $$PWD/Vna.h
+INCLUDEPATH += $$PWD
 SOURCES += $$PWD/VnaUserDefinedPort.cpp \
            $$PWD/VnaStandardModel.cpp \
            $$PWD/VnaCalStandard.cpp \
@@ -63,16 +68,9 @@ SOURCES += $$PWD/VnaUserDefinedPort.cpp \
            $$PWD/VnaTrace.cpp \
            $$PWD/VnaMarker.cpp \
            $$PWD/VnaReferenceMarker.cpp \
+           $$PWD/VnaLimits.cpp \
+           $$PWD/VnaMath.cpp \
            $$PWD/VnaTimeDomain.cpp \
            $$PWD/VnaDiagram.cpp \
-           $$PWD/Vna.cpp \
-           $$PWD/Dialogs/getCalibrationDialog.cpp \
-           $$PWD/Dialogs/getChannelDialog.cpp \
-           $$PWD/Dialogs/getPortsDialog.cpp
-
-FORMS += $$PWD/Dialogs/getCalibrationDialog.ui \
-         $$PWD/Dialogs/getChannelDialog.ui \
-         $$PWD/Dialogs/getPortsDialog.ui
-
-INCLUDEPATH += $$PWD \
-               $$PWD/Dialogs
+           $$PWD/VnaScpi.cpp \
+           $$PWD/Vna.cpp

@@ -17,13 +17,14 @@ class VnaTrace;
 
 class VnaReferenceMarker : public QObject
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit VnaReferenceMarker(QObject *parent = 0);
     VnaReferenceMarker(const VnaReferenceMarker &other);
     VnaReferenceMarker(Vna *vna, VnaTrace *trace, QObject *parent = 0);
     VnaReferenceMarker(Vna *vna, QString traceName, QObject *parent = 0);
+    ~VnaReferenceMarker();
 
     bool isOn();
     void on(bool isOn = true);
@@ -36,7 +37,7 @@ public:
     double x();
     double y();
     void coordinates(double &x, double &y);
-    void setX(double x, SiPrefix prefix = NO_PREFIX);
+    void setX(double x, SiPrefix prefix = SiPrefix::None);
     void setToMarker(uint markerIndex);
 
     void operator=(VnaReferenceMarker const &other);

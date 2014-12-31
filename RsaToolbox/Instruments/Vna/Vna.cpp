@@ -1,11 +1,15 @@
+#include "Vna.h"
 
 
 #include "General.h"
-#include "Vna.h"
-#include "RsibBus.h"
 #include "VisaBus.h"
 #include "IndexName.h"
+#include "VnaScpi.h"
 using namespace RsaToolbox;
+
+// Qt
+#include <QDebug>
+
 
 /*! \defgroup VnaGroup Vna
  * Classes for controlling a Rohde \& Schwarz VNA
@@ -23,7 +27,7 @@ using namespace RsaToolbox;
  * \c %Vna is derived from the \c GenericInstrument
  * class, and as such has the ability to
  * connect to a Vna using a \c GenericBus
- * subclass such as \c RsibBus or \c VisaBus.
+ * subclass such as \c VisaBus.
  * It also can connect to a \c Log
  * for SCPI logging.
  *
@@ -91,17 +95,20 @@ using namespace RsaToolbox;
  */
 Vna::Vna(QObject *parent)
     : GenericInstrument(parent),
-      _properties(this, this),
-      _settings(this, this),
-      _fileSystem(this, this),
-      _calKit(this, NameLabel(""), this),
-      _channel(this, uint(0), this),
-      _trace(this, QString(), this),
-      _diagram(this, uint(0), this),
-      _calibrate(this, this),
-      _switchMatrix(this, uint(0), this),
-      _calUnit(this, QString(""), this)
-{ }
+      _properties(this),
+      _settings(this),
+      _fileSystem(this),
+      _calKit(this, NameLabel()),
+      _calibrate(this),
+//      _calGroup(),
+      _channel(this, 0),
+      _trace(this, ""),
+      _diagram(this, 0),
+      _switchMatrix(this, 0),
+      _calUnit(this, "")
+{
+    //
+}
 
 /*!
  * \brief Constructor connects to the instrument
@@ -118,17 +125,20 @@ Vna::Vna(QObject *parent)
  */
 Vna::Vna(GenericBus *bus, QObject *parent)
     : GenericInstrument(bus, parent),
-      _properties(this, this),
-      _settings(this, this),
-      _fileSystem(this, this),
-      _calKit(this, NameLabel(""), this),
-      _channel(this, uint(0), this),
-      _trace(this, QString(), this),
-      _diagram(this, uint(0), this),
-      _calibrate(this, this),
-      _switchMatrix(this, uint(0), this),
-      _calUnit(this, QString(""), this)
-{ }
+      _properties(this),
+      _settings(this),
+      _fileSystem(this),
+      _calKit(this, NameLabel()),
+      _calibrate(this),
+//      _calGroup(),
+      _channel(this, 0),
+      _trace(this, ""),
+      _diagram(this, 0),
+      _switchMatrix(this, 0),
+      _calUnit(this, "")
+{
+    //
+}
 
 /*!
  * \brief Constructor connects to the instrument
@@ -146,30 +156,32 @@ Vna::Vna(GenericBus *bus, QObject *parent)
  */
 Vna::Vna(ConnectionType type, QString address, QObject *parent)
     : GenericInstrument(type, address, parent),
-      _properties(this, this),
-      _settings(this, this),
-      _fileSystem(this, this),
-      _calKit(this, NameLabel(""), this),
-      _channel(this, uint(0), this),
-      _trace(this, QString(), this),
-      _diagram(this, uint(0), this),
-      _calibrate(this, this),
-      _switchMatrix(this, uint(0), this),
-      _calUnit(this, QString(""), this)
-{ }
+      _properties(this),
+      _settings(this),
+      _fileSystem(this),
+      _calKit(this, NameLabel()),
+      _calibrate(this),
+//      _calGroup(),
+      _channel(this, 0),
+      _trace(this, ""),
+      _diagram(this, 0),
+      _switchMatrix(this, 0),
+      _calUnit(this, "")
+{
+    //
+}
 
 /*!
- * \brief Prints instrument info to the log file,
- * if connected
+ * \brief Prints instrument info to the log file
  *
  * Below is an example result of a call
- * to \c printInfo() on a Znb:
+ * to \c printInfo() with a ZNB connected:
     <tt>VNA INSTRUMENT INFO
 Connection:       TCPIP
 Address:          192.168.0.1
 Make:             Rohde & Schwarz
 Model:            ZNB
-Serial No:        1311601044100104
+Serial No:        12345678901234
 Firmware Version: 1.93.2.45
 Min Frequency:    9.0 KHz
 Max Frequency:    8.5 GHz
@@ -189,34 +201,19 @@ Options:          ZNB-K2
                   ZN-B12</tt>
  * \sa Vna::useLog()
  */
-void Vna::printInfo() {
-    if (isLogOpen() == false) {
-        return;
-    }
-
-    Log *tempLog = log();
-    disconnectLog();
-
-    QString info;
+void Vna::printInfo(QString &info) {
     QTextStream stream(&info);
-    printInfo(stream);
-    stream.flush();
-    tempLog->print(info);
-
-    useLog(tempLog);
-}
-void Vna::printInfo(QTextStream &stream) {
     stream << "VNA INSTRUMENT INFO" << endl;
     if (isConnected()) {
-        if (_properties.model() != UNKNOWN_MODEL) {
+        if (_properties.isKnownModel()) {
             stream << "Connection:       " << toString(connectionType()) << endl;
             stream << "Address:          " << address() << endl;
             stream << "Make:             Rohde & Schwarz" << endl;
             stream << "Model:            " << toString(_properties.model()) << endl;
             stream << "Serial No:        " << _properties.serialNumber() << endl;
             stream << "Firmware Version: " << _properties.firmwareVersion() << endl;
-            stream << "Min Frequency:    " << formatValue(_properties.minimumFrequency_Hz(), 1, HERTZ_UNITS) << endl;
-            stream << "Max Frequency:    " << formatValue(_properties.maximumFrequency_Hz(), 1, HERTZ_UNITS) << endl;
+            stream << "Min Frequency:    " << formatValue(_properties.minimumFrequency_Hz(), 1, Units::Hertz) << endl;
+            stream << "Max Frequency:    " << formatValue(_properties.maximumFrequency_Hz(), 1, Units::Hertz) << endl;
             stream << "Number of Ports:  " << _properties.physicalPorts() << endl;
             if (optionsString().size() > 0) {
                 stream << "Options:          ";
@@ -235,6 +232,7 @@ void Vna::printInfo(QTextStream &stream) {
         stream << "Address:          " << address() << endl << endl << endl;
     }
     stream << endl << endl;
+    stream.flush();
 }
 
 /*!
@@ -246,7 +244,44 @@ void Vna::printInfo(QTextStream &stream) {
  */
 QRowVector Vna::readVector(uint bufferSize_B, uint timeout_ms) {
     QByteArray result = binaryRead(bufferSize_B, timeout_ms);
-    return(toQRowVector(result));
+    while (result.size() < 2) {
+        int prevSize = result.size();
+        result += binaryRead(bufferSize_B, timeout_ms);
+        if (result.size() <= prevSize)
+            break;
+    }
+    if (result.size() < 2)
+        return QRowVector();
+    if (result[0] != '#')
+        return QRowVector();
+    int sizeSize = result.mid(1,1).toInt();
+    if (sizeSize <= 0)
+        return QRowVector();
+
+    while (result.size() < 2 + sizeSize) {
+        int prevSize = result.size();
+        result += binaryRead(bufferSize_B, timeout_ms);
+        if (result.size() <= prevSize)
+            break;
+    }
+    if (result.size() < 2 + sizeSize)
+        return QRowVector();
+    int size = result.mid(2, sizeSize).toInt();
+    if (size <= 0)
+        return QRowVector();
+
+    while (result.size() < 2 + sizeSize + size) {
+        int prevSize = result.size();
+        result += binaryRead(bufferSize_B, timeout_ms);
+        if (result.size() <= prevSize)
+            break;
+    }
+    if (result.size() < 2 + sizeSize + size) {
+        return QRowVector();
+    }
+    else {
+        return(toQRowVector(result));
+    }
 }
 
 /*!
@@ -334,50 +369,60 @@ ComplexRowVector Vna::queryComplexVector(QString scpi, uint bufferSize_B, uint t
  * \sa Vna::isError(QStringList &errors)
  */
 bool Vna::isError() {
-    QString errorString;
-    return(isError(errorString));
+    QList<int> codes;
+    QStringList messages;
+    if (errors(codes, messages)) {
+        QString text = "SCPI Errors:\n";
+        for (int i = 0; i < messages.size(); i++) {
+            QString format = "%1: %2\n";
+            text += format.arg(codes[i]).arg(messages[i]);
+        }
+        text += "\n";
+        emit print(text);
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
-/*!
- * \brief Checks for command errors and
- * places them in \c errorString, if present
- * \param errorString Text description of any
- * errors that were found
- * \return \c true if errors are present;
- * \c false otherwise
- */
-bool Vna::isError(QString &errorString) {
-    errorString.clear();
-    QString result
-            = query(":SYST:ERR:ALL?\n", 2000);
-    errorString = result.trimmed();
-    return(errorString.at(0) != '0');
-}
+bool Vna::nextError(int &code, QString &message) {
+    code = 0;
+    message = "";
 
-/*!
- * \brief Checks for command errors and
- * places them in \c errors, if present
- *
- * The errors, if found, are separated into
- * individual strings and returned as a
- * \c QStringList. This is opposed to
- * retrieving the original, concatenated
- * string containing all error messages,
- * as Vna::isError(QString &errorString)
- * does.
- *
- * \param errors List of error strings, if any
- * \return \c true if errors are present;
- * \c false otherwise
- */
-bool Vna::isError(QStringList &errors) {
-    errors.clear();
-    QString errorMessage;
-    bool errorFound = isError(errorMessage);
-    if (errorFound)
-        errors =errorMessage.split(
-                    ",", QString::SkipEmptyParts);
-    return(errorFound);
+    QString result = query(":SYST:ERR?\n").trimmed();
+    int sep = result.indexOf(",");
+    code = result.mid(0, sep).toInt();
+    message = result.mid(sep+1);
+    message.remove(0,1);
+    message.chop(1);
+    return code != 0;
+}
+bool Vna::nextError(QString &message) {
+    int code;
+    return nextError(code, message);
+}
+bool Vna::errors(QList<int> &codes, QStringList &messages) {
+    codes.clear();
+    messages.clear();
+
+    int code;
+    QString message;
+    while (nextError(code, message)) {
+        codes << code;
+        messages << message;
+    }
+    return !messages.isEmpty();
+}
+bool Vna::errors(QStringList &messages) {
+    messages.clear();
+
+    int code;
+    QString message;
+    while (nextError(code, message)) {
+        messages << message;
+    }
+    return !messages.isEmpty();
 }
 
 /**
@@ -558,12 +603,12 @@ VnaFileSystem *Vna::takeFileSystem() {
 QVector<Connector> Vna::connectorTypes() {
     QString scpi = ":CORR:CONN:CAT?\n";
     QStringList list =
-            query(scpi).remove('\'').split(',');
+            query(scpi).trimmed().remove('\'').split(',');
     QVector<Connector> types;
     foreach (QString item, list) {
-        ConnectorType type = toConnectorType(item);
+        Connector::Type type = VnaScpi::toConnectorType(item);
         Connector new_type;
-        if (type == CUSTOM_CONNECTOR)
+        if (type == Connector::CUSTOM_CONNECTOR)
             new_type.setCustomType(item);
         else
             new_type.setType(type);
@@ -680,8 +725,8 @@ QVector<NameLabel> Vna::calKits(Connector type) {
  * \param type Connector type
  * \return Cal kits of connector \c type
  */
-QVector<NameLabel> Vna::calKits(ConnectorType type) {
-    return(calKits(toVnaScpi(type)));
+QVector<NameLabel> Vna::calKits(Connector::Type type) {
+    return(calKits(VnaScpi::toString(type)));
 }
 
 /*!
@@ -694,8 +739,8 @@ QVector<NameLabel> Vna::calKits(ConnectorType type) {
 QVector<NameLabel> Vna::calKits(QString userDefinedConnectorType) {
     QString scpi = ":CORR:CKIT:LCAT? \'%1\'\n";
     scpi = scpi.arg(userDefinedConnectorType);
-    QString result = query(scpi, 2000);
-    return(NameLabel::parse(result, ",", "\'"));
+    QString result = query(scpi, 2000).trimmed();
+    return NameLabel::parse(result, ",", "\'");
 }
 
 /*!
@@ -717,7 +762,7 @@ void Vna::importCalKit(QString pathName) {
     QFileInfo file_info(pathName);
     QString filename;
     if (file_info.path().isEmpty()) {
-        filename = fileSystem().directory(CAL_KIT_DIRECTORY);
+        filename = fileSystem().directory(VnaFileSystem::CAL_KIT_DIRECTORY);
         filename += file_info.fileName();
     }
     else {
@@ -747,7 +792,7 @@ void Vna::exportCalKit(NameLabel calkit, QString pathName) {
     QFileInfo file_info(pathName);
     QString filename;
     if (file_info.path().isEmpty())
-        filename = fileSystem().directory(CAL_KIT_DIRECTORY);
+        filename = fileSystem().directory(VnaFileSystem::CAL_KIT_DIRECTORY);
     else
         filename = QDir::toNativeSeparators(file_info.filePath());
     filename += file_info.baseName() + ".calkit";
@@ -786,7 +831,7 @@ void Vna::deleteCalKit(NameLabel calkit) {
  * \sa VnaCalKit
  */
 VnaCalKit &Vna::calKit(NameLabel nameLabel) {
-    _calKit = VnaCalKit(this, nameLabel, this);
+    _calKit = VnaCalKit(this, nameLabel);
     return(_calKit);
 }
 
@@ -875,7 +920,7 @@ VnaCalibrate *Vna::takeCalibrate() {
  */
 QStringList Vna::calGroups() {
     QString currentDirectory = fileSystem().directory();
-    fileSystem().changeDirectory(CAL_GROUP_DIRECTORY);
+    fileSystem().changeDirectory(VnaFileSystem::CAL_GROUP_DIRECTORY);
     QStringList files = fileSystem().files();
     fileSystem().changeDirectory(currentDirectory);
 
@@ -917,7 +962,7 @@ bool Vna::isChannel(uint index) {
  * false otherwise
  */
 bool Vna::isChannel(QString name) {
-    QString result = query(":CONF:CHAN:CAT?\n", 5000);
+    QString result = query(":CONF:CHAN:CAT?\n", 5000).trimmed();
     QVector<IndexName> indexNames;
     indexNames = IndexName::parse(result, ",", "\'");
     return(IndexName::names(indexNames).contains(name));
@@ -975,7 +1020,7 @@ uint Vna::channelId(QString name) {
     QString scpi = ":CONF:CHAN:NAME:ID? \'%1\'\n";
     scpi = scpi.arg(name);
 
-    QString result = query(scpi);
+    QString result = query(scpi).trimmed();
     clearStatus();
     return(result.toUInt());
 }
@@ -1025,7 +1070,7 @@ void Vna::createChannel(uint index) {
  * \return All active (on) channels
  */
 QVector<uint> Vna::channels() {
-    QString result = query(":CONF:CHAN:CAT?\n", 5000);
+    QString result = query(":CONF:CHAN:CAT?\n", 5000).trimmed();
     QVector<IndexName> indexNames;
     indexNames = IndexName::parse(result, ",", "\'");
     return(IndexName::indices(indexNames));
@@ -1086,7 +1131,7 @@ void Vna::deleteChannels() {
  * \sa VnaChannel
  */
 VnaChannel &Vna::channel(uint index) {
-    _channel = VnaChannel(this, index, this);
+    _channel = VnaChannel(this, index);
     return(_channel);
 }
 
@@ -1185,7 +1230,7 @@ uint Vna::numberOfTraces() {
  */
 QStringList Vna::traces() {
     QString scpi = ":CONF:TRAC:CAT?\n";
-    QString result = query(scpi, 1000);
+    QString result = query(scpi, 1000).trimmed();
     QVector<IndexName> indexNames;
     indexNames = IndexName::parse(result, ",", "\'");
     return(IndexName::names(indexNames));
@@ -1210,6 +1255,28 @@ void Vna::createTrace(QString name, uint channel) {
     else
         scpi = scpi.arg("Sdd11");
     write(scpi);
+}
+
+/*!
+ * \brief Create a trace in \c channel without
+ * a specific name.
+ *
+ * To also name the trace, use the overloaded
+ * method:
+ * \c createTrace(QString name, uint channel)
+ *
+ * \param channel Channel of trace
+ * \sa Vna::createTrace(QString name, uint channel)
+ */
+QString Vna::createTrace(uint channel) {
+    QStringList traces = this->traces();
+    QString name = "Trc%1";
+    int i = traces.size() + 1;
+    while (traces.contains(name.arg(i), Qt::CaseInsensitive))
+        i++;
+    name = name.arg(i);
+    createTrace(name, channel);
+    return name;
 }
 
 /*!
@@ -1246,7 +1313,7 @@ void Vna::deleteTraces() {
  * \return VnaTrace interface
  */
 VnaTrace &Vna::trace(QString name) {
-    _trace = VnaTrace(this, name, this);
+    _trace = VnaTrace(this, name);
     return(_trace);
 }
 
@@ -1359,7 +1426,7 @@ uint Vna::numberOfDiagrams() {
  */
 QVector<uint> Vna::diagrams() {
     QString result =
-            query(":DISP:CAT?\n");
+            query(":DISP:CAT?\n").trimmed();
     QVector<uint> diagrams;
     QVector<IndexName> indexNames
             = IndexName::parse(result, ",", "\'");
@@ -1449,7 +1516,7 @@ void Vna::autoscaleDiagrams() {
 }
 
 VnaDiagram &Vna::diagram(uint index) {
-    _diagram = VnaDiagram(this, index, this);
+    _diagram = VnaDiagram(this, index);
     return(_diagram);
 }
 
@@ -1526,6 +1593,25 @@ VnaDiagram *Vna::takeDiagrams() {
  * @{*/
 
 /*!
+ * \brief Maximum sweep time
+ *
+ * Compares the sweep time of all channels
+ * and returns the maximum.
+ *
+ * \return Maximum sweep time, in ms
+ */
+uint Vna::sweepTime_ms() {
+    QVector<uint> cList = channels();
+    uint time = 0;
+    foreach (uint c, cList) {
+        QString scpi = ":SENS%1:SWE:TIME?\n";
+        scpi = scpi.arg(c);
+        time += uint(query(scpi).trimmed().toDouble() * 1000.0);
+    }
+    return time;
+}
+
+/*!
  * \brief Starts a sweep in all available channels
  */
 void Vna::startSweeps() {
@@ -1536,9 +1622,9 @@ void Vna::startSweeps() {
 /** @} */
 
 /**
- * \name Switch Matrices
- * Queries, configures and controls switch
- * matrices.
+ * \name Test Ports
+ * Queries and configures test port
+ * assignments.
  * @{*/
 
 /*!
@@ -1559,69 +1645,130 @@ uint Vna::testPorts() {
         return(properties().physicalPorts());
 
     QString scpi = ":INST:TPORT:COUN?\n";
-    return(query(scpi).toUInt());
+    return(query(scpi).trimmed().toUInt());
 }
 
 /*!
- * \brief Queries for a configured switch matrix
- * \param index Index of matrix to query
- * \return \c true if switch matrix \c index exists;
- * \c false otherwise
+ * \brief Queries test port mapping to physical VNA port
+ *
+ * \param testPort Queried test port
+ * \return \c true if the test port maps directly to a physical VNA port; \c false otherwise
  */
-bool Vna::isSwitchMatrix(uint index) {
-    Q_UNUSED(index);
-    return(false);
+bool Vna::isVnaPort(uint testPort) {
+    return testPortToVnaMap().contains(testPort);
+}
+
+/*!
+ * \brief Returns physical VNA port assigned \c testPort index.
+ * \param testPort Queried test port
+ * \return Returns physical VNA port if mapped, or \c 0 otherwise.
+ */
+uint Vna::vnaPort(uint testPort) {
+    return testPortToVnaMap().value(testPort, 0);
+}
+
+/*!
+ * \brief Returns a list of test ports mapped to physical VNA ports
+ * \return Physical VNA ports
+ */
+QVector<uint> Vna::vnaTestPorts() {
+    return testPortToVnaMap().keys().toVector();
+}
+
+/*!
+ * \brief Returns the mapping for test ports
+ * that map directly to physical VNA ports.
+ *
+ * Test ports that do not map directly to the VNA
+ * (because they are assigned to a switch matrix)
+ * are not contained in PortMap.
+ *
+ * \return \c PortMap from test port to VNA port
+ */
+PortMap Vna::testPortToVnaMap() {
+    const QString scpi = ":SYST:COMM:RDEV:SMAT:CONF:TVNA?\n";
+    QString result = query(scpi).trimmed();
+    if (result.isEmpty())
+        return PortMap();
+    else
+        return parseMap<uint,uint>(result, ",");
+}
+
+/** @} */
+
+/**
+ * \name Switch Matrix
+ * Queries, configures and controls switch
+ * matrices.
+ * @{*/
+
+/*!
+ * \brief Vna::areSwitchMatrices
+ * \return
+ */
+bool Vna::areSwitchMatrices() {
+    return switchMatrices() > 0;
 }
 
 /*!
  * \brief Queries the number of switch matrices
  * \return Number of switch matrices
  */
-uint Vna::numberOfSwitchMatrices() {
-    return(0);
+uint Vna::switchMatrices() {
+    return query(":SYST:COMM:RDEV:SMAT:COUN?\n").trimmed().toUInt();
 }
 
 /*!
- * \brief Returns a list of all switch matrices
- * \return QVector of switch matrix indices
+ * \brief Vna::isMatrixPort
+ * \param testPort
+ * \return
  */
-QVector<uint> Vna::switchMatrices() {
-    return(QVector<uint>());
+bool Vna::isMatrixPort(uint testPort) {
+    return matrixWithPort(testPort) != 0;
 }
 
 /*!
- * \brief Adds a switch matrix
- * \note The switch matrix must be
- * configured before it can be used.
- * \param index Index of switch matrix
+ * \brief Returns switch matrix
+ * assigned to port \c testPort
+ *
+ * If \c testPort is not valid, or is
+ * not mapped to a switch matrix,
+ * this function returns \c 0;
+ *
+ * \param testPort Test port
+ * \return Switch matrix mapped to
+ * \c testPort; \c 0 otherwise.
  */
-void Vna::addSwitchMatrix(uint index) {
-    Q_UNUSED(index);
+uint Vna::matrixWithPort(uint testPort) {
+    uint matrices = switchMatrices();
+    for (uint i = 1; i <= matrices; i++) {
+        if (switchMatrix(i).hasTestPort(testPort))
+            return i;
+    }
+
+    // Test port not found
+    return 0;
 }
 
 /*!
- * \brief Adds a switch matrix with the next available index
- * \return Index of added switch matrix
+ * \brief Disconnects all switch matrices from
+ * the VNA.
  */
-uint Vna::addSwitchMatrix() {
-    return(0);
+void Vna::disconnectSwitchMatrices() {
+    if (properties().isZvaFamily()) {
+        print("disconnectSwitchMatrices (\"INST:SMAT [ON/OFF]\") not available on Zva\n\n");
+        return;
+    }
+
+    write(":INST:SMAT 0\n");
 }
 
 /*!
- * \brief Deletes switch matrix \c index
- * \param index Index of switch matrix to delete
+ * \brief Removes all switch matrices
+ * from the pool of connected devices.
  */
-void Vna::deleteSwitchMatrix(uint index) {
-    Q_UNUSED(index);
-}
-
-/*!
- * \brief Deletes all configured switch matrices
- */
-void Vna::deleteSwitchMatrices() {
-    //    QVector<uint> matrices = switchMatrices();
-    //    foreach (uint matrix, matrices)
-    //        deleteSwitchMatrix(matrix);
+void Vna::removeSwitchMatrices() {
+    write(":SYST:COMM:RDEV:SMAT:DEL\n");
 }
 
 /*!
@@ -1687,17 +1834,8 @@ VnaSwitchMatrix *Vna::takeSwitchMatrix(uint index) {
  * calibration unit \c id
  * \param id Identifier for cal unit
  */
-void Vna::isCalUnit(QString id) {
-    Q_UNUSED(id);
-}
-
-/*!
- * \brief Queries the number of
- * connected calibration units
- * \return Number of cal units
- */
-uint Vna::numberOfCalUnits() {
-    return(0);
+bool Vna::isCalUnit(QString id) {
+    return calUnits().contains(id);
 }
 
 /*!
@@ -1706,7 +1844,8 @@ uint Vna::numberOfCalUnits() {
  * \return List of cal units
  */
 QStringList Vna::calUnits() {
-    return(QStringList());
+    QString scpi = ":SYST:COMM:RDEV:AKAL:ADDR:ALL?\n";
+    return query(scpi).trimmed().remove("\'").split(",", QString::SkipEmptyParts);
 }
 
 /*!
@@ -1756,19 +1895,9 @@ VnaCalUnit *Vna::takeCalUnit(QString id) {
     return(new VnaCalUnit(this, id));
 }
 
-/** @} */
-
-//void Vna::moveToThread(QThread *thread) {
-//    QObject::moveToThread(thread);
-//    _properties.moveToThread(thread);
-//    _settings.moveToThread(thread);
-//    _fileSystem.moveToThread(thread);
-//    _calKit.moveToThread(thread);
-//    _calibrate.moveToThread(thread);
-//    //_calGroup.moveToThread(thread); // ???
-//    _channel.moveToThread(thread);
-//    _trace.moveToThread(thread);
-//    _diagram.moveToThread(thread);
-//    _switchMatrix.moveToThread(thread);
-//    _calUnit.moveToThread(thread);
-//}
+bool Vna::isGlobalLimitsPass() {
+    return !isGlobalLimitsFail();
+}
+bool Vna::isGlobalLimitsFail() {
+    return query(":CALC:CLIM:FAIL?\n").trimmed() == "1";
+}

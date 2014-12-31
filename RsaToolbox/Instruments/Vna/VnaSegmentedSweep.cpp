@@ -53,8 +53,11 @@ VnaSegmentedSweep::VnaSegmentedSweep(Vna *vna, uint index, QObject *parent) :
     QObject(parent)
 {
     _vna = vna;
-    _channel.reset(new VnaChannel(vna, index, this));
+    _channel.reset(new VnaChannel(vna, index));
     _channelIndex = index;
+}
+VnaSegmentedSweep::~VnaSegmentedSweep() {
+
 }
 
 
@@ -73,12 +76,11 @@ double VnaSegmentedSweep::start_Hz() {
 double VnaSegmentedSweep::stop_Hz() {
     return(max(frequencies_Hz()));
 }
-QVector<double> VnaSegmentedSweep::frequencies_Hz() {
+QRowVector VnaSegmentedSweep::frequencies_Hz() {
     QString scpi = ":CALC%1:DATA:STIM?\n";
     scpi = scpi.arg(_channelIndex);
     uint bufferSize = frequencyBufferSize(points());
-    return(parseQRowVector(
-               _vna->query(scpi, bufferSize, 1000)));
+    return _vna->queryVector(scpi, bufferSize);
 }
 double VnaSegmentedSweep::power_dBm() {
     QString scpi = ":SOUR%1:POW?\n";
@@ -98,7 +100,7 @@ void VnaSegmentedSweep::setIfbandwidth(double bandwidth, SiPrefix prefix) {
     QString scpi = "SENS%1:BAND %2%3\n";
     scpi = scpi.arg(_channelIndex);
     scpi = scpi.arg(bandwidth);
-    scpi = scpi.arg(toString(prefix, HERTZ_UNITS));
+    scpi = scpi.arg(toString(prefix, Units::Hertz));
     _vna->write(scpi);
 }
 
@@ -115,19 +117,19 @@ uint VnaSegmentedSweep::addSegment() {
     _vna->write(scpi);
     return(index);
 }
-void VnaSegmentedSweep::removeSegment(uint index) {
+void VnaSegmentedSweep::deleteSegment(uint index) {
     QString scpi = ":SENS%1:SEGM%2:DEL\n";
     scpi = scpi.arg(_channelIndex);
     scpi = scpi.arg(index);
     _vna->write(scpi);
 }
-void VnaSegmentedSweep::removeSegments() {
+void VnaSegmentedSweep::deleteSegments() {
     QString scpi = ":SENS%1:SEGM:DEL:ALL\n";
     scpi = scpi.arg(_channelIndex);
     _vna->write(scpi);
 }
 VnaSweepSegment &VnaSegmentedSweep::segment(uint index) {
-    _segment.reset(new VnaSweepSegment(_vna, _channel.data(), index, this));
+    _segment.reset(new VnaSweepSegment(_vna, _channel.data(), index));
     return(*_segment.data());
 }
 
@@ -142,6 +144,25 @@ void VnaSegmentedSweep::clearSParameterGroup() {
 }
 ComplexMatrix3D VnaSegmentedSweep::readSParameterGroup() {
     return(_channel->linearSweep().readSParameterGroup());
+}
+
+bool VnaSegmentedSweep::isAutoSweepTimeOn() {
+    return _channel->linearSweep().isAutoSweepTimeOn();
+}
+bool VnaSegmentedSweep::isAutoSweepTimeOff() {
+    return _channel->linearSweep().isAutoSweepTimeOff();
+}
+void VnaSegmentedSweep::autoSweepTimeOn(bool isOn) {
+    _channel->linearSweep().autoSweepTimeOn(isOn);
+}
+void VnaSegmentedSweep::autoSweepTimeOff(bool isOff) {
+    _channel->linearSweep().autoSweepTimeOff(isOff);
+}
+uint VnaSegmentedSweep::sweepTime_ms() {
+    return _channel->linearSweep().sweepTime_ms();
+}
+void VnaSegmentedSweep::setSweepTime(uint time_ms) {
+    _channel->linearSweep().setSweepTime(time_ms);
 }
 
 NetworkData VnaSegmentedSweep::measure(uint port1) {

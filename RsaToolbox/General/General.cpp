@@ -1,47 +1,46 @@
 #include <QDebug>
 
-// Rsa
+
+// RsaToolbox
 #include "General.h"
+using namespace RsaToolbox;
 
 // Qt
-#include <QStringList>
 #include <QStandardPaths>
-#include <QTextStream>
 #include <QCoreApplication>
 
 // C++ std lib
 #include <cmath>
 
-using namespace RsaToolbox;
 
 // Enum Conversions
 double RsaToolbox::toDouble(SiPrefix prefix) {
     switch(prefix) {
-    case TERA_PREFIX:
+    case SiPrefix::Tera:
         return(1E12);
         break;
-    case GIGA_PREFIX:
+    case SiPrefix::Giga:
         return(1E9);
         break;
-    case MEGA_PREFIX:
+    case SiPrefix::Mega:
         return(1E6);
         break;
-    case KILO_PREFIX:
+    case SiPrefix::Kilo:
         return(1E3);
         break;
-    case MILLI_PREFIX:
+    case SiPrefix::Milli:
         return(1E-3);
         break;
-    case MICRO_PREFIX:
+    case SiPrefix::Micro:
         return(1E-6);
         break;
-    case NANO_PREFIX:
+    case SiPrefix::Nano:
         return(1E-9);
         break;
-    case PICO_PREFIX:
+    case SiPrefix::Pico:
         return(1E-12);
         break;
-    case FEMTO_PREFIX:
+    case SiPrefix::Femto:
         return(1E-15);
         break;
     default:
@@ -53,13 +52,13 @@ double RsaToolbox::toDouble(SiPrefix prefix) {
 
 QString RsaToolbox::toString(ComplexFormat format) {
     switch(format) {
-    case DB_DEGREES_COMPLEX:
+    case ComplexFormat::DecibelDegrees:
         return("dB");
         break;
-    case MAGNITUDE_DEGREES_COMPLEX:
+    case ComplexFormat::MagnitudeDegrees:
         return("MA");
         break;
-    case REAL_IMAGINARY_COMPLEX:
+    case ComplexFormat::RealImaginary:
         return("RI");
         break;
     }
@@ -68,19 +67,19 @@ QString RsaToolbox::toString(ComplexFormat format) {
 }
 QString RsaToolbox::toString(NetworkParameter parameter) {
     switch(parameter) {
-    case S_PARAMETER:
+    case NetworkParameter::S:
         return("S");
         break;
-    case Y_PARAMETER:
+    case NetworkParameter::Y:
         return("Y");
         break;
-    case Z_PARAMETER:
+    case NetworkParameter::Z:
         return("Z");
         break;
-    case H_PARAMETER:
+    case NetworkParameter::H:
         return("H");
         break;
-    case G_PARAMETER:
+    case NetworkParameter::G:
         return("G");
         break;
     }
@@ -88,34 +87,45 @@ QString RsaToolbox::toString(NetworkParameter parameter) {
     return("S");
 }
 QString RsaToolbox::toString(NetworkParameter parameter, uint outputPort, uint inputPort) {
-    QString outputString = QVariant(outputPort).toString();
-    QString inputString = QVariant(inputPort).toString();
-    int zeros = outputString.length() - inputString.length();
+    QString output = QVariant(outputPort).toString();
+    QString input = QVariant(inputPort).toString();
+    int zeros = output.length() - input.length();
     if (zeros > 0)
-        inputString.prepend(QString(zeros, '0'));
+        input.prepend(QString(zeros, '0'));
     else if (zeros < 0)
-        outputString.prepend(QString(-zeros, '0'));
-    return(toString(parameter) + outputString + inputString);
+        output.prepend(QString(-zeros, '0'));
+    return(toString(parameter) + output + input);
 }
+QString RsaToolbox::toString(WaveQuantity wave) {
+    switch (wave) {
+    case WaveQuantity::a:
+        return "a";
+    case WaveQuantity::b:
+        return "b";
+    default:
+        return "a";
+    }
+}
+
 QString RsaToolbox::toString(SiPrefix prefix) {
     switch(prefix) {
-    case TERA_PREFIX:
+    case SiPrefix::Tera:
         return("T");
-    case GIGA_PREFIX:
+    case SiPrefix::Giga:
         return("G");
-    case MEGA_PREFIX:
+    case SiPrefix::Mega:
         return("M");
-    case KILO_PREFIX:
+    case SiPrefix::Kilo:
         return("K");
-    case MILLI_PREFIX:
+    case SiPrefix::Milli:
         return("m");
-    case MICRO_PREFIX:
+    case SiPrefix::Micro:
         return("u");
-    case NANO_PREFIX:
+    case SiPrefix::Nano:
         return("n");
-    case PICO_PREFIX:
+    case SiPrefix::Pico:
         return("p");
-    case FEMTO_PREFIX:
+    case SiPrefix::Femto:
         return("f");
     default:
         // NO_PREFIX
@@ -124,25 +134,25 @@ QString RsaToolbox::toString(SiPrefix prefix) {
 }
 QString RsaToolbox::toString(Units units) {
     switch(units) {
-    case SECONDS_UNITS:
+    case Units::Seconds:
         return("s");
-    case HERTZ_UNITS:
+    case Units::Hertz:
         return("Hz");
-    case RADIANS_UNITS:
+    case Units::Radians:
         return("Rad");
-    case DEGREES_UNITS:
+    case Units::Degrees:
         return("Deg");
-    case OHMS_UNITS:
+    case Units::Ohms:
         return("Ohm");
-    case SIEMENS_UNITS:
+    case Units::Siemens:
         return("S");
-    case WATTS_UNITS:
+    case Units::Watts:
         return("W");
-    case DECIBELS_UNITS:
+    case Units::dB:
         return("dB");
-    case DECIBEL_WATTS_UNITS:
+    case Units::dBW:
         return("dBW");
-    case DECIBEL_MILLIWATTS_UNITS:
+    case Units::dBm:
         return("dBm");
     default:
         // NO_UNITS
@@ -155,40 +165,40 @@ QString RsaToolbox::toString(SiPrefix prefix, Units units) {
 
 SiPrefix RsaToolbox::toSiPrefix(QString prefix) {
     if (prefix == "T")
-        return(TERA_PREFIX);
+        return(SiPrefix::Tera);
     if (prefix == "G")
-        return(GIGA_PREFIX);
+        return(SiPrefix::Giga);
     if (prefix == "M")
-        return(MEGA_PREFIX);
+        return(SiPrefix::Mega);
     if (prefix == "K")
-        return(KILO_PREFIX);
+        return(SiPrefix::Kilo);
     if (prefix == "m")
-        return(MILLI_PREFIX);
+        return(SiPrefix::Milli);
     if (prefix == "u")
-        return(MICRO_PREFIX);
+        return(SiPrefix::Micro);
     if (prefix == "n")
-        return(NANO_PREFIX);
+        return(SiPrefix::Nano);
     if (prefix == "p")
-        return(PICO_PREFIX);
+        return(SiPrefix::Pico);
     if (prefix == "f")
-        return(FEMTO_PREFIX);
+        return(SiPrefix::Femto);
     // Default
-    return(NO_PREFIX);
+    return(SiPrefix::None);
 }
 SiPrefix RsaToolbox::getPrefix(double value) {
     int decimal_places = 1;
     const int count = 10;
     SiPrefix prefixes[count] = {
-        FEMTO_PREFIX,
-        PICO_PREFIX,
-        NANO_PREFIX,
-        MICRO_PREFIX,
-        MILLI_PREFIX,
-        NO_PREFIX,
-        KILO_PREFIX,
-        MEGA_PREFIX,
-        GIGA_PREFIX,
-        TERA_PREFIX
+        SiPrefix::Femto,
+        SiPrefix::Pico,
+        SiPrefix::Nano,
+        SiPrefix::Micro,
+        SiPrefix::Milli,
+        SiPrefix::None,
+        SiPrefix::Kilo,
+        SiPrefix::Mega,
+        SiPrefix::Giga,
+        SiPrefix::Tera
     };
 
     double magnitude = abs(value);
@@ -204,125 +214,124 @@ SiPrefix RsaToolbox::getPrefix(double value) {
 
 
 // File system
-QString RsaToolbox::AppendPath(QDir path, QString filename) {
-    return(path.path() + "/" + filename);
-}
-QString RsaToolbox::AppendCurrentDirectory(QString filename) {
-    return(QCoreApplication::applicationDirPath() + "/" + filename);
-}
-QString RsaToolbox::GetAppDataPath(QString program_folder) {
-    QStringList dataLocations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
-    QString path;
-    if (dataLocations.size() > 0)
-        path = dataLocations.back()
-                + "/" + QString(COMPANY_FOLDER)
-                + "/" + program_folder;
+// Only necessary since QStandardPaths
+// no longer returns C:\ProgramData
+// for some reason.
+QString RsaToolbox::GetAppDataPath(QString manufacturerFolder, QString applicationFolder) {
+    QDir dataDir;
+    QDir dir;
+#ifdef Q_OS_WIN32
+    dir = QDir::root();
+    if (dir.cd("ProgramData") || dir.cd("Documents and Settings/All Users/Application Data"))
+        dataDir = dir;
     else
-        path = QCoreApplication::applicationDirPath();
-    return(path);
-}
-QString RsaToolbox::AppendAppDataPath(QString program_folder, QString filename) {
-    QStringList dataLocations = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
-    QString path;
-    if (dataLocations.size() > 0)
-        path = dataLocations.back()
-                + "/" + QString(COMPANY_FOLDER)
-                + "/" + program_folder;
-    else
-        path = QCoreApplication::applicationDirPath();
-    filename = path + "/" + filename;
-    return(filename);
+        dataDir.setPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation));
+#else
+    dir.setPath(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation));
+#endif
+    dataDir.mkpath(manufacturerFolder);
+    dataDir.cd(manufacturerFolder);
+    dataDir.mkpath(applicationFolder);
+    dataDir.cd(applicationFolder);
+    return dataDir.path();
 }
 
 // Formatting
-QString RsaToolbox::toScientificNotation(double value, int decimal_places, SiPrefix prefix) {
-    QString formatted_value;
-    QTextStream text_stream(&formatted_value);
-    text_stream.setRealNumberPrecision(decimal_places);
-    text_stream.setRealNumberNotation(QTextStream::FixedNotation);
+QString RsaToolbox::toEngineeringNotation(double value, int decimalPlaces, SiPrefix prefix) {
+    QString result;
+    QTextStream stream(&result);
+    stream.setRealNumberPrecision(decimalPlaces);
+    stream.setRealNumberNotation(QTextStream::FixedNotation);
 
     const int count = 10;
-    SiPrefix prefixes[count] =
-    { FEMTO_PREFIX,
-      PICO_PREFIX,
-      NANO_PREFIX,
-      MICRO_PREFIX,
-      MILLI_PREFIX,
-      NO_PREFIX,
-      KILO_PREFIX,
-      MEGA_PREFIX,
-      GIGA_PREFIX,
-      TERA_PREFIX };
+    SiPrefix prefixes[count] = { SiPrefix::Femto,
+                                 SiPrefix::Pico,
+                                 SiPrefix::Nano,
+                                 SiPrefix::Micro,
+                                 SiPrefix::Milli,
+                                 SiPrefix::None,
+                                 SiPrefix::Kilo,
+                                 SiPrefix::Mega,
+                                 SiPrefix::Giga,
+                                 SiPrefix::Tera
+                               };
 
-    QStringList science;
-    science.append("E-15");
-    science.append("E-12");
-    science.append("E-9");
-    science.append("E-6");
-    science.append("E-3");
-    science.append("");
-    science.append("E3");
-    science.append("E6");
-    science.append("E9");
-    science.append("E12");
+    QStringList eNotation;
+    eNotation.append("E-15");
+    eNotation.append("E-12");
+    eNotation.append("E-9");
+    eNotation.append("E-6");
+    eNotation.append("E-3");
+    eNotation.append("");
+    eNotation.append("E3");
+    eNotation.append("E6");
+    eNotation.append("E9");
+    eNotation.append("E12");
 
     double magnitude = abs(value * toDouble(prefix));
     for (int i = 0; i < count; i++) {
-        double bound = (1 - 0.5 * pow(10.0, (double)(-3 - decimal_places))) * toDouble(prefixes[i + 1]);
+        double bound = (1 - 0.5 * pow(10.0, (double)(-3 - decimalPlaces))) * toDouble(prefixes[i + 1]);
         if (magnitude < bound) {
-            text_stream << (value / toDouble(prefixes[i]));
-            text_stream << science[i];
-            text_stream.flush();
-            return(formatted_value);
+            stream << (value / toDouble(prefixes[i]));
+            stream.flush();
+            if (i == 0 && result.toDouble() == 0)
+                return result;
+            stream << eNotation[i];
+            stream.flush();
+            return(result);
         }
     }
 
     // else Tera or bigger
-    text_stream << (value / (double)prefixes[count]);
-    text_stream << science[count];
-    text_stream.flush();
-    return(formatted_value);
+    stream << (value / toDouble(SiPrefix::Tera));
+    stream << eNotation.last();
+    stream.flush();
+    return(result);
 }
-QString RsaToolbox::formatValue(double value, int decimal_places, Units units, SiPrefix prefix) {
-    QString formatted_value;
-    QTextStream text_stream(&formatted_value);
-    text_stream.setRealNumberPrecision(decimal_places);
-    text_stream.setRealNumberNotation(QTextStream::FixedNotation);
+QString RsaToolbox::formatValue(double value, int decimalPlaces, Units units, SiPrefix prefix) {
+    QString result;
+    QTextStream stream(&result);
+    stream.setRealNumberPrecision(decimalPlaces);
+    stream.setRealNumberNotation(QTextStream::FixedNotation);
 
     const int count = 10;
-    SiPrefix prefixes[count] =
-    { FEMTO_PREFIX,
-      PICO_PREFIX,
-      NANO_PREFIX,
-      MICRO_PREFIX,
-      MILLI_PREFIX,
-      NO_PREFIX,
-      KILO_PREFIX,
-      MEGA_PREFIX,
-      GIGA_PREFIX,
-      TERA_PREFIX };
+    SiPrefix prefixes[count] = { SiPrefix::Femto,
+                                 SiPrefix::Pico,
+                                 SiPrefix::Nano,
+                                 SiPrefix::Micro,
+                                 SiPrefix::Milli,
+                                 SiPrefix::None,
+                                 SiPrefix::Kilo,
+                                 SiPrefix::Mega,
+                                 SiPrefix::Giga,
+                                 SiPrefix::Tera
+                               };
 
     double magnitude = abs(value * toDouble(prefix));
     for (int i = 0; i < count; i++) {
-        double bound = (1 - 0.5 * pow(10.0, (double)(-3 - decimal_places))) * toDouble(prefixes[i + 1]);
+        double bound = (1 - 0.5 * pow(10.0, (double)(-3 - decimalPlaces))) * toDouble(prefixes[i + 1]);
         if (magnitude < bound) {
-            text_stream << (value / toDouble(prefixes[i])) << " ";
-            text_stream << toString(prefixes[i]) << toString(units);
-            text_stream.flush();
-            return(formatted_value);
+            stream << (value / toDouble(prefixes[i]));
+            stream.flush();
+            if (i == 0 && result.toDouble() == 0)
+                stream << " " << units;
+            else
+                stream << " " << prefixes[i] << units;
+            stream.flush();
+            return(result);
         }
     }
 
     // else Tera or bigger
-    text_stream << (value / (double)prefixes[count]) << " ";
-    text_stream << (QString)prefixes[count] << (QString)units;
-    text_stream.flush();
-    return(formatted_value);
+    stream << (value / toDouble(prefixes[count-1]));
+    stream << " " << SiPrefix::Tera << units;
+    stream.flush();
+    return result;
 }
-QString RsaToolbox::formatDouble(double value, int decimal_places) {
+QString RsaToolbox::formatDouble(double value, int decimalPlaces) {
     QString string;
     QTextStream stream(&string);
-    stream.setRealNumberPrecision(decimal_places);
+    stream.setRealNumberPrecision(decimalPlaces);
     stream.setRealNumberNotation(QTextStream::FixedNotation);
     stream << value;
     stream.flush();
@@ -331,7 +340,7 @@ QString RsaToolbox::formatDouble(double value, int decimal_places) {
 QString RsaToolbox::toString(QStringList list, QString separator) {
     return(toString(list.toVector(), separator));
 }
-QString RsaToolbox::toString(ComplexRowVector vector, QString list_separator, QString format) {
+QString RsaToolbox::toString(ComplexRowVector vector, QString separator, QString format) {
     int size = vector.size();
     if (size == 0)
         return("");
@@ -343,7 +352,7 @@ QString RsaToolbox::toString(ComplexRowVector vector, QString list_separator, QS
     item = item.arg(vector[0].imag());
     list += item;
     for (int i = 1; i < size; i++) {
-        list.append(list_separator);
+        list.append(separator);
         item = format;
         item = item.arg(vector[i].real());
         item = item.arg(vector[i].imag());
@@ -475,11 +484,12 @@ QByteArray RsaToolbox::toBlockDataFormat(QRowVector values) {
     quint64 totalSize = headerSize + bytes;
     QByteArray result;
     result.resize(totalSize);
-    result.insert(0, "#" + numberOfNumbers + bytesString);
+    QByteArray header = "#" + numberOfNumbers.toUtf8() + bytesString.toUtf8();
+    result.replace(0, headerSize, header);
     int index = 0;
-    for (int i = headerSize; i < totalSize; i += 8) {
+    for (quint64 i = headerSize; i < totalSize; i += 8) {
         char *value = (char *)&(values[index]);
-        result.insert(i, value, 8);
+        result.replace(i, 8, value, 8);
         index++;
     }
     return(result);
@@ -491,7 +501,7 @@ QRowVector RsaToolbox::toQRowVector(QByteArray blockData) {
     quint64 numberOfDoubles = bytes/8.0;
 
     QRowVector values(numberOfDoubles);
-    for (int i = 0; i < numberOfDoubles; i++) {
+    for (quint64 i = 0; i < numberOfDoubles; i++) {
         values[i] = *((double *)blockData.mid(8*i, 8).data());
     }
     return(values);
@@ -789,6 +799,58 @@ ComplexDouble RsaToolbox::linearInterpolateY(double x1, ComplexDouble y1, double
     ComplexDouble slope = (y2 - y1)/(x2 - x1);
     return(y1 + slope*(x_desired - x1));
 }
+ComplexRowVector RsaToolbox::linearInterpolateReIm(QRowVector x, ComplexRowVector y, QRowVector xDesired) {
+    int newPoints = xDesired.size();
+    ComplexRowVector result(newPoints);
+
+    int i = 0;
+    int oldPoints = x.size();
+    for (int j = 1; j < oldPoints; j++) {
+        double x1 = x[j-1];
+        double x2 = x[j];
+        ComplexDouble y1 = y[j-1];
+        ComplexDouble y2 = y[j];
+        while (i < newPoints && xDesired[i] <= x2) {
+            result[i] = linearInterpolateY(x1, y1, x2, y2, xDesired[i]);
+            i++;
+        }
+        if (i >= newPoints)
+            break;
+    }
+    return result;
+}
+ComplexRowVector RsaToolbox::linearInterpolateMagPhase(QRowVector x, ComplexRowVector y, QRowVector xDesired) {
+    int newPoints = xDesired.size();
+    ComplexRowVector result(newPoints);
+
+    int i = 0;
+    int oldPoints = x.size();
+    for (int j = 1; j < oldPoints; j++) {
+        double x1 = x[j-1];
+        double x2 = x[j];
+        double mag1 = abs(y[j-1]);
+        double phase1 = angle_rad(y[j-1]);
+        double mag2 = abs(y[j]);
+        double phase2 = angle_rad(y[j]);
+
+        // Assume no aliasing
+        // Take shortest path between points
+        if (phase2 - phase1 > PI)
+            phase1 += 2*PI;
+        else if (phase1 - phase2 > PI)
+            phase2 += 2*PI;
+
+        while (i < newPoints && xDesired[i] <= x2) {
+            double mag = linearInterpolateY(x1, mag1, x2, mag2, xDesired[i]);
+            double phase = linearInterpolateY(x1, phase1, x2, phase2, xDesired[i]);
+            result[i] = std::polar(mag, phase);
+            i++;
+        }
+        if (i >= newPoints)
+            break;
+    }
+    return result;
+}
 
 ComplexRowVector RsaToolbox::exp(ComplexRowVector x) {
     uint size = x.size();
@@ -1071,12 +1133,12 @@ RowVector RsaToolbox::multiplyEach(RowVector vector1, RowVector vector2) {
     return(result);
 }
 QRowVector RsaToolbox::multiplyEach(QRowVector vector1, QRowVector vector2) {
-    uint size = vector1.size();
+    int size = vector1.size();
     if (vector2.size() != size)
         return(QRowVector());
 
     QRowVector result(size);
-    for (uint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         result[i] = vector1[i] * vector2[i];
     }
     return(result);
@@ -1105,12 +1167,12 @@ RowVector RsaToolbox::divideEach(RowVector vector1, RowVector vector2) {
     return(result);
 }
 QRowVector RsaToolbox::divideEach(QRowVector vector1, QRowVector vector2) {
-    uint size = vector1.size();
+    int size = vector1.size();
     if (vector2.size() != size)
         return(QRowVector());
 
     QRowVector result(size);
-    for (uint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         result[i] = vector1[i] / vector2[i];
     }
     return(result);
@@ -1183,12 +1245,12 @@ Matrix3D RsaToolbox::add(Matrix3D matrix1, Matrix3D matrix2) {
     return(result);
 }
 QRowVector RsaToolbox::add(QRowVector vector1, QRowVector vector2) {
-    uint size = vector1.size();
+    int size = vector1.size();
     if (vector2.size() != size)
         return(QRowVector());
 
     QRowVector result(size);
-    for (uint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         result[i] = vector1[i] + vector2[i];
     }
     return(result);
@@ -1198,23 +1260,23 @@ QRowVector RsaToolbox::add(QRowVector vector, double scalar) {
 }
 
 QMatrix2D RsaToolbox::add(QMatrix2D matrix1, QMatrix2D matrix2) {
-    uint size = matrix1.size();
+    int size = matrix1.size();
     if (matrix2.size() != size)
         return(QMatrix2D());
 
     QMatrix2D result(size);
-    for (uint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         result[i] = add(matrix1[i], matrix2[i]);
     }
     return(result);
 }
 QMatrix3D RsaToolbox::add(QMatrix3D matrix1, QMatrix3D matrix2) {
-    uint size = matrix1.size();
+    int size = matrix1.size();
     if (matrix2.size() != size)
         return(QMatrix3D());
 
     QMatrix3D result(size);
-    for (uint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         result[i] = add(matrix1[i], matrix2[i]);
     }
     return(result);
@@ -1287,12 +1349,12 @@ Matrix3D RsaToolbox::subtract(Matrix3D matrix1, Matrix3D matrix2) {
     return(result);
 }
 QRowVector RsaToolbox::subtract(QRowVector vector1, QRowVector vector2) {
-    uint size = vector1.size();
+    int size = vector1.size();
     if (vector2.size() != size)
         return(QRowVector());
 
     QRowVector result(size);
-    for (uint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         result[i] = vector1[i] - vector2[i];
     }
     return(result);
@@ -1301,23 +1363,23 @@ QRowVector RsaToolbox::subtract(QRowVector vector, double scalar) {
     return(subtract(vector, QRowVector(vector.size(), scalar)));
 }
 QMatrix2D RsaToolbox::subtract(QMatrix2D matrix1, QMatrix2D matrix2) {
-    uint size = matrix1.size();
+    int size = matrix1.size();
     if (matrix2.size() != size)
         return(QMatrix2D());
 
     QMatrix2D result(size);
-    for (uint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         result[i] = subtract(matrix1[i], matrix2[i]);
     }
     return(result);
 }
 QMatrix3D RsaToolbox::subtract(QMatrix3D matrix1, QMatrix3D matrix2) {
-    uint size = matrix1.size();
+    int size = matrix1.size();
     if (matrix2.size() != size)
         return(QMatrix3D());
 
     QMatrix3D result(size);
-    for (uint i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         result[i] = subtract(matrix1[i], matrix2[i]);
     }
     return(result);
@@ -1343,19 +1405,19 @@ ComplexMatrix2D RsaToolbox::transpose(ComplexMatrix2D matrix) {
     return(result);
 }
 QMatrix2D RsaToolbox::transpose(QMatrix2D matrix) {
-    uint rows = matrix.size();
+    int rows = matrix.size();
     if (rows == 0)
         return(QMatrix2D());
 
-    uint columns = matrix[0].size();
+    int columns = matrix[0].size();
     if (columns == 0)
         return(QMatrix2D());
 
     QMatrix2D result = matrix;
-    for (uint i = 0; i < rows; i++) {
+    for (int i = 0; i < rows; i++) {
         if (matrix[i].size() != columns)
             return(QMatrix2D());
-        for (uint j = 0; j < columns; j++) {
+        for (int j = 0; j < columns; j++) {
             result[i][j] = matrix[j][i];
             result[j][i] = matrix[i][j];
         }
@@ -1454,27 +1516,29 @@ void RsaToolbox::insert(ComplexMatrix2D &matrix, ComplexMatrix2D data, QVector<u
     insert(matrix, data, indices, indices);
 }
 
+
+// Data type stream operators
 QDataStream& operator<<(QDataStream &stream, ComplexDouble value) {
     stream << value.real();
     stream << value.imag();
     return(stream);
 }
 QDataStream& operator<<(QDataStream &stream, RsaToolbox::ComplexRowVector vector) {
-    ComplexRowVector::size_type size = vector.size();
+    quint64 size = vector.size();
     stream << size;
     for (ComplexRowVector::size_type i = 0; i < size; i++)
         stream << vector[i];
     return(stream);
 }
 QDataStream& operator<<(QDataStream &stream, RsaToolbox::ComplexMatrix2D matrix) {
-    ComplexMatrix2D::size_type size = matrix.size();
+    quint64 size = matrix.size();
     stream << size;
     for (ComplexMatrix2D::size_type i = 0; i < size; i++)
         stream << matrix[i];
     return(stream);
 }
 QDataStream& operator<<(QDataStream &stream, RsaToolbox::ComplexMatrix3D matrix) {
-    ComplexMatrix3D::size_type size = matrix.size();
+    quint64 size = matrix.size();
     stream << size;
     for (ComplexMatrix3D::size_type i = 0; i < size; i++)
         stream << matrix[i];
@@ -1489,7 +1553,7 @@ QDataStream& operator>>(QDataStream &stream, ComplexDouble &value) {
     return(stream);
 }
 QDataStream& operator>>(QDataStream &stream, RsaToolbox::ComplexRowVector &vector) {
-    ComplexRowVector::size_type size;
+    quint64 size;
     stream >> size;
     vector.resize(size);
     for (ComplexRowVector::size_type i = 0; i < size; i++)
@@ -1497,7 +1561,7 @@ QDataStream& operator>>(QDataStream &stream, RsaToolbox::ComplexRowVector &vecto
     return(stream);
 }
 QDataStream& operator>>(QDataStream &stream, RsaToolbox::ComplexMatrix2D &matrix) {
-    ComplexMatrix2D::size_type size;
+    quint64 size;
     stream >> size;
     matrix.resize(size);
     for (ComplexMatrix2D::size_type i = 0; i < size; i++)
@@ -1505,7 +1569,7 @@ QDataStream& operator>>(QDataStream &stream, RsaToolbox::ComplexMatrix2D &matrix
     return(stream);
 }
 QDataStream& operator>>(QDataStream &stream, RsaToolbox::ComplexMatrix3D &matrix) {
-    ComplexMatrix3D::size_type size;
+    quint64 size;
     stream >> size;
     matrix.resize(size);
     for (ComplexMatrix3D::size_type i = 0; i < size; i++)

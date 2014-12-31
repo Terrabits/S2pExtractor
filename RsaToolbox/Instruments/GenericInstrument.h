@@ -43,8 +43,8 @@ public:
 
     void print(QString text);
     void printLine(QString text = "");
-    virtual void printInfo();
-    virtual void printInfo(QTextStream &stream);
+    void printInfo();
+    virtual void printInfo(QString &info);
 
     GenericBus* takeBus();
     void resetBus();
@@ -64,6 +64,7 @@ public:
 
     void wait();
     void pause();
+    void pause(uint timeout_ms);
     void initializePolling();
     bool isOperationComplete();
 

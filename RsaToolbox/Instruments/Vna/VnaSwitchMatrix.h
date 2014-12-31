@@ -4,7 +4,8 @@
 
 // RsaToolbox
 #include "Definitions.h"
-// Etc
+#include "GenericBus.h"
+#include "VnaScpi.h"
 
 // Qt
 #include <QObject>
@@ -16,14 +17,21 @@ class Vna;
 
 class VnaSwitchMatrix : public QObject
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit VnaSwitchMatrix(QObject *parent = 0);
     VnaSwitchMatrix(const VnaSwitchMatrix &other);
     VnaSwitchMatrix(Vna *vna, uint index, QObject *parent = 0);
+    ~VnaSwitchMatrix();
 
-    // METHODS
+    QString driver();
+    ConnectionType connectionType();
+    QString address();
+
+    bool hasTestPort(uint testPort);
+    PortMap matrixToVnaPortMap();
+    PortMap testPortToMatrixMap();
 
     void operator=(VnaSwitchMatrix const &other);
 
@@ -33,6 +41,7 @@ private:
     uint _index;
     
     bool isFullyInitialized() const;
+    QStringList defineQuery();
     
 };
 }

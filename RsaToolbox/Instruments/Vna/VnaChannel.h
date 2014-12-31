@@ -5,6 +5,7 @@
 // RsaToolbox
 #include "Definitions.h"
 #include "BalancedPort.h"
+
 #include "VnaUserDefinedPort.h"
 #include "VnaLinearSweep.h"
 #include "VnaLogSweep.h"
@@ -13,8 +14,10 @@
 #include "VnaCwSweep.h"
 #include "VnaTimeSweep.h"
 #include "VnaAveraging.h"
-#include "VnaCorrections.h"
 #include "VnaCalibrate.h"
+// * #include "VnaCorrections.h"
+// * See note at end of file
+
 
 // Qt
 #include <QString>
@@ -26,26 +29,27 @@
 
 namespace RsaToolbox {
 class Vna;
-
-enum VnaSweepType {
-    LINEAR_SWEEP,
-    LOG_SWEEP,
-    SEGMENTED_SWEEP,
-    POWER_SWEEP,
-    CW_SWEEP,
-    TIME_SWEEP };
-
-QString toScpi(VnaSweepType sweepType);
-VnaSweepType toVnaSweepType(QString scpi);
+class VnaCorrections;
 
 class VnaChannel : public QObject
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
+
+    enum /*class*/ SweepType {
+        Linear,
+        Log,
+        Segmented,
+        Power,
+        Cw,
+        Time
+    };
+
     explicit VnaChannel(QObject *parent = 0);
     VnaChannel(VnaChannel const &other);
     VnaChannel(Vna *_vna, uint index, QObject *parent = 0);
+    ~VnaChannel();
 
     uint index();
     QString name();
@@ -67,15 +71,20 @@ public:
     void continuousSweepOn(bool isOn = true);
     void manualSweepOn(bool isOn = true);
 
+    uint sweepCount();
+    void setSweepCount(uint count = 1);
+
     // Sweep
+    bool isFrequencySweep();
     bool isLinearSweep();
     bool isLogarithmicSweep();
     bool isSegmentedSweep();
     bool isPowerSweep();
     bool isCwSweep();
     bool isTimeSweep();
-    VnaSweepType sweepType();
-    void setSweepType(VnaSweepType sweepType);
+    SweepType sweepType();
+    void setSweepType(SweepType sweepType);
+    void setFrequencies(QRowVector values, SiPrefix prefix = SiPrefix::None);
 
     VnaLinearSweep &linearSweep();
     VnaLinearSweep *takeLinearSweep();
@@ -111,6 +120,14 @@ public:
 
     // Averaging
     VnaAveraging &averaging();
+
+    // Delay Offsets
+    double delayOffset_s(uint port);
+    QRowVector delayOffsets_s();
+    void setDelayOffset(uint port, double delay, SiPrefix prefix = SiPrefix::None);
+    void setDelayOffsets(QRowVector delays, SiPrefix prefix = SiPrefix::None);
+    void clearDelayOffset(uint port);
+    void clearDelayOffsets();
 
     // Corrections
     bool isCalibrated();
@@ -159,8 +176,19 @@ private:
     void userDefinedPortOn(uint physicalPort);
     void userDefinedPortOff(uint physicalPort);
 };
-}
-Q_DECLARE_METATYPE(RsaToolbox::VnaSweepType)
+} // RsaToolbox
+
+Q_DECLARE_METATYPE(RsaToolbox::VnaChannel::SweepType)
+
+// Classes that depend
+// on VnaChannel::SweepType :
+// Cannot forward declare class,
+// Must provide definition first.
+// This unusual include placement
+// allows reference in
+// child classes and header
+// inclusion in parent.
+#include "VnaCorrections.h"
 
 
 #endif // VnaChannel_H

@@ -53,9 +53,13 @@ VnaCwSweep::VnaCwSweep(Vna *vna, uint channelIndex, QObject *parent) :
     QObject(parent)
 {
     _vna = vna;
-    _channel.reset(new VnaChannel(vna, channelIndex, this));
+    _channel.reset(new VnaChannel(vna, channelIndex));
     _channelIndex = channelIndex;
 }
+VnaCwSweep::~VnaCwSweep() {
+
+}
+
 
 uint VnaCwSweep::points() {
     QString scpi = ":SENS%1:SWE:POIN?\n";
@@ -75,7 +79,7 @@ double VnaCwSweep::frequency_Hz() {
 void VnaCwSweep::setFrequency(double frequency, SiPrefix prefix) {
     QString scpi = ":SOUR%1:FREQ %2%3\n";
     scpi = scpi.arg(_channelIndex);
-    scpi = scpi.arg(frequency).arg(toString(prefix, HERTZ_UNITS));
+    scpi = scpi.arg(frequency).arg(toString(prefix, Units::Hertz));
     _vna->write(scpi);
 }
 double VnaCwSweep::power_dBm() {
@@ -96,8 +100,12 @@ void VnaCwSweep::setIfBandwidth(double bandwidth, SiPrefix prefix) {
     QString scpi = "SENS%1:BAND %2%3\n";
     scpi = scpi.arg(_channelIndex);
     scpi = scpi.arg(bandwidth);
-    scpi = scpi.arg(toString(prefix, HERTZ_UNITS));
+    scpi = scpi.arg(toString(prefix, Units::Hertz));
     _vna->write(scpi);
+}
+
+uint VnaCwSweep::sweepTime_ms() {
+    return _channel->linearSweep().sweepTime_ms();
 }
 
 

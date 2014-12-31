@@ -3,13 +3,13 @@
 # for use as a dynamically linked
 # library
 
-QT += core gui
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
+QT += core gui widgets printsupport
 
-HEADERS += $$PWD/Figure.h
-INCLUDEPATH += $$PWD
-SOURCES += $$PWD/Figure.cpp
-FORMS += $$PWD/Figure.ui
+HEADERS += $$PWD/Figure/Figure.h
+INCLUDEPATH += $$PWD \
+               $$PWD/Figure
+SOURCES += $$PWD/Figure/Figure.cpp
+FORMS += $$PWD/Figure/Figure.ui
 
 # Use library
 DEFINES += QCUSTOMPLOT_USE_LIBRARY

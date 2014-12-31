@@ -4,7 +4,8 @@
 #include "General.h"
 #include "GenericInstrument.h"
 #include "VisaBus.h"
-#include "RsibBus.h"
+#include "TcpBus.h"
+#include "NoBus.h"
 using namespace RsaToolbox;
 
 /*!
@@ -37,8 +38,7 @@ using namespace RsaToolbox;
  * \param parent Optional parent QObject
  */
 GenericInstrument::GenericInstrument(QObject *parent) :
-    QObject(parent),
-    _tempLog(this)
+    QObject(parent)
 {
     _log = &_tempLog;
     resetBus();
@@ -49,12 +49,10 @@ GenericInstrument::GenericInstrument(QObject *parent) :
  * \param parent Optional parent QObject
  */
 GenericInstrument::GenericInstrument(GenericBus *bus, QObject *parent) :
-    QObject(parent),
-    _tempLog(this)
+    QObject(parent)
 {
     _log = &_tempLog;
     resetBus(bus);
-    _bus->setParent(this);
     _bus->setBufferSize(500);
     _bus->setTimeout(1000);
 }
@@ -63,18 +61,15 @@ GenericInstrument::GenericInstrument(GenericBus *bus, QObject *parent) :
  * specified
  *
  * When using this constructor, %GenericInstrument defaults to
- * RsibBus for TCPIP connections, and VisaBus for everything else.
- * The RSIB dll can be easily deployed, and thus it is used as
- * the default. RSIB only supports TCPIP, however; VISA is used
- * for other connection types.
+ * VisaBus.
+ * Please make sure VISA is installed on the target system.
  *
  * \param type The type of connection (see ConnectionType)
  * \param address Address of the instrument (e.g. "127.0.0.1")
  * \param parent Optional parent QObject
  */
 GenericInstrument::GenericInstrument(ConnectionType type, QString address, QObject *parent) :
-    QObject(parent),
-    _tempLog(this)
+    QObject(parent)
 {
     _log = &_tempLog;
     resetBus(type, address);
@@ -89,11 +84,13 @@ GenericInstrument::GenericInstrument(ConnectionType type, QString address, QObje
  * \sa resetBus(GenericBus *bus)
  */
 void GenericInstrument::resetBus() {
-    bool wasConnected = isConnected();
+    bool emitSignal = isConnected();
+    Log *temp = _log;
     disconnectLog();
-    _bus.reset(new RsibBus(this));
+    _bus.reset(new NoBus());
     QObject::connect(_bus.data(), SIGNAL(error()), this, SIGNAL(busError()));
-    if (wasConnected)
+    _log = temp;
+    if (emitSignal)
         emit disconnected();
 }
 /*!
@@ -110,32 +107,34 @@ void GenericInstrument::resetBus() {
 void GenericInstrument::resetBus(GenericBus *bus) {
     resetBus();
     _bus.reset(bus);
-    _bus->setParent(this);
+    QObject::connect(_bus.data(), SIGNAL(error()), this, SIGNAL(busError()));
     if (isConnected()) {
         connectLog();
+        if (isLogConnected())
+            printInfo();
         emit connected();
     }
-    QObject::connect(_bus.data(), SIGNAL(error()), this, SIGNAL(busError()));
 }
 /*!
  * \brief Connects to the instrument \c type :: \c address
  * with the timeout time \c timeout_ms
  *
- * This method defaults to RsibBus for TCPIP connections
- * and VisaBus for everything else. The RSIB dll can be
- * easily deployed, and thus it is used when possible.
- * RSIB only supports TCPIP, however; VISA is used for
- * other connection types.
+ * This method defaults to VisaBus. Please make sure
+ * VISA is installed on the target system.
  * \param type The type of connection (e.g. TCPIP or GPIB)
  * \param address Address of the instrument (e.g. "127.0.0.1")
  */
 void GenericInstrument::resetBus(ConnectionType type, QString address) {
-    if (type == TCPIP_CONNECTION)
-        resetBus(new RsibBus(type, address, 500, 1000, this));
-    else if (VisaBus::isVisaPresent())
-        resetBus(new VisaBus(type, address, 500, 1000, this));
+#ifdef Q_OS_WIN32
+    resetBus(new VisaBus(type, address));
+#else
+    if (VisaBus::isVisaInstalled())
+        resetBus(new VisaBus(type, address));
+    else if (type == ConnectionType::TCPIP_CONNECTION)
+        resetBus(new TcpBus(type, address));
     else
-        resetBus();
+        resetBus(new NoBus());
+#endif
 }
 
 /*!
@@ -234,7 +233,6 @@ void GenericInstrument::connectLog() {
     }
 }
 
-
 void GenericInstrument::print(QString text) {
     *_log << text;
 }
@@ -242,36 +240,35 @@ void GenericInstrument::printLine(QString text) {
     *_log << text << endl;
 }
 void GenericInstrument::printInfo() {
-    if (_log->isOpen() == false) {
-        qDebug() << "GenericInstrument: Can\'t print info.";
+    if (!_log->isOpen())
         return;
-    }
+
     Log *tempLog = _log;
     disconnectLog();
 
     QString info;
-    QTextStream stream(&info);
-    printInfo(stream);
-    stream.flush();
+    printInfo(info);
     tempLog->print(info);
 
     useLog(tempLog);
 }
-void GenericInstrument::printInfo(QTextStream &stream) {
-    stream << "VNA INSTRUMENT INFO" << endl;
+void GenericInstrument::printInfo(QString &info) {
+    QTextStream stream(&info);
+    stream << "INSTRUMENT INFO" << endl;
+    stream << "Connection: " << toString(_bus->connectionType()) << endl;
+    stream << "Address:    " << _bus->address() << endl;
     if (isConnected()) {
         if (isRohdeSchwarz())
-            stream << "Make: Rohde & Schwarz" << endl;
+            stream << "Make:       Rohde & Schwarz" << endl;
         else
-            stream << "Make: Unknown" << endl;
-        stream << "*IDN?\n  " << idString() << endl << endl << endl;
+            stream << "Make:       Unknown" << endl;
+        stream << "Id string:  " << idString() << endl;
     }
     else {
-        stream << "Instrument not found" << endl;
-        stream << "Connection:       " << toString(_bus->connectionType()) << endl;
-        stream << "Address:          " << _bus->address() << endl << endl << endl;
+        stream << "Error:      Instrument not found!" << endl;
     }
     stream << endl << endl;
+    stream.flush();
 }
 
 /*!
@@ -291,7 +288,6 @@ void GenericInstrument::printInfo(QTextStream &stream) {
  */
 GenericBus* GenericInstrument::takeBus() {
     disconnectLog();
-    _bus->setParent(NULL);
     return(_bus.take());
     disconnected();
 }
@@ -333,6 +329,7 @@ QString GenericInstrument::address() const {
  * \brief GenericInstrument::read
  * \param buffer
  * \param bufferSize_B
+ * \param timeout_ms
  * \return
  */
 bool GenericInstrument::read(char *buffer, uint bufferSize_B, uint timeout_ms) {
@@ -707,6 +704,12 @@ void GenericInstrument::wait() {
  */
 void GenericInstrument::pause() {
     _bus->query("*OPC?\n");
+}
+void GenericInstrument::pause(uint timeout_ms) {
+    uint oldTime = _bus->timeout_ms();
+    _bus->setTimeout(timeout_ms);
+    pause();
+    _bus->setTimeout(oldTime);
 }
 
 /*!

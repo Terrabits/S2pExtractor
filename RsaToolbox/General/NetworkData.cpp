@@ -16,13 +16,13 @@ using namespace RsaToolbox;
 NetworkData::NetworkData() {
     _timestamp = QDateTime::currentDateTime();
 
-    _parameter = S_PARAMETER;
+    _parameter = NetworkParameter::S;
     _impedance_Ohms = 50;
     _ports = 0;
     _points = 0;
 
-    _xUnits = HERTZ_UNITS;
-    _xPrefix = NO_PREFIX;
+    _xUnits = Units::Hertz;
+    _xPrefix = SiPrefix::None;
 }
 NetworkData::NetworkData(const NetworkData &other) {
     _timestamp = other._timestamp;
@@ -42,19 +42,19 @@ NetworkData::NetworkData(const NetworkData &other) {
 }
 
 bool NetworkData::isSParameter() {
-    return(_parameter == S_PARAMETER);
+    return(_parameter == NetworkParameter::S);
 }
 bool NetworkData::isYParameter() {
-    return(_parameter == Y_PARAMETER);
+    return(_parameter == NetworkParameter::Y);
 }
 bool NetworkData::isZParameter() {
-    return(_parameter == Z_PARAMETER);
+    return(_parameter == NetworkParameter::Z);
 }
 bool NetworkData::isHParameter() {
-    return(_parameter == H_PARAMETER);
+    return(_parameter == NetworkParameter::H);
 }
 bool NetworkData::isGParameter() {
-    return(_parameter == G_PARAMETER);
+    return(_parameter == NetworkParameter::G);
 }
 NetworkParameter NetworkData::parameter() {
     return(_parameter);
@@ -76,6 +76,10 @@ QString NetworkData::timestamp() {
 uint NetworkData::numberOfPorts() {
     return(_ports);
 }
+void NetworkData::setNumberOfPorts(uint ports) {
+    _ports = ports;
+}
+
 QString NetworkData::portComment(uint port) {
     return(_portComments[port-1]);
 }
@@ -104,11 +108,18 @@ void NetworkData::setXUnits(Units units, SiPrefix prefix) {
 uint NetworkData::points() {
     return(_points);
 }
-QRowVector NetworkData::x() {
+QRowVector &NetworkData::x() {
     return(_x);
 }
 ComplexMatrix3D& NetworkData::y() {
     return(_y);
+}
+ComplexRowVector NetworkData::y(uint outputPort, uint inputPort) {
+    ComplexRowVector crv(_points);
+    for (uint i = 0; i < _points; i++) {
+        crv[i] = _y[i][outputPort-1][inputPort-1];
+    }
+    return(crv);
 }
 QRowVector NetworkData::y_dB(uint outputPort, uint inputPort) {
     QRowVector dB(_points);
@@ -186,12 +197,12 @@ void NetworkData::operator=(const NetworkData &other) {
 }
 
 
-QDataStream& NetworkData::operator<<(QDataStream &stream) {
+void NetworkData::write(QDataStream &stream) const {
     stream << _timestamp;
     stream << _comment;
     stream << _portComments;
 
-    stream << int(_parameter);
+    stream << qint32(_parameter);
     stream << _impedance_Ohms;
     stream << _ports;
     stream << _points;
@@ -200,15 +211,17 @@ QDataStream& NetworkData::operator<<(QDataStream &stream) {
     stream << _xUnits;
     stream << _xPrefix;
     stream << _y;
-
-    return(stream);
 }
-QDataStream& NetworkData::operator>>(QDataStream &stream) {
+QDataStream& operator<<(QDataStream &stream, const NetworkData &data) {
+    data.write(stream);
+    return stream;
+}
+void NetworkData::read(QDataStream &stream) {
     stream >> _timestamp;
     stream >> _comment;
     stream >> _portComments;
 
-    int enumInt;
+    qint32 enumInt;
     stream >> enumInt;
     _parameter = NetworkParameter(enumInt);
     stream >> _impedance_Ohms;
@@ -221,8 +234,10 @@ QDataStream& NetworkData::operator>>(QDataStream &stream) {
     stream >> enumInt;
     _xPrefix = SiPrefix(enumInt);
     stream >> _y;
-
-    return(stream);
+}
+QDataStream& operator>>(QDataStream &stream, NetworkData &data) {
+    data.read(stream);
+    return stream;
 }
 
 

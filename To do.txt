@@ -1,3 +1,8 @@
+Crash:
+getPortsDialog, getCalibrationDialog crashes when you try to update the values via RsaToolbox::Vna. Que?
+
+
+
 1. Algorithm for determining corrections with switch matrix
 
 OUT = output test port

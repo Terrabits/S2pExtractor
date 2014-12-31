@@ -27,15 +27,15 @@ namespace RsaToolbox {
 
 class Vna : public GenericInstrument
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit Vna(QObject *parent = 0);
     Vna(GenericBus *bus, QObject *parent = 0);
     Vna(ConnectionType type, QString address, QObject *parent = 0);
 
-    void printInfo();
-    void printInfo(QTextStream &stream);
+    using GenericInstrument::printInfo;
+    virtual void printInfo(QString &info);
 
     QRowVector readVector(uint bufferSize_B = 5000, uint timeout_ms = 1000);
     ComplexRowVector readComplexVector(uint bufferSize_B = 5000, uint timeout_ms = 1000);
@@ -44,8 +44,10 @@ public:
 
     // Error handling
     bool isError();
-    bool isError(QString &errorString);
-    bool isError(QStringList &errors);
+    bool nextError(QString &message);
+    bool nextError(int &code, QString &message);
+    bool errors(QStringList &messages);
+    bool errors(QList<int> &codes, QStringList &messages);
 
     // Sets
 //    void SelectSet(QString name);
@@ -55,8 +57,6 @@ public:
 //    void closeSets();
 //    void saveSet(QString name);
 //    void deleteSet(QString name);
-
-//    void startSweeps();
 
     // Properties
     VnaProperties &properties();
@@ -80,7 +80,7 @@ public:
     bool isNotCalKit(QString name, QString label);
     QVector<NameLabel> calKits();
     QVector<NameLabel> calKits(Connector type);
-    QVector<NameLabel> calKits(ConnectorType type);
+    QVector<NameLabel> calKits(Connector::Type type);
     QVector<NameLabel> calKits(QString userDefinedConnectorType);
     void importCalKit(QString pathName);
     void exportCalKit(NameLabel calkit, QString pathName);
@@ -126,6 +126,7 @@ public:
     uint numberOfTraces();
     QStringList traces();
     void createTrace(QString name, uint channel);
+    QString createTrace(uint channel);
     void deleteTrace(QString name);
     void deleteTraces(QStringList traces);
     void deleteTraces();
@@ -149,29 +150,35 @@ public:
     VnaDiagram *takeDiagrams();
 
     // Measurement
+    uint sweepTime_ms();
     void startSweeps();
 
-    // Switch Matrix
+    // Test ports
     uint testPorts();
-    bool isSwitchMatrix(uint index = 1);
-    uint numberOfSwitchMatrices();
-    QVector<uint> switchMatrices();
-    void addSwitchMatrix(uint index);
-    uint addSwitchMatrix();
-    void deleteSwitchMatrix(uint index);
-    void deleteSwitchMatrices();
+    bool isVnaPort(uint testPort);
+    uint vnaPort(uint testPort);
+    QVector<uint> vnaTestPorts();
+    PortMap testPortToVnaMap();
+
+    // Switch matrix
+    bool areSwitchMatrices();
+    uint switchMatrices();
+    bool isMatrixPort(uint testPort);
+    uint matrixWithPort(uint testPort);
+    void disconnectSwitchMatrices();
+    void removeSwitchMatrices();
     VnaSwitchMatrix &switchMatrix(uint index = 1);
     VnaSwitchMatrix *takeSwitchMatrix(uint index = 1);
 
     // Cal Unit
-    void isCalUnit(QString id);
-    uint numberOfCalUnits();
+    bool isCalUnit(QString id);
     QStringList calUnits();
     VnaCalUnit &calUnit(QString id);
     VnaCalUnit *takeCalUnit(QString id);
 
-    // QObject
-//    void moveToThread(QThread *thread);
+    // Pass/Fail
+    bool isGlobalLimitsPass();
+    bool isGlobalLimitsFail();
 
 private:
     VnaProperties _properties;

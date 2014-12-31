@@ -2,7 +2,7 @@
 #define GENERAL_H
 
 
-// Rsa
+// RsaToolbox
 #include "Definitions.h"
 
 // Qt
@@ -12,18 +12,28 @@
 #include <QVariant>
 #include <QMap>
 #include <QMapIterator>
+#include <QTextStream>
+#include <QDataStream>
 
 // C++ std lib
+#include <cfloat>
 #include <complex>
 #include <vector>
+#include <type_traits>
+#include <limits>
+
 
 namespace RsaToolbox {
 
 // Enum conversions
 double toDouble(SiPrefix prefix);
-QString toString(ComplexFormat format);
 QString toString(NetworkParameter parameter);
 QString toString(NetworkParameter parameter, uint outputPort, uint inputPort);
+QString toString(WaveQuantity wave);
+
+QString toString(ComplexFormat format);
+
+
 QString toString(SiPrefix prefix);
 QString toString(Units units);
 QString toString(SiPrefix prefix, Units units);
@@ -32,15 +42,12 @@ SiPrefix getPrefix(double value);
 
 
 // File system
-QString AppendPath(QDir path, QString filename);
-QString AppendCurrentDirectory(QString filename);
-QString GetAppDataPath(QString program_folder);
-QString AppendAppDataPath(QString program_folder, QString filename);
+QString GetAppDataPath(QString manufacturerFolder, QString applicationFolder);
 
 // Formatting Functions
-QString toScientificNotation(double value, int decimal_places, SiPrefix prefix = NO_PREFIX);
-QString formatValue(double value, int decimal_places, Units units, SiPrefix prefix = NO_PREFIX);
-QString formatDouble(double value, int decimal_places);
+QString toEngineeringNotation(double value, int decimalPlaces, SiPrefix prefix = SiPrefix::None);
+QString formatValue(double value, int decimalPlaces, Units units, SiPrefix prefix = SiPrefix::None);
+QString formatDouble(double value, int decimalPlaces);
 template <class T>
 QStringList toStringList(QVector<T> vector) {
     int size = vector.size();
@@ -63,7 +70,7 @@ QString toString(QVector<T> vector, QString separator) {
     return(list);
 }
 QString toString(QStringList list, QString separator);
-QString toString(ComplexRowVector vector, QString list_separator, QString format = "(%1, %2)");
+QString toString(ComplexRowVector vector, QString separator, QString format = "(%1, %2)");
 QStringList portLabels(QVector<uint> ports);
 QString portString(QVector<uint> ports);
 QStringList channelLabels(QVector<uint> channels);
@@ -76,6 +83,23 @@ ComplexRowVector parseComplex(QString values, QString separator, QString ignore 
 ComplexRowVector parseComplex(QRowVector values);
 QRowVector parseQRowVector(QString buffer);
 QRowVector parseQRowVector(ComplexRowVector values);
+template <class T1, class T2>
+QMap<T1, T2> parseMap(QString values, QString separator, QString ignore = "", QString::SplitBehavior splitBehavior = QString::KeepEmptyParts) {
+    QMap<T1, T2> map;
+    if (!ignore.isEmpty())
+        values = values.remove(ignore);
+    QStringList results = values.split(separator, splitBehavior);
+    int size = results.size();
+    if (size % 2 != 0)
+        return map;
+
+    for (int i = 0; i < size; i+=2) {
+        T1 key = QVariant(results[i]).value<T1>();
+        T2 value = QVariant(results[i+1]).value<T2>();
+        map.insert(key, value);
+    }
+    return map;
+}
 
 QByteArray toBlockDataFormat(QRowVector values);
 QRowVector toQRowVector(QByteArray blockData);
@@ -140,7 +164,8 @@ void roundAxis(RowVector values, double interval, double &axis_min, double &axis
 double linearInterpolateX(double x1, double y1, double x2, double y2, double y_desired);
 double linearInterpolateY(double x1, double y1, double x2, double y2, double x_desired);
 ComplexDouble linearInterpolateY(double x1, ComplexDouble y1, double x2, ComplexDouble y2, double x_desired);
-
+ComplexRowVector linearInterpolateReIm(QRowVector x, ComplexRowVector y, QRowVector xDesired);
+ComplexRowVector linearInterpolateMagPhase(QRowVector x, ComplexRowVector y, QRowVector xDesired);
 
 ComplexRowVector exp(ComplexRowVector x);
 double sum(QRowVector x);
@@ -235,7 +260,7 @@ QMap<T,V> cascade(QMap<T,U> a, QMap<U,V> b) {
 template <class T>
 T max(QVector<T> vector) {
     if (vector.size() == 0)
-        return(NULL);
+        return(std::numeric_limits<T>::min());
 
     T _max = vector.first();
     for (int i = 1; i < vector.size(); i++) {
@@ -262,7 +287,7 @@ void max(QVector<T> vector, T &maximum, int &index) {
 template <class T>
 T max(std::vector<T> vector) {
     if (vector.size() == 0)
-        return(NULL);
+        return(std::numeric_limits<T>::min());
 
     T _max = vector[0];
     for (uint i = 1; i < vector.size(); i++) {
@@ -289,7 +314,7 @@ void max(std::vector<T> vector, T &maximum, int &index) {
 template <class T>
 T min(QVector<T> vector) {
     if (vector.size() == 0)
-        return(NULL);
+        return(std::numeric_limits<T>::max());
 
     T _min = vector.first();
     for (int i = 1; i < vector.size(); i++) {
@@ -316,7 +341,7 @@ void min(QVector<T> vector, T &minimum, int &index) {
 template <class T>
 T min(std::vector<T> vector) {
     if (vector.size() == 0)
-        return(NULL);
+        return(std::numeric_limits<T>::max());
 
     T _min = vector[0];
     for (uint i = 1; i < vector.size(); i++) {
@@ -342,6 +367,43 @@ T min(std::vector<T> vector, T &minimum, int &index) {
 }
 }
 
+// Enum serialization
+//QDataStream &operator<<(QDataStream &stream, const RsaToolbox::Units &units);
+//QDataStream &operator<<(QDataStream &stream, const RsaToolbox::SiPrefix &prefix);
+
+//QDataStream &operator>>(QDataStream &stream, RsaToolbox::Units &units);
+//QDataStream &operator>>(QDataStream &stream, RsaToolbox::SiPrefix &prefix);
+
+//// Enum text stream operators
+//QTextStream &operator<<(QTextStream &stream, const RsaToolbox::Units &units);
+//QTextStream &operator<<(QTextStream &stream, const RsaToolbox::SiPrefix &prefix);
+
+
+// Using templates:
+template <class T>
+QDataStream& operator<<(QDataStream &stream, const T &t) {
+    static_assert(std::is_enum<T>::value, "Template type is not enum.");
+    stream << qint32(t);
+    return stream;
+}
+template <class T>
+QDataStream& operator>>(QDataStream &stream, T &t) {
+    static_assert(std::is_enum<T>::value, "Template type is not enum.");
+    qint32 value;
+    stream >> value;
+    t = T(value);
+    return stream;
+}
+
+template <class T>
+QTextStream& operator<<(QTextStream &stream, const T &t) {
+    static_assert(std::is_enum<T>::value, "Template type is not enum.");
+    stream << toString(t);
+    return stream;
+}
+
+
+// Data type stream operators
 QDataStream& operator<<(QDataStream &stream, RsaToolbox::ComplexDouble value);
 QDataStream& operator<<(QDataStream &stream, RsaToolbox::ComplexRowVector vector);
 QDataStream& operator<<(QDataStream &stream, RsaToolbox::ComplexMatrix2D matrix);

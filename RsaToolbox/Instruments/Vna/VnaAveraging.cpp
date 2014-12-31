@@ -50,11 +50,15 @@ VnaAveraging::VnaAveraging(Vna *vna, uint channelIndex, QObject *parent) :
     _channel.reset(new VnaChannel(vna, channelIndex, this));
     _channelIndex = channelIndex;
 }
+VnaAveraging::~VnaAveraging() {
+
+}
+
 
 bool VnaAveraging::isOn() {
     QString scpi = ":SENS%1:AVER?\n";
     scpi = scpi.arg(_channelIndex);
-    return(_vna->query(scpi) == "1");
+    return(_vna->query(scpi).trimmed() == "1");
 }
 bool VnaAveraging::isOff() {
     return(!isOn());
@@ -85,7 +89,7 @@ void VnaAveraging::setNumber(uint numberOfAverages) {
 uint VnaAveraging::number() {
     QString scpi = ":SENS%1:AVER:COUN?\n";
     scpi = scpi.arg(_channelIndex);
-    return(_vna->query(scpi).toUInt());
+    return(_vna->query(scpi).trimmed().toUInt());
 }
 
 void VnaAveraging::operator=(VnaAveraging const &other) {

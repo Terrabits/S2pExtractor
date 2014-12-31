@@ -53,8 +53,11 @@ VnaPowerSweep::VnaPowerSweep(Vna *vna, uint index, QObject *parent) :
     QObject(parent)
 {
     _vna = vna;
-    _channel.reset(new VnaChannel(vna, index, this));
+    _channel.reset(new VnaChannel(vna, index));
     _channelIndex = index;
+}
+VnaPowerSweep::~VnaPowerSweep() {
+
 }
 
 
@@ -101,7 +104,7 @@ double VnaPowerSweep::frequency_Hz() {
 void VnaPowerSweep::setFrequency(double frequency, SiPrefix prefix) {
     QString scpi = ":SOUR%1:FREQ %2%3\n";
     scpi = scpi.arg(_channelIndex);
-    scpi = scpi.arg(frequency).arg(toString(prefix, HERTZ_UNITS));
+    scpi = scpi.arg(frequency).arg(toString(prefix, Units::Hertz));
     _vna->write(scpi);
 }
 double VnaPowerSweep::ifBandwidth_Hz() {
@@ -113,8 +116,27 @@ void VnaPowerSweep::setIfbandwidth(double bandwidth, SiPrefix prefix) {
     QString scpi = "SENS%1:BAND %2%3\n";
     scpi = scpi.arg(_channelIndex);
     scpi = scpi.arg(bandwidth);
-    scpi = scpi.arg(toString(prefix, HERTZ_UNITS));
+    scpi = scpi.arg(toString(prefix, Units::Hertz));
     _vna->write(scpi);
+}
+
+bool VnaPowerSweep::isAutoSweepTimeOn() {
+    return _channel->linearSweep().isAutoSweepTimeOn();
+}
+bool VnaPowerSweep::isAutoSweepTimeOff() {
+    return _channel->linearSweep().isAutoSweepTimeOff();
+}
+void VnaPowerSweep::autoSweepTimeOn(bool isOn) {
+    _channel->linearSweep().autoSweepTimeOn(isOn);
+}
+void VnaPowerSweep::autoSweepTimeOff(bool isOff) {
+    _channel->linearSweep().autoSweepTimeOff(isOff);
+}
+uint VnaPowerSweep::sweepTime_ms() {
+    return _channel->linearSweep().sweepTime_ms();
+}
+void VnaPowerSweep::setSweepTime(uint time_ms) {
+    _channel->linearSweep().setSweepTime(time_ms);
 }
 
 void VnaPowerSweep::operator=(VnaPowerSweep const &other) {

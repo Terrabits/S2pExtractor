@@ -5,42 +5,73 @@
 #include "mainwindow.h"
 
 // RsaToolbox
-#include "Log.h"
+#include "Definitions.h"
+#include "General.h"
 #include "Vna.h"
-#include "Key.h"
+#include "Log.h"
+#include "Keys.h"
+#include "About.h"
 using namespace RsaToolbox;
 
 // Qt
+#include <QDebug>
 #include <QString>
 #include <QApplication>
 #include <QMessageBox>
 
 
+bool isAboutMenu(int argc, char *argv[]);
 bool isNoConnection(Vna &vna);
 bool isUnknownModel(Vna &vna);
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    Log log(LOG_PATH, LOG_FILENAME, APP_NAME, APP_VERSION);
-    log.printApplicationHeader();
+    if (isAboutMenu(argc, argv))
+        return 0;
+
+    Log log(LOG_FILENAME, APP_NAME, APP_VERSION);
+    log.printHeader();
 
     Vna vna(CONNECTION_TYPE, INSTRUMENT_ADDRESS);
     vna.useLog(&log);
     vna.printInfo();
 
-    Key key(KEY_PATH);
+    Keys keys(KEY_PATH);
 
     if (isNoConnection(vna) || isUnknownModel(vna))
         return(0);
 
-    MainWindow w(vna, key);
+    qDebug() << "Constructing window...";
+    MainWindow w(vna, keys);
+    qDebug() << "Constructed.";
     w.setWindowFlags(w.windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowStaysOnTopHint);
     w.show();
+    qDebug() << "a.exec():";
     return a.exec();
 }
 
 
+bool isAboutMenu(int argc, char *argv[]) {
+    if (argc != 2)
+        return false;
+
+    QString arg(argv[1]);
+    arg = arg.trimmed().toUpper();
+    if (arg == "-ABOUT" || arg == "--ABOUT") {
+        Q_INIT_RESOURCE(AboutResources);
+        About about;
+        about.setAppName(APP_NAME);
+        about.setVersion(APP_VERSION);
+        about.setDescription(APP_DESCRIPTION);
+        about.setContactInfo(CONTACT_INFO);
+        about.exec();
+        return true;
+    }
+
+    return false;
+}
 bool isNoConnection(Vna &vna) {
     if (vna.isDisconnected()) {
         QString error_message

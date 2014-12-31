@@ -18,13 +18,14 @@ class VnaSegmentedSweep;
 
 class VnaSweepSegment : public QObject
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit VnaSweepSegment(QObject *parent = 0);
     VnaSweepSegment(VnaSweepSegment &other);
     VnaSweepSegment(Vna *vna, VnaChannel *channel, uint index, QObject *parent = 0);
     VnaSweepSegment(Vna *vna, uint channelIndex, uint segmentIndex, QObject *parent = 0);
+    ~VnaSweepSegment();
 
     bool isOn();
     bool isOff();
@@ -33,10 +34,10 @@ public:
     uint points();
     void setPoints(uint numberOfPoints);
     double start_Hz();
-    void setStart(double frequency, SiPrefix prefix = NO_PREFIX);
+    void setStart(double frequency, SiPrefix prefix = SiPrefix::None);
     double stop_Hz();
-    void setStop(double frequency, SiPrefix prefix = NO_PREFIX);
-    void setSingleFrequency(double frequency, SiPrefix prefix = NO_PREFIX);
+    void setStop(double frequency, SiPrefix prefix = SiPrefix::None);
+    void setSingleFrequency(double frequency, SiPrefix prefix = SiPrefix::None);
 
     void operator=(VnaSweepSegment const &other);
 

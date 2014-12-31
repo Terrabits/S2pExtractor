@@ -15,25 +15,31 @@
 
 namespace RsaToolbox {
 
-enum ConnectionType {
+
+enum /*class*/ ConnectionType {
     TCPIP_CONNECTION,
     GPIB_CONNECTION,
     USB_CONNECTION,
-    NO_CONNECTION };
-QString toString(ConnectionType connection_type);
+    NO_CONNECTION
+};
+QString toString(ConnectionType connectionType);
 ConnectionType toConnectionType(QString scpi);
+QString toVisaInstrumentResource(ConnectionType type, QString address);
+void nullTerminate(char *buffer, uint bufferSize_B, uint bytesUsed);
+
 
 class GenericBus : public QObject {
-private: Q_OBJECT
+
+    Q_OBJECT
 
 public:
-    GenericBus(QObject *parent = 0);
+    explicit GenericBus(QObject *parent = 0);
     GenericBus(ConnectionType connectionType, QString address,
                uint bufferSize_B = 500, uint timeout_ms = 1000,
                QObject *parent = 0);
 
     virtual bool isOpen() const = 0;
-    bool isClosed() const;
+    virtual bool isClosed() const;
 
     ConnectionType connectionType() const;
     QString address() const;
@@ -44,42 +50,41 @@ public:
     uint timeout_ms() const;
     virtual void setTimeout(uint time_ms);
 
-    bool read(char *buffer, uint bufferSize_B);
+    virtual bool read(char *buffer, uint bufferSize_B) = 0;
     QString read();
-    void write(QString scpiCommand);
-    QString query(QString scpiCommand);
+    virtual bool write(QString scpi) = 0;
+    QString query(QString scpi);
 
-    bool binaryRead(char *buffer, uint bufferSize_B, uint &bytesRead);
+    virtual bool binaryRead(char *buffer, uint bufferSize_B, uint &bytesRead) = 0;
     QByteArray binaryRead();
-    void binaryWrite(QByteArray scpiCommand);
-    QByteArray binaryQuery(QByteArray scpiCommand);
+    virtual bool binaryWrite(QByteArray scpi) = 0;
+    QByteArray binaryQuery(QByteArray scpi);
+
+    virtual QString status() const = 0;
 
 public slots:
+    // Reimplement:
     virtual bool lock() = 0;
     virtual bool unlock() = 0;
     virtual bool local() = 0;
     virtual bool remote()  = 0;
-
-    virtual void printStatus() const = 0;
 
 signals:
     void error() const;
     void print(QString text) const;
 
 protected:
+    static const int MAX_PRINT = 100;
+    void printRead(char *buffer, uint bytesRead) const;
+    void printWrite(QString scpi) const;
+
+private:
     ConnectionType _connectionType;
     QString _address;
-    uint _bufferSize_B;
     uint _timeout_ms;
 
+    uint _bufferSize_B;
     QScopedArrayPointer<char> _buffer;
-
-    virtual bool _read(char *buffer, uint bufferSize) = 0;
-    virtual bool _write(QString scpiCommand) = 0;
-
-    virtual bool _binaryRead(char *buffer, uint bufferSize,
-                             uint &bytesRead) = 0;
-    virtual bool _binaryWrite(QByteArray scpiCommand) = 0;
 };
 }
 Q_DECLARE_METATYPE(RsaToolbox::ConnectionType)

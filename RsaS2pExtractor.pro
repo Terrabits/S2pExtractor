@@ -13,29 +13,26 @@
 #-------------------------------------------------
 
 
-QT      += core gui
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-TARGET = RsaDeembed
-TEMPLATE = app
+QT       += core gui widgets
+TARGET   =  RsaDeembed
+TEMPLATE =  app
 
 include(RsaToolbox/rsatoolbox.pri)
-
-SOURCES +=  main.cpp \
-            mainwindow.cpp \
-    getCalibrationDialog.cpp \
-    getPortsDialog.cpp \
-    getFilenamesDialog.cpp
-HEADERS  += Settings.h \
-            mainwindow.h \
-    getCalibrationDialog.h \
-    getPortsDialog.h \
-    getFilenamesDialog.h
-FORMS    += mainwindow.ui \
-    getCalibrationDialog.ui \
-    getPortsDialog.ui \
-    getFilenamesDialog.ui
-RESOURCES += Resources.qrc
+SOURCES    +=  main.cpp \
+               mainwindow.cpp \
+               getCalibrationDialog.cpp \
+               getPortsDialog.cpp \
+               getFilenamesDialog.cpp
+HEADERS     += Settings.h \
+               mainwindow.h \
+               getCalibrationDialog.h \
+               getPortsDialog.h \
+               getFilenamesDialog.h
+FORMS       += mainwindow.ui \
+               getCalibrationDialog.ui \
+               getPortsDialog.ui \
+               getFilenamesDialog.ui
+RESOURCES   += Resources.qrc
 OTHER_FILES += VS2010Resources.rc \
                DEBUG_LOGFILE.txt
 

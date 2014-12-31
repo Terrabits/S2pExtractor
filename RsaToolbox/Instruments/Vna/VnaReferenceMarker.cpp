@@ -56,6 +56,9 @@ VnaReferenceMarker::VnaReferenceMarker(Vna *vna, QString traceName, QObject *par
     _trace.reset(new VnaTrace(vna, traceName));
     _traceName = traceName;
 }
+VnaReferenceMarker::~VnaReferenceMarker() {
+
+}
 
 
 bool VnaReferenceMarker::isOn() {
@@ -63,7 +66,7 @@ bool VnaReferenceMarker::isOn() {
 
     QString scpi = ":CALC%1:MARK:REF?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi) == "1");
+    return(_vna->query(scpi).trimmed() == "1");
 }
 void VnaReferenceMarker::on(bool isOn) {
     _trace->select();
@@ -88,7 +91,7 @@ QString VnaReferenceMarker::name() {
 
     QString scpi = ":CALC%1:MARK:REF:NAME?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi).remove('\''));
+    return(_vna->query(scpi).trimmed().remove('\''));
 }
 void VnaReferenceMarker::setName(QString name) {
     _trace->select();
@@ -104,14 +107,14 @@ double VnaReferenceMarker::x() {
 
     QString scpi = ":CALC%1:MARK:REF:X?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi).toDouble());
+    return(_vna->query(scpi).trimmed().toDouble());
 }
 double VnaReferenceMarker::y() {
     _trace->select();
 
     QString scpi = ":CALC%1:MARK:REF:Y?\n";
     scpi = scpi.arg(_trace->channel());
-    return(_vna->query(scpi).toDouble());
+    return(_vna->query(scpi).trimmed().toDouble());
 }
 void VnaReferenceMarker::coordinates(double &x, double &y) {
     x = this->x();

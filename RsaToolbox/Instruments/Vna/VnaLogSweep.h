@@ -17,30 +17,38 @@ class VnaChannel;
 
 class VnaLogSweep : public QObject
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit VnaLogSweep(QObject *parent = 0);
     VnaLogSweep(VnaLogSweep &other);
     VnaLogSweep(Vna *vna, VnaChannel *channel, QObject *parent = 0);
     VnaLogSweep(Vna *vna, uint channelIndex, QObject *parent = 0);
+    ~VnaLogSweep();
 
     uint points();
     void setPoints(uint numberOfPoints);
     double start_Hz();
-    void setStart(double frequency, SiPrefix prefix = NO_PREFIX);
+    void setStart(double frequency, SiPrefix prefix = SiPrefix::None);
     double stop_Hz();
-    void setStop(double frequency, SiPrefix prefix = NO_PREFIX);
+    void setStop(double frequency, SiPrefix prefix = SiPrefix::None);
     QVector<double> frequencies_Hz();
     double power_dBm();
     void setPower(double power_dBm);
     double ifBandwidth_Hz();
-    void setIfbandwidth(double bandwidth, SiPrefix prefix = NO_PREFIX);
+    void setIfbandwidth(double bandwidth, SiPrefix prefix = SiPrefix::None);
 
     QVector<uint> sParameterGroup();
     void setSParameterGroup(QVector<uint> ports);
     void clearSParameterGroup();
     ComplexMatrix3D readSParameterGroup();
+
+    bool isAutoSweepTimeOn();
+    bool isAutoSweepTimeOff();
+    void autoSweepTimeOn(bool isOn = true);
+    void autoSweepTimeOff(bool isOff = true);
+    uint sweepTime_ms();
+    void setSweepTime(uint time_ms);
 
     NetworkData measure(uint port1);
     NetworkData measure(uint port1, uint port2);

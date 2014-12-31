@@ -18,13 +18,14 @@ class VnaChannel;
 
 class VnaSegmentedSweep : public QObject
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit VnaSegmentedSweep(QObject *parent = 0);
     VnaSegmentedSweep(VnaSegmentedSweep &other);
     VnaSegmentedSweep(Vna *vna, VnaChannel *channel, QObject *parent = 0);
     VnaSegmentedSweep(Vna *vna, uint channelIndex, QObject *parent = 0);
+    ~VnaSegmentedSweep();
 
     uint points();
     double start_Hz();
@@ -33,18 +34,25 @@ public:
     double power_dBm();
     void setPower(double power_dBm);
     double ifBandwidth_Hz();
-    void setIfbandwidth(double bandwidth, SiPrefix prefix = NO_PREFIX);
+    void setIfbandwidth(double bandwidth, SiPrefix prefix = SiPrefix::None);
 
     uint segments();
     uint addSegment();
-    void removeSegment(uint index);
-    void removeSegments();
+    void deleteSegment(uint index);
+    void deleteSegments();
     VnaSweepSegment &segment(uint index);
 
     QVector<uint> sParameterGroup();
     void setSParameterGroup(QVector<uint> ports);
     void clearSParameterGroup();
     ComplexMatrix3D readSParameterGroup();
+
+    bool isAutoSweepTimeOn();
+    bool isAutoSweepTimeOff();
+    void autoSweepTimeOn(bool isOn = true);
+    void autoSweepTimeOff(bool isOff = true);
+    uint sweepTime_ms();
+    void setSweepTime(uint time_ms);
 
     NetworkData measure(uint port1);
     NetworkData measure(uint port1, uint port2);

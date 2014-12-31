@@ -31,6 +31,9 @@ VnaSettings::VnaSettings(Vna *vna, QObject *parent) :
 {
     this->_vna = vna;
 }
+VnaSettings::~VnaSettings() {
+
+}
 
 void VnaSettings::setIdString(QString idString) {
     if (_vna->properties().isZvaFamily()) {
@@ -79,7 +82,7 @@ void VnaSettings::resetOptionsString() {
 
 bool VnaSettings::isRead32BitBinaryFormat() {
     QStringList result
-            = _vna->query(":FORM?\n").toUpper().split(",");
+            = _vna->query(":FORM?\n").trimmed().toUpper().split(",");
     if (result.first() == "REAL") {
         uint bit = result.last().toUInt();
         return(bit == uint(32));
@@ -92,7 +95,7 @@ void VnaSettings::setRead32BitBinaryFormat() {
 }
 bool VnaSettings::isRead64BitBinaryFormat() {
     QStringList result
-            = _vna->query(":FORM?\n").toUpper().split(",");
+            = _vna->query(":FORM?\n").trimmed().toUpper().split(",");
     if (result.first() == "REAL") {
         uint bit = result.last().toUInt();
         return(bit == uint(64));
@@ -105,14 +108,14 @@ void VnaSettings::setRead64BitBinaryFormat() {
 }
 bool VnaSettings::isReadAsciiFormat() {
     QStringList result
-            = _vna->query(":FORM?\n").toUpper().split(",");
+            = _vna->query(":FORM?\n").trimmed().toUpper().split(",");
     return(result.first() == "ASC");
 }
 bool VnaSettings::isLittleEndian() {
-    return(_vna->query(":FORM:BORD?\n").toUpper() == "SWAP");
+    return(_vna->query(":FORM:BORD?\n").trimmed().toUpper() == "SWAP");
 }
 bool VnaSettings::isBigEndian() {
-    return(_vna->query(":FORM:BORD?\n").toUpper() == "NORM");
+    return(_vna->query(":FORM:BORD?\n").trimmed().toUpper() == "NORM");
 }
 void VnaSettings::setReadAsciiFormat() {
     _vna->write(":FORM ASC\n");
@@ -125,24 +128,24 @@ void VnaSettings::setBigEndian() {
 }
 
 bool VnaSettings::isEmulationOn() {
-    return(emulationMode() != NO_EMULATION);
+    return(emulationMode() != EmulationMode::Off);
 }
-bool VnaSettings::isEmulationMode(VnaEmulationMode mode) {
+bool VnaSettings::isEmulationMode(EmulationMode mode) {
     return(emulationMode() == mode);
 }
 bool VnaSettings::isEmulationOff() {
-    return(emulationMode() == NO_EMULATION);
+    return(emulationMode() == EmulationMode::Off);
 }
-VnaEmulationMode VnaSettings::emulationMode() {
+VnaSettings::EmulationMode VnaSettings::emulationMode() {
     return(toVnaEmulationMode(
-               _vna->query(":SYST:LANG?\n").remove("\'")));
+               _vna->query(":SYST:LANG?\n").trimmed().remove("\'")));
 }
-void VnaSettings::setEmulationMode(VnaEmulationMode mode) {
+void VnaSettings::setEmulationMode(EmulationMode mode) {
     _vna->write(
           QString(":SYST:LANG \'%1\'\n").arg(toScpi(mode)));
 }
 void VnaSettings::setEmulationOff() {
-    setEmulationMode(NO_EMULATION);
+    setEmulationMode(EmulationMode::Off);
 }
 
 bool VnaSettings::isDisplayOn() {
@@ -154,10 +157,16 @@ bool VnaSettings::isDisplayOff() {
 }
 
 void VnaSettings::displayOn(bool isOn) {
+    // Bug in ZNB firmware:
+    // SYST:DISP:UPD 1 is interepreted the
+    // same as
+    // SYST:DISP:UPD ONCE
+    // Oooooops!
+
     if (isOn)
-        _vna->write(":SYST:DISP:UPD 1\n");
+        _vna->write(":SYST:DISP:UPD ON\n");
     else
-        _vna->write(":SYST:DISP:UPD 0\n");
+        _vna->write(":SYST:DISP:UPD OFF\n");
 }
 void VnaSettings::displayOff(bool isOff) {
     displayOn(!isOff);
@@ -186,28 +195,28 @@ void VnaSettings::errorDisplayOff(bool isOff) {
     errorDisplayOn(!isOff);
 }
 
-bool VnaSettings::isColorScheme(VnaColorScheme scheme) {
+bool VnaSettings::isColorScheme(ColorScheme scheme) {
     return(colorScheme() == scheme);
 }
-VnaColorScheme VnaSettings::colorScheme() {
-    QString scpi = _vna->query(":SYST:DISP:COL?\n");
+VnaSettings::ColorScheme VnaSettings::colorScheme() {
+    QString scpi = _vna->query(":SYST:DISP:COL?\n").trimmed();
     return(toColorScheme(scpi));
 }
-void VnaSettings::setColorScheme(VnaColorScheme scheme) {
+void VnaSettings::setColorScheme(ColorScheme scheme) {
     QString scpi
             = QString(":SYST:DISP:COL %1\n").arg(
                 toScpi(scheme));
     _vna->write(scpi);
 }
 void VnaSettings::setDefaultColorScheme() {
-    setColorScheme(DARK_BACKGROUND);
+    setColorScheme(ColorScheme::Dark);
 }
 
 bool VnaSettings::isFontSize(uint size_percent) {
     return(fontSize_percent() == size_percent);
 }
 uint VnaSettings::fontSize_percent() {
-    return(QString(_vna->query(":DISP:RFS?\n")).toInt());
+    return(QString(_vna->query(":DISP:RFS?\n")).trimmed().toInt());
 }
 void VnaSettings::setFontSize(uint size_percent) {
     QString scpi = QString(":DISP:RFS %1\n").arg(size_percent);
@@ -234,7 +243,7 @@ void VnaSettings::userPresetOff(bool isOff) {
 }
 QString VnaSettings::userPreset() {
     ;
-    return(_vna->query(":SYST:PRES:USER:NAME?\n").remove("\'"));
+    return(_vna->query(":SYST:PRES:USER:NAME?\n").trimmed().remove("\'"));
 }
 void VnaSettings::setUserPreset(QString setFilePath) {
     QString scpi = ":SYST:PRES:USER:NAME \'%1\'\n";
@@ -273,7 +282,7 @@ QString VnaSettings::calibrationPreset() {
         return(QString());
     }
 
-    return(_vna->query(":SYST:PRES:USER:CAL?\n").remove("\'"));
+    return(_vna->query(":SYST:PRES:USER:CAL?\n").trimmed().remove("\'"));
 }
 void VnaSettings::setCalibrationPreset(QString calibrationFilePath) {
     if (_vna->properties().isZvaFamily()) {
@@ -336,7 +345,7 @@ void VnaSettings::portPowerLimitsOff(bool isOff) {
 double VnaSettings::portPowerLimit_dBm(uint physicalPort) {
     QString scpi = ":SOUR:POW%1:LLIM:VAL?\n";
     scpi = scpi.arg(physicalPort);
-    return(_vna->query(scpi).toDouble());
+    return(_vna->query(scpi).trimmed().toDouble());
 }
 void VnaSettings::portPowerLimits(QVector<uint> &physicalPorts, QVector<double> limits_dBm) {
     Q_UNUSED(physicalPorts);
@@ -434,78 +443,78 @@ void VnaSettings::remoteLogOff(bool isOff) {
 }
 
 // Private
-QString VnaSettings::toScpi(VnaEmulationMode mode) {
+QString VnaSettings::toScpi(EmulationMode mode) {
     switch(mode) {
-    case NO_EMULATION:
+    case EmulationMode::Off:
         return("SCPI");
-    case PNA_EMULATION:
+    case EmulationMode::Pna:
         return("PNA");
-    case HP_8510_EMULATION:
+    case EmulationMode::Hp8510:
         return("HP8510");
-    case HP_8720_EMULATION:
+    case EmulationMode::Hp8720:
         return("HP8720");
-    case HP_8753_EMULATION:
+    case EmulationMode::Hp8753:
         return("HP8753");
-    case HP_8714_EMULATION:
+    case EmulationMode::Hp8714:
         return("HP8714");
-    case ZVR_EMULATION:
+    case EmulationMode::Zvr:
         return("ZVR");
-    case HP_8530_EMULATION:
+    case EmulationMode::Hp8530:
         return("HP8530");
-    case ENA_EMULATION:
+    case EmulationMode::Ena:
         return("ENA");
-    case ZVABT_EMULATION:
+    case EmulationMode::Zvabt:
         return("ZVABT");
     default:
         return("SCPI");
     }
 }
-VnaEmulationMode VnaSettings::toVnaEmulationMode(QString scpi) {
+VnaSettings::EmulationMode VnaSettings::toVnaEmulationMode(QString scpi) {
     scpi = scpi.toUpper();
     if (scpi == "SCPI")
-        return(NO_EMULATION);
+        return(EmulationMode::Off);
     if (scpi == "PNA")
-        return(PNA_EMULATION);
+        return(EmulationMode::Pna);
     if (scpi == "HP8510")
-        return(HP_8510_EMULATION);
+        return(EmulationMode::Hp8510);
     if (scpi == "HP8720")
-        return(HP_8720_EMULATION);
+        return(EmulationMode::Hp8720);
     if (scpi == "HP8753")
-        return(HP_8753_EMULATION);
+        return(EmulationMode::Hp8753);
     if (scpi == "HP8714")
-        return(HP_8714_EMULATION);
+        return(EmulationMode::Hp8714);
     if (scpi == "ZVR")
-        return(ZVR_EMULATION);
+        return(EmulationMode::Zvr);
     if (scpi == "ZVABT")
-        return(ZVABT_EMULATION);
+        return(EmulationMode::Zvabt);
     // default
-    return(NO_EMULATION);
+    return(EmulationMode::Off);
 }
 
-QString VnaSettings::toScpi(VnaColorScheme scheme) {
+QString VnaSettings::toScpi(ColorScheme scheme) {
     switch(scheme) {
-    case DARK_BACKGROUND:
+    case ColorScheme::Dark:
         return("DBAC");
-    case LIGHT_BACKGROUND:
+    case ColorScheme::Light:
         return("LBAC");
-    case BLACK_WHITE_OUTLINE_BACKGROUND:
+    case ColorScheme::BlackWhiteOutline:
         return("BWLS");
-    case BLACK_WHITE_SOLID_BACKGROUND:
+    case ColorScheme::BlackWhiteSolid:
         return("BWS");
     default:
         return("DBAC");
     }
 }
-VnaColorScheme VnaSettings::toColorScheme(QString scpi) {
+VnaSettings::ColorScheme VnaSettings::toColorScheme(QString scpi) {
     scpi = scpi.toUpper();
     if(scpi == "DBAC")
-        return(DARK_BACKGROUND);
+        return(ColorScheme::Dark);
     if(scpi == "LBAC")
-        return(LIGHT_BACKGROUND);
+        return(ColorScheme::Light);
     if(scpi == "BWLS")
-        return(BLACK_WHITE_OUTLINE_BACKGROUND);
+        return(ColorScheme::BlackWhiteOutline);
     if(scpi == "BWS")
-        return(BLACK_WHITE_SOLID_BACKGROUND);
+        return(ColorScheme::BlackWhiteSolid);
     // Default
-    return(DARK_BACKGROUND);
+    return(ColorScheme::Dark);
 }

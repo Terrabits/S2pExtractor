@@ -1,12 +1,13 @@
+#include "VnaSwitchMatrix.h"
 
 
 // RsaToolbox includes
-#include "VnaSwitchMatrix.h"
+#include "General.h"
 #include "Vna.h"
 using namespace RsaToolbox;
 
-// Qt includes
-// #include <Qt>
+// Qt
+#include <QDebug>
 
 /*!
  * \class RsaToolbox::VnaSwitchMatrix
@@ -43,8 +44,49 @@ VnaSwitchMatrix::VnaSwitchMatrix(Vna *vna, uint index, QObject *parent) :
     _vna = vna;
     _index = index;
 }
+VnaSwitchMatrix::~VnaSwitchMatrix() {
 
-// Etc
+}
+
+
+QString VnaSwitchMatrix::driver() {
+    QStringList result = defineQuery();
+    if (result.size() < 4)
+        return "";
+
+    return result[1];
+}
+ConnectionType VnaSwitchMatrix::connectionType() {
+    QStringList result = defineQuery();
+    if (result.size() < 4)
+        return NO_CONNECTION;
+
+    return VnaScpi::toMatrixConnection(result[2]);
+}
+QString VnaSwitchMatrix::address() {
+    QStringList result = defineQuery();
+    if (result.size() < 4)
+        return "";
+
+    return result[3];
+}
+
+bool VnaSwitchMatrix::hasTestPort(uint testPort) {
+    return testPortToMatrixMap().contains(testPort);
+}
+
+PortMap VnaSwitchMatrix::matrixToVnaPortMap() {
+    QString scpi = ":SYST:COMM:RDEV:SMAT%1:CONF:MVNA?\n";
+    scpi = scpi.arg(_index);
+    QString result = _vna->query(scpi).trimmed();
+    return RsaToolbox::parseMap<uint,uint>(result, ",");
+}
+PortMap VnaSwitchMatrix::testPortToMatrixMap() {
+    QString scpi = ":SYST:COMM:RDEV:SMAT%1:CONF:MTES?\n";
+    scpi = scpi.arg(_index);
+    QString result = _vna->query(scpi).trimmed();
+    return RsaToolbox::parseMap<uint,uint>(result, ",");
+}
 
 void VnaSwitchMatrix::operator=(VnaSwitchMatrix const &other) {
     if (other.isFullyInitialized()) {
@@ -67,4 +109,14 @@ bool VnaSwitchMatrix::isFullyInitialized() const {
 
     //else
     return(true);
+}
+QStringList VnaSwitchMatrix::defineQuery() {
+    QString scpi = ":SYST:COMM:RDEV:SMAT%1:DEF?\n";
+    scpi = scpi.arg(_index);
+
+    // result[0]: Unused/Empty;
+    // result[1]: Driver (usually switch matrix model)
+    // result[2]: Interface (LAN, USB)
+    // result[3]: Address (eg "127.0.0.1");
+    return _vna->query(scpi).trimmed().remove("\'").split(",",QString::KeepEmptyParts);
 }

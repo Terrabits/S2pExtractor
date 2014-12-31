@@ -56,6 +56,9 @@ VnaLogSweep::VnaLogSweep(Vna *vna, uint index, QObject *parent) :
     _channel.reset(new VnaChannel(vna, index, this));
     _channelIndex = index;
 }
+VnaLogSweep::~VnaLogSweep() {
+
+}
 
 
 uint VnaLogSweep::points() {
@@ -76,7 +79,7 @@ double VnaLogSweep::start_Hz() {
 void VnaLogSweep::setStart(double frequency, SiPrefix prefix) {
     QString scpi = ":SENS%1:FREQ:STAR %2%3\n";
     scpi = scpi.arg(_channelIndex);
-    scpi = scpi.arg(frequency).arg(toString(prefix, HERTZ_UNITS));
+    scpi = scpi.arg(frequency).arg(toString(prefix, Units::Hertz));
     _vna->write(scpi);
 }
 double VnaLogSweep::stop_Hz() {
@@ -87,14 +90,14 @@ double VnaLogSweep::stop_Hz() {
 void VnaLogSweep::setStop(double frequency, SiPrefix prefix) {
     QString scpi = ":SENS%1:FREQ:STOP %2%3\n";
     scpi = scpi.arg(_channelIndex);
-    scpi = scpi.arg(frequency).arg(toString(prefix, HERTZ_UNITS));
+    scpi = scpi.arg(frequency).arg(toString(prefix, Units::Hertz));
     _vna->write(scpi);
 }
 QVector<double> VnaLogSweep::frequencies_Hz() {
     QString scpi = ":CALC%1:DATA:STIM?\n";
     scpi = scpi.arg(_channelIndex);
     uint bufferSize = frequencyBufferSize(points());
-    return(parseQRowVector(_vna->query(scpi, bufferSize)));
+    return(parseQRowVector(_vna->query(scpi, bufferSize).trimmed()));
 }
 double VnaLogSweep::power_dBm() {
     QString scpi = ":SOUR%1:POW?\n";
@@ -115,7 +118,7 @@ void VnaLogSweep::setIfbandwidth(double bandwidth, SiPrefix prefix) {
     QString scpi = "SENS%1:BAND %2%3\n";
     scpi = scpi.arg(_channelIndex);
     scpi = scpi.arg(bandwidth);
-    scpi = scpi.arg(toString(prefix, HERTZ_UNITS));
+    scpi = scpi.arg(toString(prefix, Units::Hertz));
     _vna->write(scpi);
 }
 
@@ -130,6 +133,25 @@ void VnaLogSweep::clearSParameterGroup() {
 }
 ComplexMatrix3D VnaLogSweep::readSParameterGroup() {
     return(_channel->linearSweep().readSParameterGroup());
+}
+
+bool VnaLogSweep::isAutoSweepTimeOn() {
+    return _channel->linearSweep().isAutoSweepTimeOn();
+}
+bool VnaLogSweep::isAutoSweepTimeOff() {
+    return _channel->linearSweep().isAutoSweepTimeOff();
+}
+void VnaLogSweep::autoSweepTimeOn(bool isOn) {
+    _channel->linearSweep().autoSweepTimeOn(isOn);
+}
+void VnaLogSweep::autoSweepTimeOff(bool isOff) {
+    _channel->linearSweep().autoSweepTimeOff(isOff);
+}
+uint VnaLogSweep::sweepTime_ms() {
+    return _channel->linearSweep().sweepTime_ms();
+}
+void VnaLogSweep::setSweepTime(uint time_ms) {
+    _channel->linearSweep().setSweepTime(time_ms);
 }
 
 NetworkData VnaLogSweep::measure(uint port1) {

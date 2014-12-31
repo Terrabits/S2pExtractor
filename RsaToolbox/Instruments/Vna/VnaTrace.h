@@ -8,6 +8,8 @@
 #include "NetworkTraceData.h"
 #include "VnaMarker.h"
 #include "VnaReferenceMarker.h"
+#include "VnaLimits.h"
+#include "VnaMath.h"
 #include "VnaTimeDomain.h"
 
 // Qt
@@ -20,12 +22,13 @@ class Vna;
 
 class VnaTrace : public QObject
 {
-private: Q_OBJECT
+    Q_OBJECT
 
 public:
     explicit VnaTrace(QObject *parent = 0);
     VnaTrace(const VnaTrace &other);
     VnaTrace(Vna *vna, QString name, QObject *parent = 0);
+    ~VnaTrace();
 
     bool isVisible();
     bool isHidden();
@@ -94,6 +97,9 @@ public:
 
     void toMemory(QString name);
     void write(QRowVector data);
+    void write(QRowVector frequencies_Hz, QRowVector data);
+    void write(ComplexRowVector data);
+    void write(QRowVector frequencies_Hz, ComplexRowVector data);
 
     // Marker
     bool isMarker(uint index);
@@ -110,9 +116,13 @@ public:
     // Reference Marker
     VnaReferenceMarker &referenceMarker();
 
-    void operator=(VnaTrace const &other);
+    // Limit Lines
+    VnaLimits &limits();
 
-//    void moveToThread(QThread *thread);
+    // Trace math
+    VnaMath &math();
+
+    void operator=(VnaTrace const &other);
 
 private:
     Vna *_vna;
@@ -120,29 +130,18 @@ private:
     QString _name;
     QScopedPointer<VnaMarker> _marker;
     QScopedPointer<VnaReferenceMarker> _referenceMarker;
+    QScopedPointer<VnaLimits> _limits;
+    QScopedPointer<VnaMath> _math;
     QScopedPointer<VnaTimeDomain> _timeDomain;
     
     bool isFullyInitialized() const;
 
     // Scpi
     QString measurementString();
-    static QString toScpi(TraceFormat format);
-    static QString toScpi(NetworkParameter parameter, uint outputPort, uint inputPort);
-    static QString toScpi(NetworkParameter parameter, BalancedPort outputPort, BalancedPort inputPort);
-    static QString toScpi(NetworkParameter parameter);
-    static QString toScpi(WaveQuantity waveQuantity, uint port);
-    static QString toScpi(WaveQuantity waveQuantity);
-    static QString toScpi(BalancedPortType portType);
-    static QString toPortPair(uint outputPort, uint inputPort);
-    static TraceFormat toTraceFormat(QString scpi);
     uint bufferSize();
     uint complexBufferSize();
     void parseParameters(QString scpi);
     void parseTwoPortIndices(QString scpi, uint &output, uint &input);
-
-
-
-    
 };
 }
 
