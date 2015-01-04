@@ -1,29 +1,71 @@
-Crash:
-getPortsDialog, getCalibrationDialog crashes when you try to update the values via RsaToolbox::Vna. Que?
+Note:
+1. Refuse to support cal groups/channels with multiple calibration sets
+2. Cannot support cal groups that cannot be applied to the instrument
+3. Cannot support Segmented Sweep (SCPI command doesn't provide actual values)
+4. Check for matching calibrations (already done?)
+5. Determine paths (including switch matrices), and error if impossible.
 
 
 
 1. Algorithm for determining corrections with switch matrix
 
-OUT = output test port
-IN = input test port
+class MatrixPortMap {
+	bool hasTestPort(uint port);
+	PortMap testPortToMatrix;
+	PortMap matrixToVna;
+}
+class TestPortMap {
+	bool isVnaPort(uint testPort);
+	bool isSwitchMatrixPort(uint testPort);
+	uint switchMatrix(uint testPort);
+	uint testPorts;
+	PortMap testPortToVna;
+	QVector<MatrixMap> matrices;
+}
+TestPortMap testPortMap;
 
-Organization #1
-MatrixToVna[matrix] -> Vna Port
-MatrixToTestPort[matrix] -> test port
-MatrixToTestPort.key(testPort, 1) -> matrix port
+struct ThruPath {
+	uint port1;
+	uint port2;
+}
+QVector<ThruPath> calibratedThruPaths;
 
-Organization #2
-VnaToMatrix[vna] -> matrix input
-TestPortToMatrix[test port] -> matrix output
+QVector<uint> extractPorts;
+QVector<uint> toTest = extractPorts;
 
+while (!toTest.isEmpty()) {
+	uint testPort1 = toTest.takeFirst();
+	uint vnaPort1 = findVnaPort(testPort1);
+	
+	uint testPort2;
+	uint 
+}
 
-Problem #1 (Using Organization #1)
-Have: test port
-Want: vna port
-
-MatrixToTestPort.key(test port) -> matrix port
-MatrixToVna.key(matrix port, 1) -> vna port
+uint findVnaPort(uint testPort) {
+	if (testPortToVnaMap.contains(testPort)) {
+		return vnaPort(testPort1);
+	}
+	else {
+		return findSwitchMatrixPath(testPort);
+	}
+}
+uint findVnaPort(uint testPort, uint usedVnaPort) {
+	if (testPortToVnaMap.contains(testPort)) {
+		return vnaPort(testPort1);
+	}
+	else {
+		return findSwitchMatrixPath(testPort, usedVnaPort);
+	}
+}
+uint findSwitchMatrixPath(uint testPort) {
+	
+}
+uint findSwitchMatrixPath(uint testPort, uint usedVnaPort) {
+	
+}
+uint findSwitchMatrixPath(uint testPort, PortMap matrixToVnaPortMap, PortMap testPortToMatrixMap) {
+	
+}
 
 2. Fix touchstone newlines for two port file (s2p):
    Should have all four S-parameters on one line.

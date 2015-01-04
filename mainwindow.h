@@ -26,6 +26,9 @@ public:
     explicit MainWindow(RsaToolbox::Vna &_vna, RsaToolbox::Keys &_keys, QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    virtual void keyPressEvent(QKeyEvent *event);
+
 private slots:
     void on_portOrderCheckbox_toggled(bool checked);
     void on_outerCalButton_clicked();
@@ -53,7 +56,7 @@ private:
     uint _outerChannel;
     QVector<uint> _outerPorts;
     RsaToolbox::VnaCorrections _outerCorrections;
-    void _loadOuterCorrections();
+    bool _loadOuterCorrections();
 
     bool _deleteInnerChannel;
     uint _innerChannel;

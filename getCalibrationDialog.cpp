@@ -15,6 +15,7 @@ getCalibrationDialog::getCalibrationDialog(QWidget *parent) :
     ui(new Ui::getCalibrationDialog)
 {
     ui->setupUi(this);
+
     clearDefault();
     clearSelection();
     _isOkClicked = false;
@@ -24,6 +25,7 @@ getCalibrationDialog::getCalibrationDialog(Vna &vna, QWidget *parent) :
     ui(new Ui::getCalibrationDialog)
 {
     ui->setupUi(this);
+
     clearDefault();
     clearSelection();
     _isOkClicked = false;
@@ -34,6 +36,7 @@ getCalibrationDialog::getCalibrationDialog(QVector<uint> calibratedChannels, QSt
     ui(new Ui::getCalibrationDialog)
 {
     ui->setupUi(this);
+
     clearDefault();
     clearSelection();
     _isOkClicked = false;
@@ -148,17 +151,17 @@ void getCalibrationDialog::_selectCalGroupOnGui(QString name) {
 int getCalibrationDialog::exec() {
     _isOkClicked = false;
     _selectDefaultOnGui();
-    return(QDialog::exec());
+    return QDialog::exec();
 }
 int getCalibrationDialog::exec(Vna &vna) {
     _isOkClicked = false;
     update(vna);
-    return(QDialog::exec());
+    return QDialog::exec();
 }
 int getCalibrationDialog::exec(QVector<uint> calibratedChannels, QStringList calGroups) {
     _isOkClicked = false;
     update(calibratedChannels, calGroups);
-    return(QDialog::exec());
+    return QDialog::exec();
 }
 
 bool getCalibrationDialog::isOkClicked() {

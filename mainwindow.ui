@@ -202,6 +202,9 @@
        </item>
        <item row="0" column="1">
         <widget class="QLineEdit" name="outerCalEdit">
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="text">
           <string>outer_probes.cal</string>
          </property>
@@ -287,6 +290,9 @@
        </item>
        <item row="1" column="1">
         <widget class="QLineEdit" name="innerCalEdit">
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="text">
           <string>inner_probes.cal</string>
          </property>
@@ -354,6 +360,9 @@
        </item>
        <item row="2" column="1">
         <widget class="QLineEdit" name="portsEdit">
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
+         </property>
          <property name="text">
           <string>1-4</string>
          </property>
@@ -424,10 +433,14 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
-  <tabstop>outerCalButton</tabstop>
-  <tabstop>generateButton</tabstop>
   <tabstop>portOrderCheckbox</tabstop>
   <tabstop>outerCalEdit</tabstop>
+  <tabstop>outerCalButton</tabstop>
+  <tabstop>innerCalEdit</tabstop>
+  <tabstop>innerCalButton</tabstop>
+  <tabstop>portsEdit</tabstop>
+  <tabstop>portsButton</tabstop>
+  <tabstop>generateButton</tabstop>
  </tabstops>
  <resources>
   <include location="Resources.qrc"/>

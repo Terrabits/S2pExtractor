@@ -14,30 +14,30 @@ using namespace RsaToolbox;
 #include <QMessageBox>
 #include <QDir>
 #include <QFileDialog>
+#include <QKeyEvent>
 
 
 MainWindow::MainWindow(Vna &vna, RsaToolbox::Keys &keys, QWidget *parent) :
     _vna(vna),
     _keys(keys),
-//    _portsDialog(vna, this),
-//    _outerCalDialog(vna, this),
-//    _innerCalDialog(vna, this),
+    _portsDialog(vna, this),
+    _outerCalDialog(vna, this),
+    _innerCalDialog(vna, this),
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    qDebug() << "MainWindow constructor";
     ui->setupUi(this);
     QString title = APP_NAME + " " + APP_VERSION;
     setWindowTitle(title);
 
-    qDebug() << "1";
     ui->portsEdit->clear();
     ui->outerCalEdit->clear();
     ui->innerCalEdit->clear();
     // ui->directoryEdit->clear();
     ui->portOrderCheckbox->setVisible(false);
+    ui->innerCalButton->setFocus();
+    ui->outerCalButton->setFocus();
 
-    qDebug() << "2";
     _deleteOuterChannel = false;
     _deleteInnerChannel = false;
     _outerChannel = 0;
@@ -45,7 +45,6 @@ MainWindow::MainWindow(Vna &vna, RsaToolbox::Keys &keys, QWidget *parent) :
     _outerPorts.clear();
     _innerPorts.clear();
 
-    qDebug() << "3";
     _points = 0;
     _ports.clear();
     _start_Hz = 0;
@@ -53,17 +52,14 @@ MainWindow::MainWindow(Vna &vna, RsaToolbox::Keys &keys, QWidget *parent) :
     _sweepType = VnaChannel::SweepType::Linear;
     _x_Hz.clear();
 
-    qDebug() << "4";
     _outerCalDialog.setDefaultChannel(1);
     _outerCalDialog.selectDefault();
     _updateOuterCal();
 
-    qDebug() << "5";
     _innerCalDialog.setDefaultChannel(2);
     _innerCalDialog.selectDefault();
     _updateInnerCal();
 
-    qDebug() << "6";
     if (_innerCalDialog.isCalibrationSelected()
             && _outerCalDialog.isCalibrationSelected()
             && _commonPorts().isEmpty() == false)
@@ -84,6 +80,47 @@ MainWindow::MainWindow(Vna &vna, RsaToolbox::Keys &keys, QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    const int key = event->key();
+    if (key == Qt::Key_Escape) {
+        event->accept();
+        close();
+        return;
+    }
+
+    if (key == Qt::Key_Enter || key == Qt::Key_Return) {
+        QWidget *widget = this->focusWidget();
+        if (widget == ui->portOrderCheckbox) {
+            ui->portOrderCheckbox->click();
+            event->accept();
+            return;
+        }
+        else if (widget == ui->outerCalButton) {
+            ui->outerCalButton->click();
+            event->accept();
+            return;
+        }
+        else if (widget == ui->innerCalButton) {
+            ui->innerCalButton->click();
+            event->accept();
+            return;
+        }
+        else if (widget == ui->portsButton) {
+            ui->portsButton->click();
+            event->accept();
+            return;
+        }
+        else if (widget == ui->generateButton) {
+            ui->generateButton->click();
+            event->accept();
+            return;
+        }
+    }
+
+    // Else
+    QMainWindow::keyPressEvent(event);
 }
 
 void MainWindow::on_portOrderCheckbox_toggled(bool checked) {
@@ -130,36 +167,30 @@ void MainWindow::on_portsButton_clicked() {
     _updatePorts();
 }
 void MainWindow::on_generateButton_clicked() {
-    qDebug() << "MainWindow::generate";
-    if (_isReadyToGenerate() && _isMatchingCalibrations()
-            && _isCalibratedPorts())
-    {
-        qDebug() << "  Going for it.";
-        _constructX();
-        QVector<uint> ports = _portsDialog.selectedPorts();
+    if (!_isReadyToGenerate())
+        return;
 
-        QString directory;
-        directory = _vna.fileSystem().directory(VnaFileSystem::Directory::TRACES_DIRECTORY);
-        getFilenamesDialog filenameDialog(ports, directory, this);
-        filenameDialog.exec();
-        if (filenameDialog.isOkClicked()) {
-            directory = filenameDialog.directory();
-            QStringList filenames = filenameDialog.filenames();
-            int size = filenames.size();
-            for (int i = 0; i < size; i++) {
-                qDebug() << i;
-                qDebug() << "ports: " << ports[i];
-                qDebug() << "file: " << filenames[i];
-                NetworkData data = _calculateNetwork(ports[i]);
-                QFileInfo file(QDir(directory), filenames[i]);
-                Touchstone::Write(data, file.filePath());
-            }
-            _deleteChannels();
-            close();
+    _constructX();
+    QVector<uint> ports = _portsDialog.selectedPorts();
+
+    QString directory;
+    directory = _vna.fileSystem().directory(VnaFileSystem::Directory::TRACES_DIRECTORY);
+    getFilenamesDialog filenameDialog(ports, directory, this);
+    filenameDialog.exec();
+    if (filenameDialog.isOkClicked()) {
+        directory = filenameDialog.directory();
+        QStringList filenames = filenameDialog.filenames();
+        int size = filenames.size();
+        for (int i = 0; i < size; i++) {
+            NetworkData data = _calculateNetwork(ports[i]);
+            QFileInfo file(QDir(directory), filenames[i]);
+            Touchstone::Write(data, file.filePath());
         }
-        else {
-            _deleteChannels();
-        }
+        _deleteChannels();
+        close();
+    }
+    else {
+        _deleteChannels();
     }
 }
 
@@ -171,6 +202,10 @@ void MainWindow::_updatePorts() {
     }
 }
 void MainWindow::_updateOuterCal() {
+    // 1. Check for user selection
+    // 2. Validate user selection
+    // 3. Update line edit
+
     if (_outerCalDialog.isCalibrationSelected()) {
         if (_outerCalDialog.isCalGroup()) {
             ui->outerCalEdit->setText(_outerCalDialog.calGroup());
@@ -215,30 +250,31 @@ void MainWindow::_updateDirectory() {
 }
 
 bool MainWindow::_isReadyToGenerate() {
-    if (_outerCalDialog.isCalibrationSelected() == false) {
+    if (!_outerCalDialog.isCalibrationSelected()) {
         QMessageBox::warning(this, "Missing outer calibration...",
                              "Please select the outer calibration.");
         return(false);
     }
-    if (_innerCalDialog.isCalibrationSelected() == false) {
+    if (!_innerCalDialog.isCalibrationSelected()) {
         QMessageBox::warning(this, "Missing inner calibration...",
                              "Please select the inner calibration.");
         return(false);
     }
-    if (_portsDialog.isPortsSelected() == false) {
+    if (!_portsDialog.isPortsSelected()) {
         QMessageBox::warning(this, "Missing ports...",
                              "Please select the ports to use during touchstone file generation.");
         ui->portsButton->setFocus();
         return(false);
     }
-    //    if (_directory.isEmpty()) {
-    //        QMessageBox::warning(this, "Missing directory...",
-    //                             "Please select the directory for saving touchstone files.");
-    //        return(false);
-    //    }
+    if (!_isMatchingCalibrations())
+        return false;
+    if (!_isCalibratedPorts())
+        return false;
+
+    // Else
     return(true);
 }
-void MainWindow::_loadOuterCorrections() {
+bool MainWindow::_loadOuterCorrections() {
     if (_outerCalDialog.isCalibratedChannel()) {
         _deleteOuterChannel = false;
         _outerChannel = _outerCalDialog.channel();
@@ -247,9 +283,16 @@ void MainWindow::_loadOuterCorrections() {
         _deleteOuterChannel = true;
         _outerChannel = _vna.createChannel();
         QString calGroup = _outerCalDialog.calGroup();
+
+        _vna.clearStatus();
         _vna.channel(_outerChannel).setCalGroup(calGroup);
+        if (_vna.isError()) {
+            _vna.clearStatus();
+            return false;
+        }
     }
     _outerCorrections = _vna.channel(_outerChannel).corrections();
+    return true;
 }
 void MainWindow::_loadInnerCorrections() {
     if (_innerCalDialog.isCalibratedChannel()) {
@@ -274,8 +317,12 @@ QVector<uint> MainWindow::_commonPorts() {
 }
 
 bool MainWindow::_isMatchingCalibrations() {
-    _loadOuterCorrections();
-    _loadInnerCorrections();
+    if (!_loadOuterCorrections()) {
+
+    }
+    if (!_loadInnerCorrections()) {
+
+    }
 
     _points = _outerCorrections.points();
     _ports = _commonPorts();
@@ -325,8 +372,6 @@ bool MainWindow::_isCalibratedPorts() {
     return(true);
 }
 NetworkData MainWindow::_calculateNetwork(uint port) {
-    qDebug() << "MainWindow::_calulateNetwork " << port;
-    qDebug() << "_ports: " << _ports;
     uint otherPort;
     if (_ports.first() == port)
         otherPort = _ports.last();
@@ -372,7 +417,6 @@ void MainWindow::_constructX() {
         _x_Hz.clear();
 }
 void MainWindow::_constructMatrix(ComplexMatrix3D &matrix, ComplexRowVector &s11, ComplexRowVector &s21, ComplexRowVector &s22) {
-    qDebug() << "points: " << _points;
     matrix.resize(_points);
     for (uint i = 0; i < _points; i++) {
         matrix[i].resize(2);

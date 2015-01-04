@@ -43,12 +43,10 @@ int main(int argc, char *argv[])
     if (isNoConnection(vna) || isUnknownModel(vna))
         return(0);
 
-    qDebug() << "Constructing window...";
+
     MainWindow w(vna, keys);
-    qDebug() << "Constructed.";
     w.setWindowFlags(w.windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowStaysOnTopHint);
     w.show();
-    qDebug() << "a.exec():";
     return a.exec();
 }
 
