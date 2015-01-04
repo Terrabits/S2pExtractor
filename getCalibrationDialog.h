@@ -1,6 +1,10 @@
 #ifndef GETCALIBRATIONDIALOG_H
 #define GETCALIBRATIONDIALOG_H
 
+
+// Project
+#include "Calibration.h"
+
 // RsaToolbox
 #include "Vna.h"
 
@@ -51,16 +55,8 @@ public:
 
     bool isOkClicked();
     bool isCancelClicked();
-
     bool isCalibrationSelected();
-
-    bool isCalibratedChannel();
-    void saveChannelCalibration(RsaToolbox::Vna &vna, QString calGroup);
-    uint channel();
-
-    bool isCalGroup();
-    QString calGroup();
-
+    Calibration result() const;
 
 private slots:
     void on_channelList_itemSelectionChanged();
@@ -84,11 +80,7 @@ private:
     bool _isOkClicked;
     bool _isCalibrationSelected;
 
-    bool _isCalibratedChannel;
-    uint _channel;
-
-    bool _isCalGroup;
-    QString _calGroup;
+    Calibration _calibration;
 
     // Select in the Gui sense.
     // Better name?

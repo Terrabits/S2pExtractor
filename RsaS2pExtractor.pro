@@ -22,12 +22,18 @@ SOURCES    +=  main.cpp \
                mainwindow.cpp \
                getCalibrationDialog.cpp \
                getPortsDialog.cpp \
-               getFilenamesDialog.cpp
+               getFilenamesDialog.cpp \
+               Calibration.cpp \
+               Data.cpp \
+               CalibrationWidgetMap.cpp
 HEADERS     += Settings.h \
                mainwindow.h \
                getCalibrationDialog.h \
                getPortsDialog.h \
-               getFilenamesDialog.h
+               getFilenamesDialog.h \
+               Calibration.h \
+               Data.h \
+               CalibrationWidgetMap.h
 FORMS       += mainwindow.ui \
                getCalibrationDialog.ui \
                getPortsDialog.ui \
