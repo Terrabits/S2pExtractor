@@ -22,10 +22,6 @@ public:
     Calibration(const Calibration &other);
     ~Calibration();
 
-    bool isVna() const;
-    RsaToolbox::Vna *vna() const;
-    void setVna(RsaToolbox::Vna *vna);
-
     bool isEmpty() const;
     bool isCalGroup() const;
     bool isChannel() const;
@@ -33,6 +29,7 @@ public:
     QString calGroup() const;
     uint channel() const;
 
+    bool isValid(RsaToolbox::Vna *vna);
     QString displayText() const;
 
     void operator=(const Calibration &other);
@@ -47,8 +44,6 @@ public slots:
     bool setChannel(uint index);
 
 private:
-    RsaToolbox::Vna *_vna;
-
     bool _isCalGroup;
     QString _calGroup;
     uint _channel;

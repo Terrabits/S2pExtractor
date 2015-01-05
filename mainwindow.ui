@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>325</width>
-    <height>472</height>
+    <width>375</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -375,6 +375,16 @@
      </widget>
     </item>
     <item>
+     <widget class="RsaToolbox::ErrorLabel" name="error" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>16</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -432,6 +442,14 @@
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>RsaToolbox::ErrorLabel</class>
+   <extends>QWidget</extends>
+   <header>ErrorLabel.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>portOrderCheckbox</tabstop>
   <tabstop>outerCalEdit</tabstop>

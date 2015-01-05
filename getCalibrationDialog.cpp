@@ -7,7 +7,6 @@
 using namespace RsaToolbox;
 
 // Qt
-#include <QMessageBox>
 #include <QKeyEvent>
 #include <QDebug>
 
@@ -20,6 +19,9 @@ getCalibrationDialog::getCalibrationDialog(QWidget *parent) :
 
     _vna = NULL;
     reset();
+
+    QObject::connect(&_selection, SIGNAL(error(QString)),
+                     ui->error, SLOT(showMessage(QString)));
 }
 getCalibrationDialog::~getCalibrationDialog() {
     delete ui;
@@ -98,16 +100,11 @@ int getCalibrationDialog::exec() {
 
 void getCalibrationDialog::accept() {
     if (_selection.isEmpty()) {
-        QMessageBox::warning(this,
-                             "Calibration",
-                             "Please choose a calibration.");
+        ui->error->showMessage("*Please choose a calibration.");
         return;
     }
-
-    if (_selection == _calibration) {
-        QDialog::accept();
+    if (!_selection.isValid(_vna))
         return;
-    }
 
     _calibration = _selection;
     QDialog::accept();

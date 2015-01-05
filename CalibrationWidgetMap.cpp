@@ -22,7 +22,6 @@ CalibrationWidgetMap::~CalibrationWidgetMap()
 
 }
 
-
 Vna *CalibrationWidgetMap::vna() const {
     return _vna;
 }
@@ -77,7 +76,7 @@ void CalibrationWidgetMap::getCalibration() {
         return;
 
     if (_dialog.exec() == QDialog::Accepted)
-        *_calibration = _dialog.calibration();
+            *_calibration = _dialog.calibration();
 }
 bool CalibrationWidgetMap::isVna() const {
     return _vna != NULL;

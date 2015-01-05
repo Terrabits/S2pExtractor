@@ -7,7 +7,6 @@
 using namespace RsaToolbox;
 
 // Qt
-#include <QMessageBox>
 #include <QKeyEvent>
 #include <QDebug>
 
@@ -72,9 +71,7 @@ int getPortsDialog::exec() {
 void getPortsDialog::accept() {
     const QVector<uint> _selection = selection();
     if (_selection.isEmpty()) {
-        QMessageBox::warning(this,
-                             "Ports",
-                             "Please choose at least one port.");
+        ui->error->showMessage("*Please choose at least one port.");
         return;
     }
 

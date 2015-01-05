@@ -97,8 +97,22 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
 }
 
 void MainWindow::on_generateButton_clicked() {
-    if (_filenamesDialog.exec() == QDialog::Accepted) {
-        qDebug() << "Ready to generate...";
-        qDebug() << _filenamesDialog.filePathNames();
-    }
+    // Validate data
+    //
+
+    if (_filenamesDialog.exec() != QDialog::Accepted)
+        return;
+
+    // 1. Disable inputs
+    // 2. Display pinwheel
+    // 3. Connect calculation thread to SLOT(finished()), SLOT(displayError(QString()))?;
+    // 4. Start calculation thread
+    finished();
+}
+void MainWindow::finished() {
+    // if is success:
+    QMessageBox::information(this,
+                             APP_NAME,
+                             "Touchstone files successfully generated!");
+    close();
 }

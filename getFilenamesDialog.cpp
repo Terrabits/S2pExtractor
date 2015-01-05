@@ -12,9 +12,9 @@ using namespace RsaToolbox;
 #include <QLineEdit>
 #include <QRegExp>
 #include <QRegExpValidator>
-#include <QMessageBox>
 #include <QDir>
 #include <QFileDialog>
+#include <QKeyEvent>
 
 getFilenamesDialog::getFilenamesDialog(QWidget *parent) :
     QDialog(parent),
@@ -85,24 +85,28 @@ int getFilenamesDialog::exec() {
     return QDialog::exec();
 }
 void getFilenamesDialog::accept() {
-    if (_directory.isEmpty()) {
-        QMessageBox::warning(this, "Invalid Directory...",
-                             "Please choose a valid directory.");
-        return;
-    }
-
     _filenames.clear();
     for (int i = 0; i < _ports->size(); i++) {
         QLineEdit *edit;
         edit = qobject_cast<QLineEdit*>(ui->filenames->cellWidget(i, 1));
         QString filename = edit->text().trimmed();
-        if (filename.isEmpty() || filename.remove(".").isEmpty()) {
-            QMessageBox::warning(this, "Invalid filename...",
-                                 "Please check the filenames and try again.");
+        if (filename.isEmpty()) {
+            ui->error->showMessage("*Invalid filename");
+            edit->setFocus();
+            edit->selectAll();
+            return;
+        }
+        if (_filenames.contains(filename, Qt::CaseInsensitive)) {
+            ui->error->showMessage("*Filenames must be unique");
+            edit->setFocus();
             edit->selectAll();
             return;
         }
         _filenames.append(edit->text().trimmed());
+    }
+    if (_directory.isEmpty()) {
+        ui->error->showMessage("Please choose a valid directory.");
+        return;
     }
     QDialog::accept();
 }

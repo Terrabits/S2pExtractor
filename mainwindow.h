@@ -33,6 +33,7 @@ protected:
 
 private slots:
     void on_generateButton_clicked();
+    void finished();
 
 private:
     Ui::MainWindow *ui;

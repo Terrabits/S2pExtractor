@@ -26,6 +26,7 @@ public:
     explicit getCalibrationDialog(QWidget *parent = 0);
     ~getCalibrationDialog();
 
+    bool isVna() const;
     RsaToolbox::Vna *vna() const;
     void setVna(RsaToolbox::Vna *vna);
 
@@ -54,7 +55,6 @@ private slots:
 private:
     Ui::getCalibrationDialog *ui;
 
-    bool isVna() const;
     RsaToolbox::Vna *_vna;
     void updateUi();
 

@@ -31,6 +31,7 @@ public:
     SharedCalibration outerCalibration() const;
     SharedCalibration innerCalibration() const;
     SharedPorts ports() const;
+    QStringList &filePathNames();
 
 private:
     RsaToolbox::Keys *_keys;
@@ -38,6 +39,7 @@ private:
     SharedCalibration _outerCal;
     SharedCalibration _innerCal;
     SharedPorts _ports;
+    QStringList _pathNames;
 };
 
 #endif // DATA_H

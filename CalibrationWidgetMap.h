@@ -8,6 +8,7 @@
 
 // RsaToolbox
 #include "Vna.h"
+#include "ErrorLabel.h"
 
 // Qt
 #include <QWidget>

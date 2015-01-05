@@ -36,10 +36,6 @@ Vna *Data::vna() const {
 }
 void Data::setVna(RsaToolbox::Vna *vna) {
     _vna = vna;
-    if (isVna()) {
-        _outerCal->setVna(vna);
-        _innerCal->setVna(vna);
-    }
 }
 
 SharedCalibration Data::outerCalibration() const {
@@ -50,4 +46,7 @@ SharedCalibration Data::innerCalibration() const {
 }
 SharedPorts Data::ports() const {
     return _ports;
+}
+QStringList &Data::filePathNames() {
+    return _pathNames;
 }

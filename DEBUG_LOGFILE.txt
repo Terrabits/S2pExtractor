@@ -1,7 +1,7 @@
 R&S S2P Extractor Version 1.2
 (C) 2014 Rohde & Schwarz America
 
-Sun Jan 4 23:53:36 2015
+Mon Jan 5 12:41:15 2015
 
 VNA INSTRUMENT INFO
 Connection:       TCPIP
@@ -48,7 +48,111 @@ Write:    ":INST:TPORT:COUN?"
 Bytes: 18
 Status: 0x0 Operation completed successfully.
 
-Read:     "10"
-Bytes: 3
+Read:     "4"
+Bytes: 2
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CDIR?"
+Bytes: 12
+Status: 0x0 Operation completed successfully.
+
+Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
+Bytes: 46
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CDIR DEF"
+Bytes: 15
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CDIR '.\Calibration\Data'"
+Bytes: 32
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CAT?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "2319257, 91203674112, no switch matrix.cal, , 659713, twomatrices_ports56.cal, , 192615, znb4_with_..."
+Bytes: 122
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
+Bytes: 57
+Status: 0x0 Operation completed successfully.
+
+Write:    ":CONF:CHAN:CAT?"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Read:     "'1,Ch1'"
+Bytes: 8
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR:COUN?"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "0"
+Bytes: 2
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CDIR?"
+Bytes: 12
+Status: 0x0 Operation completed successfully.
+
+Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
+Bytes: 46
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CDIR DEF"
+Bytes: 15
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CDIR '.\Calibration\Data'"
+Bytes: 32
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CAT?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "2319257, 91203674112, no switch matrix.cal, , 659713, twomatrices_ports56.cal, , 192615, znb4_with_..."
+Bytes: 122
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\Vna'"
+Bytes: 57
+Status: 0x0 Operation completed successfully.
+
+Write:    ":CONF:CHAN:CAT?"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Read:     "'1,Ch1'"
+Bytes: 8
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR:COUN?"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "0"
+Bytes: 2
+Status: 0x0 Operation completed successfully.
+
+Write:    "*IDN?"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.40"
+Bytes: 47
+Status: 0x0 Operation completed successfully.
+
+Write:    ":INST:TPORT:COUN?"
+Bytes: 18
+Status: 0x0 Operation completed successfully.
+
+Read:     "4"
+Bytes: 2
 Status: 0x0 Operation completed successfully.
 
