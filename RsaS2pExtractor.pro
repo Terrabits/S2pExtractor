@@ -25,7 +25,9 @@ SOURCES    +=  main.cpp \
                getFilenamesDialog.cpp \
                Calibration.cpp \
                Data.cpp \
-               CalibrationWidgetMap.cpp
+               CalibrationWidgetMap.cpp \
+    PortsWidgetMap.cpp \
+    Ports.cpp
 HEADERS     += Settings.h \
                mainwindow.h \
                getCalibrationDialog.h \
@@ -33,7 +35,9 @@ HEADERS     += Settings.h \
                getFilenamesDialog.h \
                Calibration.h \
                Data.h \
-               CalibrationWidgetMap.h
+               CalibrationWidgetMap.h \
+    PortsWidgetMap.h \
+    Ports.h
 FORMS       += mainwindow.ui \
                getCalibrationDialog.ui \
                getPortsDialog.ui \

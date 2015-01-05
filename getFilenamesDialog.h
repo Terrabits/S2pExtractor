@@ -1,8 +1,17 @@
 #ifndef GETFILENAMESDIALOG_H
 #define GETFILENAMESDIALOG_H
 
+
+// Project
+#include "Ports.h"
+
+// Rsatoolbox
+#include "LastPath.h"
+#include "Keys.h"
+
 #include <QDialog>
 #include <QVector>
+
 
 namespace Ui {
 class getFilenamesDialog;
@@ -13,27 +22,38 @@ class getFilenamesDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit getFilenamesDialog(QVector<uint> ports, QString directory, QWidget *parent = 0);
+    explicit getFilenamesDialog(QWidget *parent = 0);
     ~getFilenamesDialog();
 
-    bool isOkClicked();
-    QStringList filenames();
-    QString directory();
+    bool isPorts() const;
+    SharedPorts ports() const;
+    void setPorts(SharedPorts ports);
+
+    bool isKey() const;
+    QString key() const;
+    RsaToolbox::Keys *keys() const;
+    void setKey(RsaToolbox::Keys *keys, QString key);
+
+    QStringList filenames() const;
+    QString directory() const;
+    QStringList filePathNames() const;
+
+public slots:
+    virtual int exec();
+    virtual void accept();
 
 private slots:
-    void on_getFilenamesDialog_accepted();
     void on_directoryButton_clicked();
 
 private:
     Ui::getFilenamesDialog *ui;
 
-    int _numberOfPorts;
+    SharedPorts _ports;
+    RsaToolbox::LastPath _lastPath;
 
-    bool _isOkClicked;
-    QString _directory;
     QStringList _filenames;
-
-    void _updateDirectory();
+    QString _directory;
+    void updateUi();
 };
 
 #endif // GETFILENAMESDIALOG_H

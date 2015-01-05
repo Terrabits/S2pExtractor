@@ -13,16 +13,18 @@
 class Calibration;
 typedef QSharedPointer<Calibration> SharedCalibration;
 SharedCalibration newCalibration();
-SharedCalibration newCalibration(RsaToolbox::Vna *vna);
 
 class Calibration : public QObject
 {
     Q_OBJECT
 public:
     explicit Calibration(QObject *parent = 0);
-    Calibration(RsaToolbox::Vna *vna, QObject *parent = 0);
     Calibration(const Calibration &other);
     ~Calibration();
+
+    bool isVna() const;
+    RsaToolbox::Vna *vna() const;
+    void setVna(RsaToolbox::Vna *vna);
 
     bool isEmpty() const;
     bool isCalGroup() const;
@@ -45,13 +47,15 @@ public slots:
     bool setChannel(uint index);
 
 private:
-    bool isVna() const;
     RsaToolbox::Vna *_vna;
 
     bool _isCalGroup;
     QString _calGroup;
     uint _channel;
 };
+
+bool operator==(const Calibration &rhs, const Calibration &lhs);
+bool operator!=(const Calibration &rhs, const Calibration &lhs);
 
 
 #endif // CALIBRATION_H

@@ -48,7 +48,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="channelLabel">
         <property name="font">
          <font>
           <weight>75</weight>
@@ -61,7 +61,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QListWidget" name="channelList">
+       <widget class="QListWidget" name="channels">
         <property name="horizontalScrollBarPolicy">
          <enum>Qt::ScrollBarAlwaysOff</enum>
         </property>
@@ -74,16 +74,6 @@
         <property name="selectionBehavior">
          <enum>QAbstractItemView::SelectItems</enum>
         </property>
-        <item>
-         <property name="text">
-          <string>Channel 1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Channel 3</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -124,7 +114,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="calGroupLabel">
         <property name="font">
          <font>
           <weight>75</weight>
@@ -137,45 +127,10 @@
        </widget>
       </item>
       <item>
-       <widget class="QListWidget" name="calPoolList">
+       <widget class="QListWidget" name="calGroups">
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
         </property>
-        <item>
-         <property name="text">
-          <string>Cal Group 1</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Cal Group 2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Cal Group 3</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Cal Group 4</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Cal Group 5</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Cal Group 5</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Cal Group 5</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -220,10 +175,43 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>channelList</tabstop>
-  <tabstop>calPoolList</tabstop>
+  <tabstop>channels</tabstop>
+  <tabstop>calGroups</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>getCalibrationDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>174</x>
+     <y>320</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>getCalibrationDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>174</x>
+     <y>320</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

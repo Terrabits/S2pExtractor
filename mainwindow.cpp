@@ -1,9 +1,11 @@
-#include "QDebug"
-
-// RsaDeembed
-#include "Settings.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+
+// Project
+#include "Settings.h"
+#include "Calibration.h"
+
 
 // RsaToolbox
 #include "Touchstone.h"
@@ -17,15 +19,36 @@ using namespace RsaToolbox;
 #include <QKeyEvent>
 
 
-MainWindow::MainWindow(Vna &vna, RsaToolbox::Keys &keys, QWidget *parent) :
-    _vna(vna),
-    _keys(keys),
+MainWindow::MainWindow(Data *data, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    _data(data),
+    _outerCalMap(this),
+    _innerCalMap(this),
+    _portsMap(this),
+    _filenamesDialog(this)
 {
     ui->setupUi(this);
     setWindowTitle(APP_NAME + " " + APP_VERSION);
     ui->portOrderCheckbox->setVisible(false);
+
+    _outerCalMap.setVna(_data->vna());
+    _outerCalMap.setLineEdit(ui->outerCalEdit);
+    _outerCalMap.setPushButton(ui->outerCalButton);
+    _outerCalMap.setCalibration(_data->outerCalibration());
+
+    _innerCalMap.setVna(_data->vna());
+    _innerCalMap.setLineEdit(ui->innerCalEdit);
+    _innerCalMap.setPushButton(ui->innerCalButton);
+    _innerCalMap.setCalibration(_data->innerCalibration());
+
+    _portsMap.setVna(_data->vna());
+    _portsMap.setLineEdit(ui->portsEdit);
+    _portsMap.setPushButton(ui->portsButton);
+    _portsMap.setPorts(_data->ports());
+
+    _filenamesDialog.setPorts(_data->ports());
+    _filenamesDialog.setKey(_data->keys(), SAVE_PATH_KEY);
 }
 MainWindow::~MainWindow()
 {
@@ -73,3 +96,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event) {
     QMainWindow::keyPressEvent(event);
 }
 
+void MainWindow::on_generateButton_clicked() {
+    if (_filenamesDialog.exec() == QDialog::Accepted) {
+        qDebug() << "Ready to generate...";
+        qDebug() << _filenamesDialog.filePathNames();
+    }
+}

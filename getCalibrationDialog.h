@@ -24,70 +24,50 @@ class getCalibrationDialog : public QDialog
 
 public:
     explicit getCalibrationDialog(QWidget *parent = 0);
-    explicit getCalibrationDialog(RsaToolbox::Vna &vna, QWidget *parent = 0);
-    explicit getCalibrationDialog(QVector<uint> calibratedChannels, QStringList calGroups, QWidget *parent = 0);
-
     ~getCalibrationDialog();
 
-    // Manual (non-GUI) use
-    QVector<uint> calibratedChannels();
-    void selectChannel(uint index);
-    QStringList calGroups();
-    void selectCalGroup(QString name);
-    void selectDefault();
-    void clearSelection();
+    RsaToolbox::Vna *vna() const;
+    void setVna(RsaToolbox::Vna *vna);
 
-
-    // GUI defaults
     void clearDefault();
-    void setDefaultChannel(uint channel);
-    void setDefaultCalGroup(QString calGroup);
+    bool isDefault() const;
+    Calibration defaultCalibration() const;
+    void setDefault(Calibration cal);
 
-    // Choices
-    void update(RsaToolbox::Vna &vna);
-    void update(QVector<uint> calibratedChannels, QStringList calGroups);
+    Calibration calibration() const;
 
+signals:
+    void changed(Calibration cal);
 
-    // Handle selection (or lack thereof)
-    int exec();
-    int exec(RsaToolbox::Vna &vna);
-    int exec(QVector<uint> calibratedChannels, QStringList calGroups);
+public slots:
+    virtual int exec();
+    virtual void accept();
+    virtual void reject();
 
-    bool isOkClicked();
-    bool isCancelClicked();
-    bool isCalibrationSelected();
-    Calibration result() const;
+protected:
+    virtual void keyPressEvent(QKeyEvent *event);
 
 private slots:
-    void on_channelList_itemSelectionChanged();
-    void on_calPoolList_itemSelectionChanged();
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
+    void on_channels_itemSelectionChanged();
+    void on_calGroups_itemSelectionChanged();
 
 private:
     Ui::getCalibrationDialog *ui;
 
-    bool _isDefaultChannel;
-    uint _defaultChannel;
-
-    bool _isDefaultCalGroup;
-    QString _defaultCalGroup;
-
+    bool isVna() const;
+    RsaToolbox::Vna *_vna;
+    void updateUi();
 
     QVector<uint> _channels;
     QStringList _calGroups;
-
-    bool _isOkClicked;
-    bool _isCalibrationSelected;
+    Calibration _default;
+    Calibration _selection;
 
     Calibration _calibration;
 
-    // Select in the Gui sense.
-    // Better name?
-    void _unselectGui();
-    void _selectDefaultOnGui();
-    void _selectChannelOnGui(uint index);
-    void _selectCalGroupOnGui(QString name);
+    void reset();
+    void unselectAll();
+    void select(const Calibration &cal);
 
 };
 

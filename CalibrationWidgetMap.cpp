@@ -4,9 +4,17 @@
 // RsaToolbox
 using namespace RsaToolbox;
 
-CalibrationWidgetMap::CalibrationWidgetMap(QObject *parent) : QObject(parent)
-{
+// Qt
+#include <QDebug>
 
+
+CalibrationWidgetMap::CalibrationWidgetMap(QWidget *parent) :
+    _dialog(parent),
+    QObject(parent)
+{
+    _calibration = newCalibration();
+    _lineEdit = NULL;
+    _pushButton = NULL;
 }
 
 CalibrationWidgetMap::~CalibrationWidgetMap()
@@ -15,11 +23,12 @@ CalibrationWidgetMap::~CalibrationWidgetMap()
 }
 
 
-Vna CalibrationWidgetMap::vna() const {
+Vna *CalibrationWidgetMap::vna() const {
     return _vna;
 }
 void CalibrationWidgetMap::setVna(Vna *vna) {
     _vna = vna;
+    _dialog.setVna(vna);
 }
 
 QLineEdit *CalibrationWidgetMap::lineEdit() const {
@@ -32,10 +41,10 @@ void CalibrationWidgetMap::setLineEdit(QLineEdit *edit) {
     disconnectView();
     _lineEdit = edit;
     connectView();
-    udpate();
+    updateView();
 
 }
-QPushButton CalibrationWidgetMap::pushButton() const {
+QPushButton *CalibrationWidgetMap::pushButton() const {
     return _pushButton;
 }
 void CalibrationWidgetMap::setPushButton(QPushButton *button) {
@@ -47,6 +56,9 @@ void CalibrationWidgetMap::setPushButton(QPushButton *button) {
     connectView();
 }
 
+bool CalibrationWidgetMap::isCalibration() const {
+    return !_calibration.isNull();
+}
 SharedCalibration CalibrationWidgetMap::calibration() const {
     return _calibration;
 }
@@ -54,23 +66,31 @@ void CalibrationWidgetMap::setCalibration(SharedCalibration calibration) {
     if (_calibration == calibration)
         return;
 
+    disconnectView();
     _calibration = calibration;
+    connectView();
+    updateView();
 }
 
 void CalibrationWidgetMap::getCalibration() {
     if (!isVna())
         return;
 
-    _dialog.exec(_vna);
-    if (_dialog.isOkClicked()) {
-        *_calibration = _dialog.result();
-    }
+    if (_dialog.exec() == QDialog::Accepted)
+        *_calibration = _dialog.calibration();
+}
+bool CalibrationWidgetMap::isVna() const {
+    return _vna != NULL;
+}
+bool CalibrationWidgetMap::isLineEdit() const {
+    return _lineEdit != NULL;
+}
+bool CalibrationWidgetMap::isPushButton() const {
+    return _pushButton != NULL;
 }
 
-
-
 void CalibrationWidgetMap::connectView() {
-    if (isLineEdit()) {
+    if (isLineEdit() && isCalibration()) {
         QObject::connect(_calibration.data(), SIGNAL(changed(QString)),
                          _lineEdit, SLOT(setText(QString)));
     }
@@ -80,7 +100,7 @@ void CalibrationWidgetMap::connectView() {
     }
 }
 void CalibrationWidgetMap::disconnectView() {
-    if (isLineEdit()) {
+    if (isLineEdit() && isCalibration()) {
         QObject::disconnect(_calibration.data(), SIGNAL(changed(QString)),
                          _lineEdit, SLOT(setText(QString)));
     }
@@ -89,4 +109,7 @@ void CalibrationWidgetMap::disconnectView() {
                          this, SLOT(getCalibration()));
     }
 }
-
+void CalibrationWidgetMap::updateView() {
+    if (isLineEdit())
+        _lineEdit->setText(_calibration->displayText());
+}

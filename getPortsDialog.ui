@@ -30,78 +30,14 @@
     <number>15</number>
    </property>
    <item>
-    <widget class="QListWidget" name="portsList">
+    <widget class="QListWidget" name="ports">
      <property name="selectionMode">
       <enum>QAbstractItemView::NoSelection</enum>
      </property>
-     <item>
-      <property name="text">
-       <string>Port 1</string>
-      </property>
-      <property name="checkState">
-       <enum>Checked</enum>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Port 2</string>
-      </property>
-      <property name="checkState">
-       <enum>Checked</enum>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Port 3</string>
-      </property>
-      <property name="checkState">
-       <enum>Checked</enum>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Port 4</string>
-      </property>
-      <property name="checkState">
-       <enum>Checked</enum>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Port 5</string>
-      </property>
-      <property name="checkState">
-       <enum>Checked</enum>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Port 6</string>
-      </property>
-      <property name="checkState">
-       <enum>Checked</enum>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Port 7</string>
-      </property>
-      <property name="checkState">
-       <enum>Checked</enum>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Port 8</string>
-      </property>
-      <property name="checkState">
-       <enum>Checked</enum>
-      </property>
-     </item>
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="selectAllCheckbox">
+    <widget class="QCheckBox" name="selectAll">
      <property name="text">
       <string>Select All</string>
      </property>
@@ -133,7 +69,7 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>portsList</tabstop>
+  <tabstop>ports</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>

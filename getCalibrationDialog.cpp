@@ -7,6 +7,8 @@
 using namespace RsaToolbox;
 
 // Qt
+#include <QMessageBox>
+#include <QKeyEvent>
 #include <QDebug>
 
 
@@ -16,213 +18,153 @@ getCalibrationDialog::getCalibrationDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    clearDefault();
-    clearSelection();
-    _isOkClicked = false;
+    _vna = NULL;
+    reset();
 }
-getCalibrationDialog::getCalibrationDialog(Vna &vna, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::getCalibrationDialog)
-{
-    ui->setupUi(this);
-
-    clearDefault();
-    clearSelection();
-    _isOkClicked = false;
-    update(vna);
-}
-getCalibrationDialog::getCalibrationDialog(QVector<uint> calibratedChannels, QStringList calGroups, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::getCalibrationDialog)
-{
-    ui->setupUi(this);
-
-    clearDefault();
-    clearSelection();
-    _isOkClicked = false;
-    update(calibratedChannels, calGroups);
-}
-
 getCalibrationDialog::~getCalibrationDialog() {
     delete ui;
 }
 
-QVector<uint> getCalibrationDialog::calibratedChannels() {
-    return(_channels);
+Vna *getCalibrationDialog::vna() const {
+    return _vna;
 }
-void getCalibrationDialog::selectChannel(uint index) {
-    if (_channels.contains(index)) {
-        clearSelection();
-        _isCalibrationSelected = true;
-        _isCalibratedChannel = true;
-        _channel = index;
+void getCalibrationDialog::setVna(Vna *vna) {
+    _vna = vna;
+}
+
+void getCalibrationDialog::reset() {
+    _default.clear();
+    _selection.clear();
+    _calibration.clear();
+    updateUi();
+    unselectAll();
+}
+void getCalibrationDialog::unselectAll() {
+    ui->channels->clearSelection();
+    ui->calGroups->clearSelection();
+}
+void getCalibrationDialog::select(const Calibration &cal) {
+    if (cal.isEmpty())
+        return;
+    if (cal.isCalGroup()) {
+        int row = _calGroups.indexOf(cal.calGroup());
+        if (row != -1)
+            ui->calGroups->setCurrentRow(row);
+    }
+    else {
+        int row = _channels.indexOf(cal.channel());
+        if (row != -1)
+            ui->channels->setCurrentRow(row);
     }
 }
-QStringList getCalibrationDialog::calGroups() {
-    return(_calGroups);
-}
-void getCalibrationDialog::selectCalGroup(QString name) {
-    if (_calGroups.contains(name, Qt::CaseInsensitive)) {
-        clearSelection();
-        _isCalibrationSelected = true;
-        _isCalGroup = true;
-        _calGroup = name;
-    }
-}
-void getCalibrationDialog::selectDefault() {
-    if (_isDefaultChannel)
-        selectChannel(_defaultChannel);
-    else if (_isDefaultCalGroup)
-        selectCalGroup(_defaultCalGroup);
-}
-void getCalibrationDialog::clearSelection() {
-    _isCalibrationSelected = false;
-    _isCalibratedChannel = false;
-    _isCalGroup = false;
-}
-void getCalibrationDialog::update(Vna &vna) {
-    update(vna.calibratedChannels(), vna.calGroups());
-}
-void getCalibrationDialog::update(QVector<uint> calibratedChannels, QStringList calGroups) {
-    _channels = calibratedChannels;
-    QStringList channelList = channelLabels(calibratedChannels);
-    ui->channelList->clear();
-    ui->channelList->addItems(channelList);
 
-    _calGroups = calGroups;
-    ui->calPoolList->clear();
-    ui->calPoolList->addItems(calGroups);
-
-    _selectDefaultOnGui();
-}
-
-void getCalibrationDialog::_unselectGui() {
-    ui->channelList->clearSelection();
-    ui->calPoolList->clearSelection();
-}
 void getCalibrationDialog::clearDefault() {
-    _isDefaultChannel = false;
-    _isDefaultCalGroup = false;
+    _default.clear();
 }
-void getCalibrationDialog::setDefaultChannel(uint channel) {
-    clearDefault();
-    _isDefaultChannel = true;
-    _defaultChannel = channel;
+bool getCalibrationDialog::isDefault() const {
+    return !_default.isEmpty();
 }
-void getCalibrationDialog::setDefaultCalGroup(QString calGroup) {
-    clearDefault();
-    _isDefaultCalGroup = true;
-    _defaultCalGroup = calGroup;
+Calibration getCalibrationDialog::defaultCalibration() const {
+    return _default;
 }
-void getCalibrationDialog::_selectDefaultOnGui() {
-    // User choice is present
-    if (_isCalibrationSelected) {
-        if (_isCalibratedChannel)
-            _selectChannelOnGui(_channel);
-        else if (_isCalGroup)
-            _selectCalGroupOnGui(_calGroup);
-    }
-    else if (_isDefaultChannel)
-        _selectChannelOnGui(_defaultChannel);
-    else if (_isDefaultCalGroup)
-        _selectCalGroupOnGui(_defaultCalGroup);
+void getCalibrationDialog::setDefault(Calibration cal) {
+    _default = cal;
 }
-void getCalibrationDialog::_selectChannelOnGui(uint index) {
-    if (_channels.contains(index)) {
-        int i = _channels.indexOf(index);
-        ui->channelList->item(i)->setSelected(true);
-    }
 
-}
-void getCalibrationDialog::_selectCalGroupOnGui(QString name) {
-    name = name.toLower();
-    name.remove(".cal");
-    if (_calGroups.contains(name, Qt::CaseInsensitive)) {
-        int size = _calGroups.size();
-        for (int i = 0; i < size; i++) {
-            if (_calGroups[i].toLower() == name) {
-                ui->calPoolList->item(i)->setSelected(true);
-                return;
-            }
-        }
-    }
+Calibration getCalibrationDialog::calibration() const {
+    return _calibration;
 }
 
 int getCalibrationDialog::exec() {
-    _isOkClicked = false;
-    _selectDefaultOnGui();
-    return QDialog::exec();
-}
-int getCalibrationDialog::exec(Vna &vna) {
-    _isOkClicked = false;
-    update(vna);
-    return QDialog::exec();
-}
-int getCalibrationDialog::exec(QVector<uint> calibratedChannels, QStringList calGroups) {
-    _isOkClicked = false;
-    update(calibratedChannels, calGroups);
+    _selection.clear();
+    updateUi();
+    unselectAll();
+    if (!_calibration.isEmpty())
+        select(_calibration);
+    else if (!_default.isEmpty())
+        select(_default);
+    
+    int x = parentWidget()->geometry().x();
+    x += parentWidget()->width()/2.0;
+    x -= width()/2.0;
+    
+    int y = parentWidget()->geometry().y();
+    y += parentWidget()->height()/2.0;
+    y -= height()/2.0;
+
+    this->setGeometry(x, y, width(), height());
     return QDialog::exec();
 }
 
-bool getCalibrationDialog::isOkClicked() {
-    return(_isOkClicked);
+void getCalibrationDialog::accept() {
+    if (_selection.isEmpty()) {
+        QMessageBox::warning(this,
+                             "Calibration",
+                             "Please choose a calibration.");
+        return;
+    }
+
+    if (_selection == _calibration) {
+        QDialog::accept();
+        return;
+    }
+
+    _calibration = _selection;
+    QDialog::accept();
+    emit changed(_calibration);
 }
-bool getCalibrationDialog::isCalibrationSelected() {
-    return(_isCalibrationSelected);
-}
-bool getCalibrationDialog::isCancelClicked() {
-    return(!_isOkClicked);
+void getCalibrationDialog::reject() {
+    _selection.clear();
+    QDialog::reject();
 }
 
-bool getCalibrationDialog::isCalibratedChannel() {
-    return(_isCalibratedChannel);
-}
-void getCalibrationDialog::saveChannelCalibration(Vna &vna, QString calGroup) {
-    if (_isCalibratedChannel) {
-        vna.channel(_channel).saveCalibration(calGroup);
+void getCalibrationDialog::keyPressEvent(QKeyEvent *event) {
+    int key = event->key();
+    if (key == Qt::Key_Escape) {
+        event->accept();
+        reject();
+    }
+    else {
+        QDialog::keyPressEvent(event);
     }
 }
-uint getCalibrationDialog::channel() {
-    return(_channel);
-}
 
-bool getCalibrationDialog::isCalGroup() {
-    return(_isCalGroup);
-}
-QString getCalibrationDialog::calGroup() {
-    return(_calGroup);
-}
 
-void getCalibrationDialog::on_channelList_itemSelectionChanged() {
-    if (ui->channelList->selectedItems().isEmpty())
+void getCalibrationDialog::on_channels_itemSelectionChanged() {
+    const QList<QListWidgetItem*> selectedItems = ui->channels->selectedItems();
+    if (selectedItems.isEmpty())
         return;
 
-    ui->calPoolList->clearSelection();
+    ui->calGroups->clearSelection();
+    const QListWidgetItem *selectedItem = selectedItems.first();
+    const uint row = ui->channels->row(selectedItem);
+    _selection.setChannel(_channels[row]);
 }
-void getCalibrationDialog::on_calPoolList_itemSelectionChanged() {
-    if (ui->calPoolList->selectedItems().isEmpty())
+void getCalibrationDialog::on_calGroups_itemSelectionChanged() {
+    const QList<QListWidgetItem*> selectedItems = ui->calGroups->selectedItems();
+    if (selectedItems.isEmpty())
         return;
 
-    ui->channelList->clearSelection();
+    ui->channels->clearSelection();
+    const QListWidgetItem *selectedItem = selectedItems.first();
+    const uint row = ui->calGroups->row(selectedItem);
+    _selection.setCalGroup(_calGroups[row]);
 }
-void getCalibrationDialog::on_buttonBox_accepted()
-{
-    _isOkClicked = true;
-    if (ui->channelList->selectedItems().isEmpty() == false) {
-        QListWidgetItem *item;
-        item = ui->channelList->selectedItems().first();
-        uint row = ui->channelList->row(item);
-        selectChannel(_channels[row]);
-    }
-    else if (ui->calPoolList->selectedItems().isEmpty() == false) {
-        QString calGroup;
-        calGroup
-            = ui->calPoolList->selectedItems().first()->text();
-        selectCalGroup(calGroup);
-    }
-    close();
+
+bool getCalibrationDialog::isVna() const {
+    return _vna != NULL;
 }
-void getCalibrationDialog::on_buttonBox_rejected()
-{
-    close();
+void getCalibrationDialog::updateUi() {
+    if (!isVna())
+        return;
+
+    _calGroups = _vna->calGroups();
+    ui->calGroups->clear();
+    if (!_calGroups.isEmpty())
+        ui->calGroups->addItems(_calGroups);
+
+    _channels = _vna->calibratedChannels();
+    ui->channels->clear();
+    if (!_channels.isEmpty())
+        ui->channels->addItems(toStringList(_channels));
 }

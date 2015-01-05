@@ -19,63 +19,48 @@ class getPortsDialog : public QDialog
 
 public:
     explicit getPortsDialog(QWidget *parent = 0);
-    explicit getPortsDialog(RsaToolbox::Vna &vna, QWidget *parent = 0);
-    explicit getPortsDialog(QVector<uint> selectedPorts, QWidget *parent = 0);
-
     ~getPortsDialog();
 
-    QVector<uint> ports();
-    void selectDefault();
-    void selectPort(uint port);
-    void unselectPort(uint port);
-    void selectPorts(QVector<uint> selectedPorts);
-    void clearSelection();
+    bool isVna() const;
+    RsaToolbox::Vna *vna() const;
+    void setVna(RsaToolbox::Vna *vna);
 
+    bool isDefault() const;
     void clearDefault();
-    void addDefault(uint port);
-    void removeDefault(uint port);
-    void setDefault(QVector<uint> selectedPorts);
+    QVector<uint> defaultPorts() const;
+    void setDefaultPorts(QVector<uint> ports);
 
-    bool isOkClicked();
-    bool isCancelClicked();
+    QVector<uint> ports() const;
 
-    bool isPortsSelected();
-    QVector<uint> selectedPorts();
+signals:
+    void changed(QVector<uint> ports);
 
-    void update(RsaToolbox::Vna &vna);
-    void update(QVector<uint> selectedPorts);
+public slots:
+    virtual int exec();
+    virtual void accept();
 
-    int exec();
-    int exec(RsaToolbox::Vna &vna);
-    int exec(QVector<uint> selectedPorts);
+protected:
+    virtual void keyPressEvent(QKeyEvent *event);
 
 private slots:
-    void on_buttonBox_accepted();
-    void on_buttonBox_rejected();
-    void on_selectAllCheckbox_toggled(bool checked);
+    void on_selectAll_toggled(bool checked);
 
 private:
     Ui::getPortsDialog *ui;
 
-    void _displayPorts();
+    RsaToolbox::Vna *_vna;
+    void updateUi();
 
-    void _checkAll(bool checked = true);
-    void _uncheckAll(bool unchecked = true);
-    void _selectPortsOnGui(QVector<uint> selectedPorts);
+    QVector<uint> _vnaPorts;
+    QVector<uint> _default;
+    QVector<uint> selection();
 
-    void _validateSelection();
-
-    bool _isDefault;
-    QVector<uint> _defaultPorts;
-    void _displaySelection();
-
-    bool _isOkClicked;
-
-    int _numberOfPorts;
     QVector<uint> _ports;
 
-    bool _isPortsSelected;
-    QVector<uint> _selectedPorts;
+    void reset();
+    void checkAll();
+    void uncheckAll();
+    void check(const QVector<uint> &ports);
 };
 
 #endif // GETPORTSDIALOG_H

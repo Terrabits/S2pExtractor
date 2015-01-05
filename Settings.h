@@ -32,7 +32,11 @@ const QString INSTRUMENT_ADDRESS = "127.0.0.1";
 const unsigned int TIMEOUT_MS = 1000;
 
 // Keys
-const QString EXAMPLE_KEY = "EXAMPLE"; // Place your keys here
+const QString OUTERCAL_KEY = "OuterCalibration";
+const QString INNERCAL_KEY = "InnerCalibration";
+const QString PORTS_KEY = "Ports";
+const QString SAVE_PATH_KEY = "SavePath";
+const QString FILENAMES_KEY = "Filenames";
 
 
 #endif

@@ -1,35 +1,38 @@
-#ifndef CalibrationWidgetMap_H
-#define CalibrationWidgetMap_H
+#ifndef PORTSWIDGETMAP_H
+#define PORTSWIDGETMAP_H
 
 
 // Project
-#include "Calibration.h"
-#include "getCalibrationDialog.h"
+#include "Ports.h"
+#include "getPortsDialog.h"
 
 // RsaToolbox
 #include "Vna.h"
 
 // Qt
-#include <QWidget>
+#include <QObject>
+#include <QSharedPointer>
 #include <QLineEdit>
 #include <QPushButton>
 
-class CalibrationWidgetMap : public QObject
+
+class PortsWidgetMap : public QObject
 {
     Q_OBJECT
-public:
-    explicit CalibrationWidgetMap(QWidget *parent = 0);
-    ~CalibrationWidgetMap();
 
-    bool isCalibration() const;
-    SharedCalibration calibration() const;
-    void setCalibration(SharedCalibration calibration);
+public:
+    explicit PortsWidgetMap(QWidget *parent = 0);
+    ~PortsWidgetMap();
+
+    bool isPorts() const;
+    SharedPorts ports() const;
+    void setPorts(SharedPorts ports);
 
     bool isVna() const;
     RsaToolbox::Vna *vna() const;
     void setVna(RsaToolbox::Vna *vna);
 
-    bool  isLineEdit() const;
+    bool isLineEdit() const;
     QLineEdit *lineEdit() const;
     void setLineEdit(QLineEdit *edit);
 
@@ -38,11 +41,11 @@ public:
     void setPushButton(QPushButton *button);
 
 public slots:
-    void getCalibration();
+    void getPorts();
 
 private:
-    SharedCalibration _calibration;
-    getCalibrationDialog _dialog;
+    SharedPorts _ports;
+    getPortsDialog _dialog;
 
     RsaToolbox::Vna *_vna;
     QLineEdit *_lineEdit;
@@ -52,4 +55,4 @@ private:
     void updateView();
 };
 
-#endif // CalibrationWidgetMap_H
+#endif // PORTSWIDGETMAP_H

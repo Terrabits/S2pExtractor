@@ -18,12 +18,6 @@ Calibration::Calibration(QObject *parent) :
     _vna = NULL;
     clear();
 }
-Calibration::Calibration(RsaToolbox::Vna *vna, QObject *parent) :
-    _vna(vna),
-    QObject(parent)
-{
-    clear();
-}
 Calibration::Calibration(const Calibration &other) :
     QObject()
 {
@@ -35,6 +29,33 @@ Calibration::Calibration(const Calibration &other) :
 
 Calibration::~Calibration()
 { }
+
+bool Calibration::isVna() const {
+    return _vna != NULL;
+}
+Vna *Calibration::vna() const {
+    return _vna;
+}
+void Calibration::setVna(Vna *vna) {
+    if (_vna == vna)
+        return;
+
+    _vna = vna;
+
+    if (isEmpty())
+        return;
+
+    if (isCalGroup()) {
+        QString cal = calGroup();
+        clear();
+        setCalGroup(cal);
+    }
+    else {
+        uint i = channel();
+        clear();
+        setChannel(i);
+    }
+}
 
 bool Calibration::isEmpty() const {
     if (_isCalGroup && _calGroup.isEmpty())
@@ -107,17 +128,25 @@ bool Calibration::setCalGroup(QString group) {
         return true;
 
     if (isVna()) {
-        _vna->isError();
-        _vna->clearStatus();
-        uint c = _vna->createChannel();
-        _vna->channel(c).setCalGroup(group);
-        _vna->deleteChannel(c);
-        if (_vna->isError()) {
-            _vna->clearStatus();
-            QString message = "Could not load cal group\n";
-            message += "Make sure cal group is compatible with the current VNA setup";
+        if (!_vna->calGroups().contains(group)) {
+            QString message = "Cal group %1 doesn\'t exist";
+            message = message.arg(group);
             emit error(message);
             return false;
+        }
+        else {
+            _vna->isError();
+            _vna->clearStatus();
+            uint c = _vna->createChannel();
+            _vna->channel(c).setCalGroup(group);
+            _vna->deleteChannel(c);
+            if (_vna->isError()) {
+                _vna->clearStatus();
+                QString message = "Could not load cal group\n";
+                message += "Make sure cal group is compatible with the current VNA setup";
+                emit error(message);
+                return false;
+            }
         }
     }
 
@@ -153,6 +182,18 @@ bool Calibration::setChannel(uint index) {
     return true;
 }
 
-bool Calibration::isVna() const {
-    return _vna != NULL;
+bool operator==(const Calibration &rhs, const Calibration &lhs) {
+    if (rhs.isEmpty() != lhs.isEmpty())
+        return false;
+    if (rhs.isEmpty() && lhs.isEmpty())
+        return true;
+    if (rhs.isCalGroup() != lhs.isCalGroup())
+        return false;
+    if (rhs.isCalGroup())
+        return rhs.calGroup() == lhs.calGroup();
+    else
+        return rhs.channel() == lhs.channel();
+}
+bool operator!=(const Calibration &rhs, const Calibration &lhs) {
+    return !(rhs == lhs);
 }
