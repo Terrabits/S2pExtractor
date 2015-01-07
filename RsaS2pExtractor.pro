@@ -14,7 +14,7 @@
 
 
 QT       += core gui widgets
-TARGET   =  RsaDeembed
+TARGET   =  RsaS2pExtractor
 TEMPLATE =  app
 
 include(RsaToolbox/rsatoolbox.pri)
@@ -27,7 +27,8 @@ SOURCES    +=  main.cpp \
                Data.cpp \
                CalibrationWidgetMap.cpp \
     PortsWidgetMap.cpp \
-    Ports.cpp
+    Ports.cpp \
+    CalculateThread.cpp
 HEADERS     += Settings.h \
                mainwindow.h \
                getCalibrationDialog.h \
@@ -37,7 +38,8 @@ HEADERS     += Settings.h \
                Data.h \
                CalibrationWidgetMap.h \
     PortsWidgetMap.h \
-    Ports.h
+    Ports.h \
+    CalculateThread.h
 FORMS       += mainwindow.ui \
                getCalibrationDialog.ui \
                getPortsDialog.ui \

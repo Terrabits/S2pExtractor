@@ -7,6 +7,7 @@
 #include "CalibrationWidgetMap.h"
 #include "PortsWidgetMap.h"
 #include "getFilenamesDialog.h"
+#include "CalculateThread.h"
 
 // RsaToolbox
 #include "NetworkData.h"
@@ -14,6 +15,7 @@
 // Qt
 #include <QMainWindow>
 #include <QScopedPointer>
+#include <QLabel>
 
 
 namespace Ui {
@@ -33,7 +35,14 @@ protected:
 
 private slots:
     void on_generateButton_clicked();
-    void finished();
+    void startCalculation();
+    void finishCalculation();
+
+    void enableInputs();
+    void disableInputs();
+
+    void showPinwheel();
+    void hidePinwheel();
 
 private:
     Ui::MainWindow *ui;
@@ -43,6 +52,13 @@ private:
     CalibrationWidgetMap _innerCalMap;
     PortsWidgetMap _portsMap;
     getFilenamesDialog _filenamesDialog;
+
+    CalculateThread _calcThread;
+
+    bool isReady();
+
+    void initPinwheel();
+    QLabel _pinwheel;
 };
 
 

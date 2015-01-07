@@ -132,7 +132,7 @@ void getFilenamesDialog::updateUi() {
     ui->filenames->setColumnWidth(0, 30);
     ui->filenames->setRowCount(size);
     QString label = "%1";
-    QString filename = "Port %1";
+    QString filename = "Port %1 path";
     QRegExp regExp("[^/?*:;{}\"\\<>|]+");
     for (int i = 0; i < size; i++) {
         uint port = _ports->at(i);

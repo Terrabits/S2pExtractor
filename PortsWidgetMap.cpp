@@ -9,10 +9,6 @@ using namespace RsaToolbox;
 #include <QDebug>
 
 
-SharedPorts newPorts() {
-    return SharedPorts(new QVector<uint>());
-}
-
 PortsWidgetMap::PortsWidgetMap(QWidget *parent) :
     _dialog(parent),
     QObject(parent)

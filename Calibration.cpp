@@ -63,7 +63,7 @@ uint Calibration::channel() const {
         return 0;
 }
 
-bool Calibration::isValid(Vna *vna) {
+bool Calibration::canLoad(Vna *vna) {
     if (vna == NULL)
         return false;
     if (isEmpty()) {

@@ -9,5 +9,6 @@
         <file>Graphics/CalPlanes_Reverse_90.png</file>
         <file>Graphics/CalPlanes_Reverse_120.png</file>
         <file>Graphics/CalPlanes_Reverse_150.png</file>
+        <file>Graphics/pinwheel.gif</file>
     </qresource>
 </RCC>

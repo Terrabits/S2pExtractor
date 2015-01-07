@@ -29,7 +29,7 @@ public:
     QString calGroup() const;
     uint channel() const;
 
-    bool isValid(RsaToolbox::Vna *vna);
+    bool canLoad(RsaToolbox::Vna *vna);
     QString displayText() const;
 
     void operator=(const Calibration &other);

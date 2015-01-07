@@ -3,6 +3,7 @@
 
 
 // Qt
+#include <QVector>
 #include <QSharedPointer>
 
 
