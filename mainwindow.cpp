@@ -124,6 +124,7 @@ void MainWindow::on_generateButton_clicked() {
     if (_filenamesDialog.exec() != QDialog::Accepted)
         return;
 
+    _data->filePathNames() = _filenamesDialog.filePathNames();
     startCalculation();
 }
 void MainWindow::startCalculation() {
