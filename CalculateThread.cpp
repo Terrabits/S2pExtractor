@@ -25,7 +25,7 @@ CalculateThread::~CalculateThread()
 }
 
 void CalculateThread::run() {
-    if (!isReady() || !areFilesWritable()) {
+    if (!isReady()) {
         _isError = true;
         return;
     }
@@ -52,8 +52,14 @@ void CalculateThread::run() {
             deleteFiles();
             return;
         }
-        calculate(port1, vnaPort1, isPort1Matrix,
-                  port2, vnaPort2, isPort2Matrix);
+        if (!calculate(port1, vnaPort1, isPort1Matrix,
+                  port2, vnaPort2, isPort2Matrix))
+        {
+            _isError = true;
+            deleteChannels();
+            deleteFiles();
+            return;
+        }
     }
 }
 
@@ -386,18 +392,21 @@ bool CalculateThread::portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix,
         return false;
     }
 }
-void CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix)
+bool CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix)
 {
     qDebug() << QString ("Calculating %1 (%2), %3 (%4)").arg(port1).arg(vnaPort1).arg(port2).arg(vnaPort2);
     if (_data->ports()->contains(port1)) {
         const uint index = _data->ports()->indexOf(port1);
-         const QString pathName = _data->filePathNames()[index];
+        const QString pathName = _data->filePathNames()[index];
         QFileInfo file(pathName);
         if (!file.exists()) {
             qDebug() << "Generating " << pathName;
             NetworkData s2p = calculateNetwork(port1, vnaPort1, isPort1Matrix,
                                                port2, vnaPort2, isPort2Matrix);
-            Touchstone::Write(s2p, pathName);
+            if (!Touchstone::write(s2p, pathName)) {
+                emit error("*Could not write touchstone files");
+                return false;
+            }
         }
     }
     if (_data->ports()->contains(port2)) {
@@ -408,9 +417,14 @@ void CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, u
             qDebug() << "Generating " << pathName;
             NetworkData s2p = calculateNetwork(port2, vnaPort2, isPort2Matrix,
                                                port1, vnaPort1, isPort1Matrix);
-            Touchstone::Write(s2p, pathName);
+            if (!Touchstone::write(s2p, pathName)) {
+                emit error("*Could not write touchstone files");
+                return false;
+            }
         }
     }
+
+    return true;
 }
 NetworkData CalculateThread::calculateNetwork(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix) {
 

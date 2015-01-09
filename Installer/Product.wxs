@@ -1,60 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Installer template for use with Rsa Create Installer,
-     part of the RsaToolbox. Do not modify unless you know
-     what you are doing!!!                                -->
-
+<!-- Rsa Create Installer Template                 -->
+<!-- Name: RsaToolbox DirectX with About Link      -->
+<!-- Ver:  1.0                                     -->
+<!-- Guid: d99c6279-2616-4d0d-9eb8-fc9baaa5943f    -->
+<!-- Instruments: Vna(Zva, Znb)                    -->
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  
-  <!-- Definition of my application -->
-	<Product Id="%PRODUCT_GUID%" Name="R&amp;S %APPLICATION_NAME%" Language="1033" Version="%VERSION%" Manufacturer="Rohde &amp; Schwarz America" UpgradeCode="%GUID%">  
+	<Product Id="377884B3-E9AB-4393-A13B-019746ABBB9D" Name="R&amp;S S2P Extractor" Language="1033"
+    Version="1.2" Manufacturer="Rohde &amp; Schwarz"
+    UpgradeCode="ca98bc5f-7344-448a-b765-f33a9db7903a">
 		
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+		<Package InstallerVersion="200"
+      Compressed="yes" InstallScope="perMachine" />
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate  EmbedCab="yes" />
-    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
-    <WixVariable Id="WixUIBannerBmp" Value="RS_Banner.bmp" />
-    <WixVariable Id="WixUIDialogBmp" Value="RS_Dialog.bmp" />
+    <WixVariable Id="WixUILicenseRtf"
+      Value="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\R&amp;S Terms and Conditions for Royalty-Free Products.rtf" />
+    <WixVariable Id="WixUIBannerBmp"
+      Value="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Images\RsBanner.bmp" />
+    <WixVariable Id="WixUIDialogBmp"
+      Value="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Images\RsDialog.bmp" />
 
-    <Feature Id="AppFeature" Title="R&amp;S %APPLICATION_NAME%" Description="%DESCRIPTION%" Level="1">
-      <ComponentRef Id="AppComponent" />
-      <ComponentRef Id="RSIB" />
-      <ComponentRef Id="QCustomPlots" />
-      <ComponentRef Id="VC2010Runtime" />
+    <Feature Id="AppFeature" Title="R&amp;S S2P Extractor"
+      Description="Calculates the characterization of unmeasurable devices such as probes and test fixtures from specific calibrations." Level="1">
+      <ComponentRef Id="ExecutableComponent" />
       <ComponentRef Id="QtRuntime" />
       <ComponentRef Id="QtPlatformPlugin" />
-      <ComponentRef Id="UninstallShortcutComponent"/>
+      <ComponentRef Id="Licenses" />
+      <ComponentRef Id="LogsAndSettings" />
+      <ComponentRef Id="MsvcRuntime" />
+      <ComponentRef Id="QCustomPlots" />
+      <ComponentRef Id="QuaZip" />
+      <ComponentRef Id="RsVisa" />
+      <ComponentRef Id="ShortcutsComponent" />
     </Feature>
     
-    <Property Id="ARPPRODUCTICON" Value="RS.ico" />
+    <Property Id="ARPPRODUCTICON"
+      Value="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Icons\Rs.ico" />
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
-    <UIRef Id="WixUI_InstallDir"/>
+    <UIRef Id="WixUI_InstallDir" />
   </Product>
 
   <!-- Directory structure -->
   <Fragment>
     <SetDirectory Id="WINDOWSVOLUME" Value="[WindowsVolume]" />
-    <SetDirectory Id="ZNBExternalToolsFolder" Value="[WindowsVolume]\Users\Public\Documents\Rohde-Schwarz\Vna\External Tools\" />
-    <SetDirectory Id="ZVAExternalToolsFolder" Value="[WindowsVolume]\Rohde&amp;Schwarz\Nwa\External Tools\" />
+    <SetDirectory Id="ZNBExternalToolsFolder"
+      Value="[WindowsVolume]\Users\Public\Documents\Rohde-Schwarz\Vna\External Tools\" />
+    <SetDirectory Id="ZVAExternalToolsFolder"
+      Value="[WindowsVolume]\Rohde&amp;Schwarz\Nwa\External Tools\" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="WINDOWSVOLUME">
         <Directory Id="ProgramFilesFolder">
           <Directory Id="CompanyFilesFolder" Name="Rohde-Schwarz">
-            <Directory Id="INSTALLFOLDER" Name="%APP_FOLDER%">
+            <Directory Id="INSTALLFOLDER" Name="S2P Extractor">
               <Directory Id="PlatformsFolder" Name="platforms" />
+              <Directory Id="LicensesFolder" Name="Licenses" />
             </Directory>
           </Directory>
         </Directory>
         <Directory Id="ProgramMenuFolder">
-          <Directory Id="ApplicationStartMenuFolder" Name="R&amp;S %APPLICATION_NAME%" />
+          <Directory Id="ApplicationStartMenuFolder"
+            Name="R&amp;S S2P Extractor" />
         </Directory>
       </Directory>
       <Directory Id="ZNBExternalToolsFolder" />
       <Directory Id="ZVAExternalToolsFolder" />
       <Directory Id="CommonAppDataFolder">
         <Directory Id="CompanyDataFolder" Name="Rohde-Schwarz">
-          <Directory Id="MyAppDataFolder" Name="%APPLICATION_NAME%">
+          <Directory Id="MyAppDataFolder" Name="S2P Extractor">
             <Directory Id="SettingsFolder" Name="Settings" />
           </Directory>
         </Directory>
@@ -63,58 +77,131 @@
   </Fragment>
 
   <!-- Application Components -->
-  <Fragment>    
+  <Fragment>
     <!-- Application files -->
-    <Icon Id="RS.ico" SourceFile="RS.ico"/>
-    <Component Id="AppComponent" Guid="%GUID%" Directory="INSTALLFOLDER">
-      <CreateFolder Directory="SettingsFolder" />
-      <CreateFolder Directory="PlatformsFolder" />
-      <File Id="AppExecutable" Name="%APPLICATION_NAME%.exe" Source="%EXECUTABLE_PATH%" KeyPath="yes">
-        <Shortcut Id="AppShortcut" Name="R&amp;S %APPLICATION_NAME%" Directory="ApplicationStartMenuFolder" Description="%DESCRIPTION%" Advertise="yes" Icon="RS.ico"/>
-        <Shortcut Id="ZNBShortcut" Name="%APPLICATION_NAME%" Directory="ZNBExternalToolsFolder" Advertise="yes" Icon="RS.ico"/>
-        <Shortcut Id="ZVAShortcut" Name="%APPLICATION_NAME%" Directory="ZVAExternalToolsFolder" Advertise="yes" Icon="RS.ico"/>
+    <Icon Id="Rs.ico" SourceFile="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer/Icons/Rs.ico" />
+    <Component Id="ExecutableComponent" Guid="045C3B5A-B69B-45A7-9A90-8617CEA3CECC"
+      Directory="INSTALLFOLDER">
+      <File Id="AppExecutable" Name="R&amp;S S2P Extractor.exe"
+        Source="C:\Users\Lalic\Documents\Qt\build-RsaS2pExtractor-Desktop_Qt_5_2_1_MSVC2010_32bit-Release\release\RsaS2pExtractor.exe" KeyPath="yes">
+        <Shortcut Id="ZNBShortcut" Name="S2P Extractor"
+          Directory="ZNBExternalToolsFolder" Advertise="yes" Icon="Rs.ico" />
+        <Shortcut Id="ZVAShortcut" Name="S2P Extractor"
+          Directory="ZVAExternalToolsFolder" Advertise="yes" Icon="Rs.ico" />
       </File>
-      <File Id="RSA_License" Name="License.txt" Source="License.txt" />
-      <RemoveFile Id="PurgeInstallFolder" Name="*.*" On="uninstall" />
-      <RemoveFile Id="PurgePluginsFolder" Directory="PlatformsFolder" Name="*.*" On="uninstall" />
-      <RemoveFile Id="PurgeAppDataFolder" Directory="MyAppDataFolder" Name="*.*" On="uninstall" />
-      <RemoveFile Id="PurgeSettingsFolder" Directory="SettingsFolder" Name="*.*" On="uninstall" />
-      <RemoveFolder Id="RemoveSettingsFolder" Directory="SettingsFolder" On="uninstall" />
-      <RemoveFolder Id="RemoveAppStartMenuFolder" Directory="ApplicationStartMenuFolder" On="uninstall" />
-      <RemoveFolder Id="RemoveAppDataFolder" Directory="MyAppDataFolder" On="uninstall" />
-      <RemoveFolder Id="RemoveCompanyDataFolder" Directory="CompanyDataFolder" On="uninstall" />
-      <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
     </Component>
-    <Component Id="RSIB" Guid="%GUID%" Directory="INSTALLFOLDER">
-      <File Id="rsib32.dll" Name="rsib32.dll" Source="..\RsaToolbox\Bus\Rsib\rsib32.dll" KeyPath="yes"/>
+    <Component Id="Licenses" Guid="AF8FAAEF-44CC-4BCE-81C5-69E1DA55213B" Directory="LicensesFolder">
+      <File Id="RsaLicense"
+        Name="R&amp;S Terms and Conditions for Royalty-Free Products.txt"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\R&amp;S Terms and Conditions for Royalty-Free Products.txt"
+        KeyPath="yes" />
+      <File Id="MsvcLicense"
+        Name="Microsoft Visual C++ 2010 License.txt"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\Microsoft Visual C++ 2010 License.txt" />
+      <File Id="QCustomPlotLicense"
+        Name="QCustomPlot - GNU General Public License Version 3.txt"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\QCustomPlot - GNU General Public License Version 3.txt" />
+      <File Id="Qt5License"
+        Name="Qt 5 - GNU Lesser General Public License Version 2.1.txt"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\Qt 5 - GNU Lesser General Public License Version 2.1.txt" />
+      <File Id="QuaZIPLicense"
+        Name="QuaZip - GNU General Public License v2.1.txt"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\QuaZip - GNU General Public License v2.1.txt" />
+      <File Id="ZLibLicense"
+        Name="ZLib Copyright and Terms and Conditions.txt"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\ZLib Copyright and Terms and Conditions.txt" />
     </Component>
-    <Component Id="QCustomPlots" Guid="%GUID%" Directory="INSTALLFOLDER">
-    	<File Id="qcustomplot.dll" Name="qcustomplot.dll" Source="..\RsaToolbox\QCustomPlot\qcustomplot.dll" KeyPath="yes" />
+    <Component Id="RsVisa" Guid="362AE06C-E345-4D34-A750-EEF2BCFBD3AA"
+      Directory="INSTALLFOLDER">
+      <File Id="RsVisa32.dll" Name="RsVisa32.dll"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\RsVisa\RsVisa32.dll" KeyPath="yes" />
     </Component>
-    <Component Id="VC2010Runtime" Guid="%GUID%" Directory="INSTALLFOLDER">
-      <File Id="msvcr100.dll" Name="msvcr100.dll" Source="%MSVC2010_CPP_RUNTIME%\msvcr100.dll" KeyPath="yes"/>
-      <File Id="msvcp100.dll" Name="msvcp100.dll" Source="%MSVC2010_CPP_RUNTIME%\msvcp100.dll" />
+    <Component Id="QCustomPlots" Guid="DF114D31-4A22-4EEA-850B-09ED9C5F014F"
+      Directory="INSTALLFOLDER">
+    	<File Id="qcustomplot.dll" Name="qcustomplot.dll"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QCustomPlots\qcustomplot.dll" KeyPath="yes" />
     </Component>
-    <Component Id="QtRuntime" Guid="%GUID%" Directory="INSTALLFOLDER">
-      <File Id="Qt5Core.dll" Name="Qt5Core.dll" Source="%QT_CPP_RUNTIME%\Qt5Core.dll" KeyPath="yes" />
-      <File Id="Qt5Gui.dll" Name="Qt5Gui.dll" Source="%QT_CPP_RUNTIME%\Qt5Gui.dll" />
-      <File Id="Qt5Widgets.dll" Name="Qt5Widgets.dll" Source="%QT_CPP_RUNTIME%\Qt5Widgets.dll" />
-      <File Id="libGLESv2.dll" Name="libGLESv2.dll" Source="%QT_CPP_RUNTIME%\libGLESv2.dll" />
-      <File Id="libEGL.dll" Name="libEGL.dll" Source="%QT_CPP_RUNTIME%\libEGL.dll" />
-      <File Id="D3DCompiler_43.dll" Name="D3DCompiler_43.dll" Source="%QT_CPP_RUNTIME%\D3DCompiler_43.dll" />
-      <File Id="icudt51.dll" Name="icudt51.dll" Source="%QT_CPP_RUNTIME%\icudt51.dll" />
-      <File Id="icuin51.dll" Name="icuin51.dll" Source="%QT_CPP_RUNTIME%\icuin51.dll" />
-      <File Id="icuuc51.dll" Name="icuuc51.dll" Source="%QT_CPP_RUNTIME%\icuuc51.dll" />
-      <File Id="Qt5PrintSupport.dll" Name="Qt5PrintSupport.dll" Source="%QT_CPP_RUNTIME%\Qt5PrintSupport.dll" />
+    <Component Id="QuaZip" Guid="C93841AC-0BBA-4067-8CFE-A1E38E8A3E8F"
+      Directory="INSTALLFOLDER">
+      <File Id="quazip.dll" Name="quazip.dll"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QuaZIP\quazip.dll" KeyPath="yes" />
+      <File Id="zlib1.dll" Name="zlib1.dll"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QuaZIP\zlib1.dll" />
     </Component>
-    <Component Id="QtPlatformPlugin" Guid="%GUID%" Directory="PlatformsFolder">
-      <File Id="qwindows.dll" Name="qwindows.dll" Source="%QT_CPP_RUNTIME%\..\plugins\platforms\qwindows.dll" KeyPath="yes" />
+    <Component Id="MsvcRuntime" Guid="63B9FD98-6F39-4C5E-9CA1-85D1C46195E7"
+      Directory="INSTALLFOLDER">
+      <File Id="msvcr100.dll" Name="msvcr100.dll"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32\msvcr100.dll" KeyPath="yes" />
+      <File Id="msvcp100.dll" Name="msvcp100.dll"
+        Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32\msvcp100.dll" />
     </Component>
-    <Component Id="UninstallShortcutComponent" Guid="%GUID%" Directory="ApplicationStartMenuFolder">
-      <RegistryKey Root="HKCU" Key="Software\Rohde-Schwarz\%APPLICATION_NAME%\Uninstall">
-        <RegistryValue Value="Registry entry for %APPLICATION_NAME% uninstall shortcut" Type="string" KeyPath="yes" />
+    <Component Id="QtRuntime" Guid="D28A20E2-C86A-4A8C-8525-5A5D2B98A888"
+      Directory="INSTALLFOLDER">
+      <File Id="Qt5Core.dll" Name="Qt5Core.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Core.dll" KeyPath="yes" />
+      <File Id="Qt5Gui.dll" Name="Qt5Gui.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Gui.dll" />
+      <File Id="Qt5Widgets.dll" Name="Qt5Widgets.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Widgets.dll" />
+      <File Id="Qt5Network.dll" Name="Qt5Network.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Network.dll" />
+      <File Id="Qt5PrintSupport.dll" Name="Qt5PrintSupport.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\Qt5PrintSupport.dll" />
+      <File Id="libGLESv2.dll" Name="libGLESv2.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\libGLESv2.dll" />
+      <File Id="libEGL.dll" Name="libEGL.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\libEGL.dll" />
+      <File Id="D3DCompiler_43.dll" Name="D3DCompiler_43.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\D3DCompiler_43.dll" />
+      <File Id="icudt51.dll" Name="icudt51.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\icudt51.dll" />
+      <File Id="icuin51.dll" Name="icuin51.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\icuin51.dll" />
+      <File Id="icuuc51.dll" Name="icuuc51.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\icuuc51.dll" />
+    </Component>
+    <Component Id="QtPlatformPlugin" Guid="A335CCA0-2034-4F22-9956-888543E220D7"
+      Directory="PlatformsFolder">
+      <File Id="qwindows.dll" Name="qwindows.dll"
+        Source="C:\Qt\5.2.1\msvc2010\bin\..\plugins\platforms\qwindows.dll" KeyPath="yes" />
+    </Component>
+    <Component Id="LogsAndSettings" Guid="52FF94F5-56FD-431F-9086-7D158179DE9C"
+      Directory="MyAppDataFolder" KeyPath="yes">
+      <CreateFolder Directory="SettingsFolder" />
+      <RemoveFile Id="PurgeLogs"
+        Name="*.*" On="uninstall" />
+      <RemoveFile Id="PurgeSettings"
+        Directory="SettingsFolder"
+        Name="*.*" On="uninstall" />
+      <RemoveFolder Id="RemoveSettingsFolder"
+      Directory="SettingsFolder" On="uninstall" />
+    </Component>
+    <Component Id="ShortcutsComponent" Guid="511CF402-5EB5-4F35-B5DD-51055D9CBB58"
+      Directory="ApplicationStartMenuFolder">
+      <RegistryKey Root="HKCU"
+        Key="Software\Rohde-Schwarz\R&amp;S S2P Extractor\Uninstall">
+        <RegistryValue
+          Value="KeyPath for uninstall shortcut"
+          Type="string" KeyPath="yes" />
       </RegistryKey>
-      <Shortcut Id="UninstallShortcut" Name="Uninstall" Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" />
+      <Shortcut Id="AppShortcut" Name="R&amp;S S2P Extractor"
+        Directory="ApplicationStartMenuFolder"
+        Description="Calculates the characterization of unmeasurable devices such as probes and test fixtures from specific calibrations."
+        Icon="Rs.ico"
+        WorkingDirectory="INSTALLFOLDER"
+        Target="[INSTALLFOLDER]\R&amp;S S2P Extractor.exe" />
+      <Shortcut Id="AboutShortcut" Name="About"
+        Directory="ApplicationStartMenuFolder"
+        Description="Licensing and contact information"
+        Icon="Rs.ico"
+        WorkingDirectory="INSTALLFOLDER"
+        Target="[INSTALLFOLDER]\R&amp;S S2P Extractor.exe" Arguments="-about" />
+      <Shortcut Id="LogsShortcut" Name="Logs"
+        Target="[WindowsFolder]explorer.exe" Arguments="&quot;[MyAppDataFolder]&quot;" />
+      <Shortcut Id="UninstallShortcut" Name="Uninstall"
+        Target="[SystemFolder]msiexec.exe" Arguments="/x [ProductCode]" />
+      <RemoveFolder Id="RemoveStartShortcutsFolder"
+        Directory="ApplicationStartMenuFolder" On="uninstall" />
     </Component>
   </Fragment>
 </Wix>
