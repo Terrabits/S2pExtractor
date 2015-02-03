@@ -15,6 +15,7 @@ using namespace RsaToolbox;
 #include <QDir>
 #include <QFileDialog>
 #include <QKeyEvent>
+#include <QMessageBox>
 
 getFilenamesDialog::getFilenamesDialog(QWidget *parent) :
     QDialog(parent),
@@ -102,12 +103,31 @@ void getFilenamesDialog::accept() {
             edit->selectAll();
             return;
         }
-        _filenames.append(edit->text().trimmed());
+        _filenames.append(filename);
     }
+
     if (_directory.isEmpty()) {
         ui->error->showMessage("Please choose a valid directory.");
         return;
     }
+
+    QDir dir(_directory);
+    bool exists = false;
+    foreach (QString f, filePathNames()) {
+        if (dir.exists(f)) {
+            exists = true;
+            break;
+        }
+    }
+    if (exists) {
+        QMessageBox::StandardButton response
+                = QMessageBox::question(this,
+                                        "Overwrite?",
+                                        "Filename(s) already exist.\nOverwrite?");
+        if (response != QMessageBox::Yes)
+            return;
+    }
+
     QDialog::accept();
 }
 

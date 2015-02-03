@@ -103,12 +103,16 @@ bool CalculateThread::areFilesWritable() {
         return false;
     }
 
-    if (QFileInfo(_data->filePathNames().first()).isWritable()) {
-        emit error("*Directory not writable");
+    QFile test(_data->filePathNames().first());
+    if (!test.open(QFile::WriteOnly)) {
+        emit error("*Directory is not writable");
         return false;
     }
-    else
+    else {
+        test.close();
+        test.remove();
         return true;
+    }
 }
 bool CalculateThread::hasPorts() {
     if (_data->ports()->isEmpty()) {
@@ -229,14 +233,28 @@ bool CalculateThread::moreThanOnePortCalibrated() {
 
 bool CalculateThread::portsAreCalibrated() {
     QVector<uint> calibratedPorts = _outerData.ports();
+    QVector<uint> uncalibratedPorts;
     foreach (uint i, *(_data->ports())) {
-        if (!calibratedPorts.contains(i)) {
-            emit error("*Ports are not calibrated");
-            return false;
-        }
+        if (!calibratedPorts.contains(i))
+            uncalibratedPorts << i;
     }
 
-    return true;
+    if (uncalibratedPorts.isEmpty()) {
+        return true;
+    }
+    else {
+        QString msg;
+        if (uncalibratedPorts.size() == 1) {
+            msg = "*Port %1 is not calibrated";
+            msg = msg.arg(uncalibratedPorts.first());
+        }
+        else {
+            msg = "*Ports %1 are not calibrated";
+            msg = msg.arg(portString(uncalibratedPorts));
+        }
+        emit error(msg);
+        return false;
+    }
 }
 bool CalculateThread::frequencyIsKnown() {
     if (_outerData.sweepType() == VnaChannel::SweepType::Segmented) {
@@ -264,11 +282,13 @@ bool CalculateThread::isPortsLeft() const {
 void CalculateThread::getVnaPorts() {
     _vnaPorts = _outerData.testPortToVnaMap().values().toVector();
     uint switchMatrices = _outerData.switchMatrices();
-    for (uint i = 0; i < switchMatrices; i++)
+    for (uint i = 1; i <= switchMatrices; i++)
         _vnaPorts += _outerData.switchMatrixToVnaPortMap(i).values().toVector();
     qSort(_vnaPorts);
 }
 bool CalculateThread::portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix, uint &port2, uint &vnaPort2, bool &isPort2Matrix) {
+    _data->vna()->printLine("CalculateThread::portPair(...)\n");
+    _data->vna()->clearStatus();
     _data->vna()->settings().errorDisplayOff();
     QVector<uint> availableVnaPorts = _vnaPorts;
 
@@ -388,16 +408,14 @@ bool CalculateThread::portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix,
 }
 void CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix)
 {
-    qDebug() << QString ("Calculating %1 (%2), %3 (%4)").arg(port1).arg(vnaPort1).arg(port2).arg(vnaPort2);
     if (_data->ports()->contains(port1)) {
         const uint index = _data->ports()->indexOf(port1);
          const QString pathName = _data->filePathNames()[index];
         QFileInfo file(pathName);
         if (!file.exists()) {
-            qDebug() << "Generating " << pathName;
             NetworkData s2p = calculateNetwork(port1, vnaPort1, isPort1Matrix,
                                                port2, vnaPort2, isPort2Matrix);
-            Touchstone::Write(s2p, pathName);
+            Touchstone::write(s2p, pathName);
         }
     }
     if (_data->ports()->contains(port2)) {
@@ -405,16 +423,14 @@ void CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, u
         const QString pathName = _data->filePathNames()[index];
         QFileInfo file(pathName);
         if (!file.exists()) {
-            qDebug() << "Generating " << pathName;
             NetworkData s2p = calculateNetwork(port2, vnaPort2, isPort2Matrix,
                                                port1, vnaPort1, isPort1Matrix);
-            Touchstone::Write(s2p, pathName);
+            Touchstone::write(s2p, pathName);
         }
     }
 }
 NetworkData CalculateThread::calculateNetwork(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix) {
 
-    qDebug() << "Getting dir, reflTrack and srcMatch";
     ComplexRowVector dir, reflTrack, srcMatch;
     if (isPort1Matrix || isPort2Matrix) {
         dir = _outerData.directivity(port2, vnaPort2, port1, vnaPort1);
@@ -426,9 +442,7 @@ NetworkData CalculateThread::calculateNetwork(uint port1, uint vnaPort1, bool is
         reflTrack = _outerData.reflectionTracking(port2, port1);
         srcMatch = _outerData.sourceMatch(port2, port1);
     }
-    qDebug() << "Sizes: " << dir.size() << reflTrack.size() << srcMatch.size();
 
-    qDebug() << "Getting dir, reflTrack and srcMatch with DUT";
     ComplexRowVector dirWithDut, reflTrackWithDut, srcMatchWithDut;
     if (isPort1Matrix || isPort2Matrix) {
         dirWithDut = _innerData.directivity(port2, vnaPort2, port1, vnaPort1);
@@ -440,25 +454,16 @@ NetworkData CalculateThread::calculateNetwork(uint port1, uint vnaPort1, bool is
         reflTrackWithDut = _innerData.reflectionTracking(port2, port1);
         srcMatchWithDut = _innerData.sourceMatch(port2, port1);
     }
-    qDebug() << "Sizes: " << dirWithDut.size() << reflTrackWithDut.size() << srcMatchWithDut.size();
 
-    qDebug() << "Calculating...";
     ComplexRowVector denominator = add(reflTrack, multiplyEach(srcMatch, subtract(dirWithDut, dir)));
-    qDebug() << "denominator size: " << denominator.size();
     ComplexRowVector s11 = divideEach(subtract(dirWithDut, dir), denominator);
-    qDebug() << "s11 size: " << s11.size();
     ComplexRowVector s22 = subtract(srcMatchWithDut, divideEach(multiplyEach(srcMatch, reflTrackWithDut), denominator));
-    qDebug() << "s22 size: " << s22.size();
 
     ComplexRowVector s21Numerator = smoothSqrt(multiplyEach(reflTrack, reflTrackWithDut));
-    qDebug() << "s21 numerator size: " << s21Numerator.size();
     ComplexRowVector s21 = divideEach(s21Numerator, denominator);
-    qDebug() << "s21 size: " << s21.size();
     s21 = smoothPhase(s21);
-    qDebug() << "... phase smoothed. fix DC...";
     s21 = fixPhaseAtDc(_frequency_Hz, s21);
 
-    qDebug() << "Constructing...";
     ComplexMatrix3D y;
     constructMatrix(y, s11, s21, s22);
 
@@ -471,7 +476,6 @@ NetworkData CalculateThread::calculateNetwork(uint port1, uint vnaPort1, bool is
 }
 void CalculateThread::constructMatrix(ComplexMatrix3D &matrix, const ComplexRowVector &s11, const ComplexRowVector &s21, const ComplexRowVector &s22) {
     uint points = s11.size();
-    qDebug() << "Points: " << points << s21.size() << s22.size();
     matrix.resize(points);
         for (uint i = 0; i < points; i++) {
             matrix[i].resize(2);
