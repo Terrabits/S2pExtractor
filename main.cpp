@@ -77,12 +77,12 @@ bool isAboutMenu(int argc, char *argv[]) {
 }
 bool isNoConnection(Vna &vna) {
     if (vna.isDisconnected()) {
-        QString error_message
-                = "Instrument not found. Please run this application on a Rohde & Schwarz VNA.";
+        QString message
+                = "Please run this application on a Rohde & Schwarz VNA.";
         QMessageBox::critical(NULL,
-                              "RSA Deembed",
-                              error_message);
-        vna.print(error_message);
+                              "Instrument not found!",
+                              message);
+        vna.print(message);
         return(true);
     }
     else
@@ -90,12 +90,12 @@ bool isNoConnection(Vna &vna) {
 }
 bool isUnknownModel(Vna &vna) {
     if (vna.properties().isUnknownModel()) {
-        QString error_message(QString("VNA not recognized.\n")
-                              + "Please use RSA Deembed with a Rohde & Schwarz instrument");
+        QString message("Please use %1 with a Rohde & Schwarz instrument");
+        message = message.arg(APP_NAME);
         QMessageBox::critical(NULL,
-                              "RSA Deembed",
-                              error_message);
-        vna.print(error_message);
+                              "VNA not recognized!",
+                              message);
+        vna.print(message);
         return(true);
     }
     else
