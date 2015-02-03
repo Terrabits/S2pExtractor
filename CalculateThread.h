@@ -62,6 +62,7 @@ private:
 
     bool _isError;
 
+    bool _areMatrices;
     QVector<uint> _vnaPorts;
     QVector<uint> _calibratedPorts;
     QVector<uint> _portsLeft;

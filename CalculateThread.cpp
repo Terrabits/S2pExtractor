@@ -34,6 +34,7 @@ void CalculateThread::run() {
     deleteFiles();
 
     loadCalibrations();
+    _areMatrices = _outerData.areSwitchMatrices();
     _calibratedPorts = _outerData.ports();
     _portsLeft = *(_data->ports());
     calculateFrequency();
@@ -412,8 +413,7 @@ bool CalculateThread::portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix,
         return false;
     }
 }
-bool CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix)
-{
+bool CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix) {
     if (_data->ports()->contains(port1)) {
         const uint index = _data->ports()->indexOf(port1);
         const QString pathName = _data->filePathNames()[index];
@@ -421,14 +421,10 @@ bool CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, u
         if (!file.exists()) {
             NetworkData s2p = calculateNetwork(port1, vnaPort1, isPort1Matrix,
                                                port2, vnaPort2, isPort2Matrix);
-<<<<<<< HEAD
-            Touchstone::write(s2p, pathName);
-=======
             if (!Touchstone::write(s2p, pathName)) {
                 emit error("*Could not write touchstone files");
                 return false;
             }
->>>>>>> 1d4381d5c100c4554cd004ea719b67c958d4d2a4
         }
     }
     if (_data->ports()->contains(port2)) {
@@ -438,40 +434,32 @@ bool CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, u
         if (!file.exists()) {
             NetworkData s2p = calculateNetwork(port2, vnaPort2, isPort2Matrix,
                                                port1, vnaPort1, isPort1Matrix);
-<<<<<<< HEAD
-            Touchstone::write(s2p, pathName);
-=======
             if (!Touchstone::write(s2p, pathName)) {
                 emit error("*Could not write touchstone files");
                 return false;
             }
->>>>>>> 1d4381d5c100c4554cd004ea719b67c958d4d2a4
         }
     }
 
     return true;
 }
 NetworkData CalculateThread::calculateNetwork(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix) {
-
-    ComplexRowVector dir, reflTrack, srcMatch;
-    if (isPort1Matrix || isPort2Matrix) {
+    ComplexRowVector dir,        reflTrack,        srcMatch;
+    ComplexRowVector dirWithDut, reflTrackWithDut, srcMatchWithDut;
+    if (_areMatrices /*isPort1Matrix || isPort2Matrix*/) {
         dir = _outerData.directivity(port2, vnaPort2, port1, vnaPort1);
         reflTrack = _outerData.reflectionTracking(port2, vnaPort2, port1, vnaPort1);
         srcMatch = _outerData.sourceMatch(port2, vnaPort2, port1, vnaPort1);
-    }
-    else {
-        dir = _outerData.directivity(port2, port1);
-        reflTrack = _outerData.reflectionTracking(port2, port1);
-        srcMatch = _outerData.sourceMatch(port2, port1);
-    }
 
-    ComplexRowVector dirWithDut, reflTrackWithDut, srcMatchWithDut;
-    if (isPort1Matrix || isPort2Matrix) {
         dirWithDut = _innerData.directivity(port2, vnaPort2, port1, vnaPort1);
         reflTrackWithDut = _innerData.reflectionTracking(port2, vnaPort2, port1, vnaPort1);
         srcMatchWithDut = _innerData.sourceMatch(port2, vnaPort2, port1, vnaPort1);
     }
     else {
+        dir = _outerData.directivity(port2, port1);
+        reflTrack = _outerData.reflectionTracking(port2, port1);
+        srcMatch = _outerData.sourceMatch(port2, port1);
+
         dirWithDut = _innerData.directivity(port2, port1);
         reflTrackWithDut = _innerData.reflectionTracking(port2, port1);
         srcMatchWithDut = _innerData.sourceMatch(port2, port1);
@@ -532,6 +520,7 @@ void CalculateThread::deleteFiles() {
 }
 void CalculateThread::reset() {
     _isError = false;
+    _areMatrices = false;
     _vnaPorts.clear();
     _calibratedPorts.clear();
     _portsLeft.clear();

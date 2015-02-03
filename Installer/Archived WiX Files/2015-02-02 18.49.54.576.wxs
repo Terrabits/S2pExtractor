@@ -1,44 +1,3 @@
-RSA Create Installer Version 1.1
-(C) 2014 Rohde & Schwarz America
-
-Mon Feb 2 19:59:50 2015
-
-Application Name:    R&S S2P Extractor
-Version:             1.2
-Manufacturer:        Rohde & Schwarz
-Author:              Nick Lalic
-Description:         Calculates the characterization of unmeasurable devices such as probes and test fixtures from specific calibrations.
-Manufacturer Folder: Rohde-Schwarz
-Installation Folder: S2P Extractor
-Start Menu Folder:   R&S S2P Extractor
-Add About Link?      true
-Executable:          C:\Users\lalic\Documents\Qt\build-RsaS2pExtractor-Desktop_Qt_5_2_1_MSVC2010_32bit-Release\release\RsaS2pExtractor.exe
-Instrument Shortcut: S2P Extractor
-Msvc Runtime:        C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32
-Qt Runtime:          C:\Qt\5.2.1\msvc2010\bin
-Create Installer:    C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer
-
-Upgrade Code:        ca98bc5f-7344-448a-b765-f33a9db7903a
-Product Guid:        79B5E407-5C62-4176-AAFF-919A043B4EA0
-Executable Guid:     6B9E4900-C697-4BDD-91E4-F56C5CB9D746
-Licenses Guid:       6DCC4374-2EEA-4628-BF0B-80F4AC5EC196
-Msvc Runtime Guid:   14AFF949-24DC-4AF3-866F-0C7D7076CF3B
-Qt Runtime Guid:     7D60C13A-7F2F-4377-88E5-C7915D3ADBE6
-Qt Platform Guid:    7D8E8718-FB7B-4F71-81E6-998C4E5119E8
-Logs/Settings Guid:  6AFC3B7D-A652-4A62-B289-A695D78FB47E
-Shortcuts Guid:      6C789024-8AC3-4B59-98D6-D9880E814A55
-RsVisa Guid:         CF57E51A-E0AB-4F6A-89A0-44C2D2953E8D
-QCustomPlots Guid:   989E1ED0-28F2-477B-980C-710417139E0B
-QuaZIP Guid:         46A054EF-CD56-4A25-AECA-E63DD56DD375
-
-Wxs Template:        RsaToolbox DirectX with About Link 1.0
-Template exists?     true
-Wxs File:            Product.wxs
-Installer:           C:\Users\Lalic\Documents\Qt\RsaS2pExtractor\Installer\R&S S2P Extractor 1.2.msi
-Add Version?         true
-WiX Tools:           C:\Program Files (x86)\WiX Toolset v3.9\bin
-
-WXS FILE:            
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Rsa Create Installer Template                 -->
 <!-- Name: RsaToolbox DirectX with About Link      -->
@@ -48,7 +7,7 @@ WXS FILE:
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-	<Product Id="79B5E407-5C62-4176-AAFF-919A043B4EA0" Name="R&amp;S S2P Extractor" Language="1033"
+	<Product Id="377884B3-E9AB-4393-A13B-019746ABBB9D" Name="R&amp;S S2P Extractor" Language="1033"
     Version="1.2" Manufacturer="Rohde &amp; Schwarz"
     UpgradeCode="ca98bc5f-7344-448a-b765-f33a9db7903a">
 		
@@ -121,17 +80,17 @@ WXS FILE:
   <Fragment>
     <!-- Application files -->
     <Icon Id="Rs.ico" SourceFile="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer/Icons/Rs.ico" />
-    <Component Id="ExecutableComponent" Guid="6B9E4900-C697-4BDD-91E4-F56C5CB9D746"
+    <Component Id="ExecutableComponent" Guid="045C3B5A-B69B-45A7-9A90-8617CEA3CECC"
       Directory="INSTALLFOLDER">
       <File Id="AppExecutable" Name="R&amp;S S2P Extractor.exe"
-        Source="C:\Users\lalic\Documents\Qt\build-RsaS2pExtractor-Desktop_Qt_5_2_1_MSVC2010_32bit-Release\release\RsaS2pExtractor.exe" KeyPath="yes">
+        Source="C:\Users\Lalic\Documents\Qt\build-RsaS2pExtractor-Desktop_Qt_5_2_1_MSVC2010_32bit-Release\release\RsaS2pExtractor.exe" KeyPath="yes">
         <Shortcut Id="ZNBShortcut" Name="S2P Extractor"
           Directory="ZNBExternalToolsFolder" Advertise="yes" Icon="Rs.ico" />
         <Shortcut Id="ZVAShortcut" Name="S2P Extractor"
           Directory="ZVAExternalToolsFolder" Advertise="yes" Icon="Rs.ico" />
       </File>
     </Component>
-    <Component Id="Licenses" Guid="6DCC4374-2EEA-4628-BF0B-80F4AC5EC196" Directory="LicensesFolder">
+    <Component Id="Licenses" Guid="AF8FAAEF-44CC-4BCE-81C5-69E1DA55213B" Directory="LicensesFolder">
       <File Id="RsaLicense"
         Name="R&amp;S Terms and Conditions for Royalty-Free Products.txt"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\R&amp;S Terms and Conditions for Royalty-Free Products.txt"
@@ -152,31 +111,31 @@ WXS FILE:
         Name="ZLib Copyright and Terms and Conditions.txt"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\ZLib Copyright and Terms and Conditions.txt" />
     </Component>
-    <Component Id="RsVisa" Guid="CF57E51A-E0AB-4F6A-89A0-44C2D2953E8D"
+    <Component Id="RsVisa" Guid="362AE06C-E345-4D34-A750-EEF2BCFBD3AA"
       Directory="INSTALLFOLDER">
       <File Id="RsVisa32.dll" Name="RsVisa32.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\RsVisa\RsVisa32.dll" KeyPath="yes" />
     </Component>
-    <Component Id="QCustomPlots" Guid="989E1ED0-28F2-477B-980C-710417139E0B"
+    <Component Id="QCustomPlots" Guid="DF114D31-4A22-4EEA-850B-09ED9C5F014F"
       Directory="INSTALLFOLDER">
     	<File Id="qcustomplot.dll" Name="qcustomplot.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QCustomPlots\qcustomplot.dll" KeyPath="yes" />
     </Component>
-    <Component Id="QuaZip" Guid="46A054EF-CD56-4A25-AECA-E63DD56DD375"
+    <Component Id="QuaZip" Guid="C93841AC-0BBA-4067-8CFE-A1E38E8A3E8F"
       Directory="INSTALLFOLDER">
       <File Id="quazip.dll" Name="quazip.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QuaZIP\quazip.dll" KeyPath="yes" />
       <File Id="zlib1.dll" Name="zlib1.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QuaZIP\zlib1.dll" />
     </Component>
-    <Component Id="MsvcRuntime" Guid="14AFF949-24DC-4AF3-866F-0C7D7076CF3B"
+    <Component Id="MsvcRuntime" Guid="63B9FD98-6F39-4C5E-9CA1-85D1C46195E7"
       Directory="INSTALLFOLDER">
       <File Id="msvcr100.dll" Name="msvcr100.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32\msvcr100.dll" KeyPath="yes" />
       <File Id="msvcp100.dll" Name="msvcp100.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32\msvcp100.dll" />
     </Component>
-    <Component Id="QtRuntime" Guid="7D60C13A-7F2F-4377-88E5-C7915D3ADBE6"
+    <Component Id="QtRuntime" Guid="D28A20E2-C86A-4A8C-8525-5A5D2B98A888"
       Directory="INSTALLFOLDER">
       <File Id="Qt5Core.dll" Name="Qt5Core.dll"
         Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Core.dll" KeyPath="yes" />
@@ -201,12 +160,12 @@ WXS FILE:
       <File Id="icuuc51.dll" Name="icuuc51.dll"
         Source="C:\Qt\5.2.1\msvc2010\bin\icuuc51.dll" />
     </Component>
-    <Component Id="QtPlatformPlugin" Guid="7D8E8718-FB7B-4F71-81E6-998C4E5119E8"
+    <Component Id="QtPlatformPlugin" Guid="A335CCA0-2034-4F22-9956-888543E220D7"
       Directory="PlatformsFolder">
       <File Id="qwindows.dll" Name="qwindows.dll"
         Source="C:\Qt\5.2.1\msvc2010\bin\..\plugins\platforms\qwindows.dll" KeyPath="yes" />
     </Component>
-    <Component Id="LogsAndSettings" Guid="6AFC3B7D-A652-4A62-B289-A695D78FB47E"
+    <Component Id="LogsAndSettings" Guid="52FF94F5-56FD-431F-9086-7D158179DE9C"
       Directory="MyAppDataFolder" KeyPath="yes">
       <CreateFolder Directory="SettingsFolder" />
       <RemoveFile Id="PurgeLogs"
@@ -217,7 +176,7 @@ WXS FILE:
       <RemoveFolder Id="RemoveSettingsFolder"
       Directory="SettingsFolder" On="uninstall" />
     </Component>
-    <Component Id="ShortcutsComponent" Guid="6C789024-8AC3-4B59-98D6-D9880E814A55"
+    <Component Id="ShortcutsComponent" Guid="511CF402-5EB5-4F35-B5DD-51055D9CBB58"
       Directory="ApplicationStartMenuFolder">
       <RegistryKey Root="HKCU"
         Key="Software\Rohde-Schwarz\R&amp;S S2P Extractor\Uninstall">
@@ -246,18 +205,3 @@ WXS FILE:
     </Component>
   </Fragment>
 </Wix>
-
-COMPILER:
-Generating C:\Users\Lalic\Documents\Qt\RsaS2pExtractor\Installer\__temp.wixobj
-Windows Installer XML Toolset Compiler version 3.9.1006.0
-Copyright (c) Outercurve Foundation. All rights reserved.
-
-Product.wxs
-
-LINKER:
-Generating C:\Users\Lalic\Documents\Qt\RsaS2pExtractor\Installer\R&S S2P Extractor 1.2.msi
-Windows Installer XML Toolset Linker version 3.9.1006.0
-Copyright (c) Outercurve Foundation. All rights reserved.
-
-
-Installer Created!
