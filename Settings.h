@@ -10,7 +10,7 @@
 // Application settings
 const QString APP_NAME = "R&S S2P Extractor";
 const QString APP_VERSION = "1.2";
-const QString APP_DESCRIPTION = "Calculates the characterization of unmeasurable devices such as probes and test fixtures from specific calibrations.";
+const QString APP_DESCRIPTION = "Characterizes unmeasurable devices such as probes and test fixtures by subtracting specific calibrations";
 const QString MANUFACTURER_FOLDER = "Rohde-Schwarz";
 const QString APP_FOLDER = "S2P Extractor";
 const QString CONTACT_INFO = "<html><head/><body><p>Nick Lalic<br/>VNA Software Developer<br/>Cupertino, CA USA<br/>+1 424 200 2846<br/>nick.lalic@rsa.rohde-schwarz.com<br/><a href=\"http://vna.rs-us.net\"><span style=\"text-decoration: underline; color:#0000ff;\">http://vna.rs-us.net</span></a></p></body></html>";
@@ -40,4 +40,3 @@ const QString FILENAMES_KEY = "Filenames";
 
 
 #endif
-
