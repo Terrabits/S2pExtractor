@@ -53,8 +53,8 @@ void CalculateThread::run() {
             deleteFiles();
             return;
         }
-        if (!calculate(port1, vnaPort1, isPort1Matrix,
-                  port2, vnaPort2, isPort2Matrix))
+        if (!calculate(port1, vnaPort1,
+                  port2, vnaPort2))
         {
             _isError = true;
             deleteChannels();
@@ -187,20 +187,18 @@ bool CalculateThread::calibrationsMatch() {
         return false;
     }
 
-
     // Sweep
     if (_outerData.sweepType() != _innerData.sweepType()) {
         emit error("*Sweep types do not match");
         return false;
     }
-    if (_outerData.startFrequency_Hz() != _innerData.startFrequency_Hz()
-            || _outerData.stopFrequency_Hz() != _innerData.stopFrequency_Hz())
-    {
-        emit error("*Frequencies do not match");
-        return false;
-    }
     if (_outerData.points() != _innerData.points()) {
         emit error("*Points do not match");
+        return false;
+    }
+    if (_outerData.frequencies_Hz() != _innerData.frequencies_Hz())
+    {
+        emit error("*Frequencies do not match");
         return false;
     }
 
@@ -264,23 +262,13 @@ bool CalculateThread::portsAreCalibrated() {
     }
 }
 bool CalculateThread::frequencyIsKnown() {
-    if (_outerData.sweepType() == VnaChannel::SweepType::Segmented) {
-        emit error("*Segmented sweep is not supported");
-        return false;
-    }
+    // Segmented sweep is now supported
 
     return true;
 }
 void CalculateThread::calculateFrequency() {
-    const VnaChannel::SweepType sweepType = _outerData.sweepType();
-    const double start = _outerData.startFrequency_Hz();
-    const double stop = _outerData.stopFrequency_Hz();
-    const int points = _outerData.points();
-
-    if (sweepType == VnaChannel::SweepType::Linear)
-        _frequency_Hz = linearSpacing(start, stop, points);
-    else
-        _frequency_Hz = logSpacing(start, stop, points);
+    // Segmented sweep is now supported
+    _frequency_Hz = _outerData.frequencies_Hz();
 }
 
 bool CalculateThread::isPortsLeft() const {
@@ -413,14 +401,14 @@ bool CalculateThread::portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix,
         return false;
     }
 }
-bool CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix) {
+bool CalculateThread::calculate(uint port1, uint vnaPort1, uint port2, uint vnaPort2) {
     if (_data->ports()->contains(port1)) {
         const uint index = _data->ports()->indexOf(port1);
         const QString pathName = _data->filePathNames()[index];
         QFileInfo file(pathName);
         if (!file.exists()) {
-            NetworkData s2p = calculateNetwork(port1, vnaPort1, isPort1Matrix,
-                                               port2, vnaPort2, isPort2Matrix);
+            NetworkData s2p = calculateNetwork(port1, vnaPort1,
+                                               port2, vnaPort2);
             if (!Touchstone::write(s2p, pathName)) {
                 emit error("*Could not write touchstone files");
                 return false;
@@ -432,8 +420,8 @@ bool CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, u
         const QString pathName = _data->filePathNames()[index];
         QFileInfo file(pathName);
         if (!file.exists()) {
-            NetworkData s2p = calculateNetwork(port2, vnaPort2, isPort2Matrix,
-                                               port1, vnaPort1, isPort1Matrix);
+            NetworkData s2p = calculateNetwork(port2, vnaPort2,
+                                               port1, vnaPort1);
             if (!Touchstone::write(s2p, pathName)) {
                 emit error("*Could not write touchstone files");
                 return false;
@@ -443,10 +431,10 @@ bool CalculateThread::calculate(uint port1, uint vnaPort1, bool isPort1Matrix, u
 
     return true;
 }
-NetworkData CalculateThread::calculateNetwork(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix) {
+NetworkData CalculateThread::calculateNetwork(uint port1, uint vnaPort1, uint port2, uint vnaPort2) {
     ComplexRowVector dir,        reflTrack,        srcMatch;
     ComplexRowVector dirWithDut, reflTrackWithDut, srcMatchWithDut;
-    if (_areMatrices /*isPort1Matrix || isPort2Matrix*/) {
+    if (_areMatrices) {
         dir = _outerData.directivity(port2, vnaPort2, port1, vnaPort1);
         reflTrack = _outerData.reflectionTracking(port2, vnaPort2, port1, vnaPort1);
         srcMatch = _outerData.sourceMatch(port2, vnaPort2, port1, vnaPort1);

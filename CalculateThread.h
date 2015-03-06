@@ -52,8 +52,8 @@ private:
     bool isPortsLeft() const;
     void getVnaPorts();
     bool portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix, uint &port2, uint &vnaPort2, bool &isPort2Matrix);
-    bool calculate(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix);
-    RsaToolbox::NetworkData calculateNetwork(uint port1, uint vnaPort1, bool isPort1Matrix, uint port2, uint vnaPort2, bool isPort2Matrix);
+    bool calculate(uint port1, uint vnaPort1, uint port2, uint vnaPort2);
+    RsaToolbox::NetworkData calculateNetwork(uint port1, uint vnaPort1, uint port2, uint vnaPort2);
     void constructMatrix(RsaToolbox::ComplexMatrix3D &matrix, const RsaToolbox::ComplexRowVector &s11, const RsaToolbox::ComplexRowVector &s21, const RsaToolbox::ComplexRowVector &s22);
 
     void deleteChannels();
