@@ -202,7 +202,11 @@ bool CalculateThread::calibrationsMatch() {
         return false;
     }
 
-    // Hardware
+//    // ZVA does not handle switch matrix
+//    if (_data->vna()->properties().isZvaFamily())
+//        return true;
+
+    // Compare switch matrices
     uint numMats = _outerData.switchMatrices();
     if (_outerData.testPortToVnaMap() != _innerData.testPortToVnaMap()
             || numMats != _innerData.switchMatrices())
@@ -275,6 +279,10 @@ bool CalculateThread::isPortsLeft() const {
     return !_portsLeft.isEmpty();
 }
 void CalculateThread::getVnaPorts() {
+//    if (_data->vna()->properties().isZvaFamily()) {
+//        // All ports are vna ports
+//    }
+
     _vnaPorts = _outerData.testPortToVnaMap().values().toVector();
     uint switchMatrices = _outerData.switchMatrices();
     for (uint i = 1; i <= switchMatrices; i++)

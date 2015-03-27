@@ -1,44 +1,3 @@
-RSA Create Installer Version 1.1
-(C) 2014 Rohde & Schwarz America
-
-Fri Mar 27 04:07:53 2015
-
-Application Name:    R&S S2P Extractor
-Version:             1.4
-Manufacturer:        Rohde & Schwarz
-Author:              Nick Lalic
-Description:         Calculates the response of unmeasurable devices such as probes and test fixtures from specific calibrations.
-Manufacturer Folder: Rohde-Schwarz
-Installation Folder: S2P Extractor
-Start Menu Folder:   R&S S2P Extractor
-Add About Link?      true
-Executable:          C:\Users\lalic\Documents\Qt\build-RsaS2pExtractor-Desktop_Qt_5_2_1_MSVC2010_32bit-Release\release\RsaS2pExtractor.exe
-Instrument Shortcut: S2P Extractor
-Msvc Runtime:        C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32
-Qt Runtime:          C:\Qt\5.2.1\msvc2010\bin
-Create Installer:    C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer
-
-Upgrade Code:        ca98bc5f-7344-448a-b765-f33a9db7903a
-Product Guid:        601D21E5-8ABF-4B43-B04A-FA1135A442F6
-Executable Guid:     B23432E2-D880-43D5-86FA-B0D99F37829B
-Licenses Guid:       8EBDE1F7-A8D6-4129-A891-F7C933DEDB6D
-Msvc Runtime Guid:   9A363005-E2DC-49AF-80BE-DE13DF202CE8
-Qt Runtime Guid:     C19B8D6D-15A7-4BC2-A737-9B8ABD925BEF
-Qt Platform Guid:    774D4540-7646-466B-AFB3-1D5E6D2F6C25
-Logs/Settings Guid:  ABB9C683-A633-4F5A-A1ED-1CE3E01E9001
-Shortcuts Guid:      1F10001C-42E3-4A8B-A613-AD8508D68E4B
-RsVisa Guid:         0646DCDE-5FD0-4C42-9889-DE910BFD0AC5
-QCustomPlots Guid:   A05403CF-227C-414E-B2F5-CE835787D61B
-QuaZIP Guid:         CAD039DB-B2A6-4839-AC37-638FB44143D3
-
-Wxs Template:        RsaToolbox DirectX with About Link 1.0
-Template exists?     true
-Wxs File:            Product.wxs
-Installer:           C:\Users\Lalic\Documents\Qt\RsaS2pExtractor\Installer\R&S S2P Extractor 1.4.msi
-Add Version?         true
-WiX Tools:           C:\Program Files (x86)\WiX Toolset v3.9\bin
-
-WXS FILE:            
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Rsa Create Installer Template                 -->
 <!-- Name: RsaToolbox DirectX with About Link      -->
@@ -48,8 +7,8 @@ WXS FILE:
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-	<Product Id="601D21E5-8ABF-4B43-B04A-FA1135A442F6" Name="R&amp;S S2P Extractor" Language="1033"
-    Version="1.4" Manufacturer="Rohde &amp; Schwarz"
+	<Product Id="A24526D0-FEE0-46F7-8F18-29AD42ABD92C" Name="R&amp;S S2P Extractor" Language="1033"
+    Version="1.3" Manufacturer="Rohde &amp; Schwarz"
     UpgradeCode="ca98bc5f-7344-448a-b765-f33a9db7903a">
 		
 		<Package InstallerVersion="200"
@@ -64,7 +23,7 @@ WXS FILE:
       Value="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Images\RsDialog.bmp" />
 
     <Feature Id="AppFeature" Title="R&amp;S S2P Extractor"
-      Description="Calculates the response of unmeasurable devices such as probes and test fixtures from specific calibrations." Level="1">
+      Description="Calculates the characterization of unmeasurable devices such as probes and test fixtures from specific calibrations." Level="1">
       <ComponentRef Id="ExecutableComponent" />
       <ComponentRef Id="QtRuntime" />
       <ComponentRef Id="QtPlatformPlugin" />
@@ -121,7 +80,7 @@ WXS FILE:
   <Fragment>
     <!-- Application files -->
     <Icon Id="Rs.ico" SourceFile="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer/Icons/Rs.ico" />
-    <Component Id="ExecutableComponent" Guid="B23432E2-D880-43D5-86FA-B0D99F37829B"
+    <Component Id="ExecutableComponent" Guid="7103F8B0-6288-457C-86DE-CEFFB2A86BF2"
       Directory="INSTALLFOLDER">
       <File Id="AppExecutable" Name="R&amp;S S2P Extractor.exe"
         Source="C:\Users\lalic\Documents\Qt\build-RsaS2pExtractor-Desktop_Qt_5_2_1_MSVC2010_32bit-Release\release\RsaS2pExtractor.exe" KeyPath="yes">
@@ -131,7 +90,7 @@ WXS FILE:
           Directory="ZVAExternalToolsFolder" Advertise="yes" Icon="Rs.ico" />
       </File>
     </Component>
-    <Component Id="Licenses" Guid="8EBDE1F7-A8D6-4129-A891-F7C933DEDB6D" Directory="LicensesFolder">
+    <Component Id="Licenses" Guid="7E85B666-17D8-47CB-AFB2-10B38B32825C" Directory="LicensesFolder">
       <File Id="RsaLicense"
         Name="R&amp;S Terms and Conditions for Royalty-Free Products.txt"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\R&amp;S Terms and Conditions for Royalty-Free Products.txt"
@@ -152,31 +111,31 @@ WXS FILE:
         Name="ZLib Copyright and Terms and Conditions.txt"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\ZLib Copyright and Terms and Conditions.txt" />
     </Component>
-    <Component Id="RsVisa" Guid="0646DCDE-5FD0-4C42-9889-DE910BFD0AC5"
+    <Component Id="RsVisa" Guid="A3067B87-E1E7-4C36-8E5B-510E1E057102"
       Directory="INSTALLFOLDER">
       <File Id="RsVisa32.dll" Name="RsVisa32.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\RsVisa\RsVisa32.dll" KeyPath="yes" />
     </Component>
-    <Component Id="QCustomPlots" Guid="A05403CF-227C-414E-B2F5-CE835787D61B"
+    <Component Id="QCustomPlots" Guid="CF453639-5B16-409A-A558-7E9B151872E8"
       Directory="INSTALLFOLDER">
     	<File Id="qcustomplot.dll" Name="qcustomplot.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QCustomPlots\qcustomplot.dll" KeyPath="yes" />
     </Component>
-    <Component Id="QuaZip" Guid="CAD039DB-B2A6-4839-AC37-638FB44143D3"
+    <Component Id="QuaZip" Guid="EF2E6F1E-DBAB-43BF-A7D5-6A61D39A7C6B"
       Directory="INSTALLFOLDER">
       <File Id="quazip.dll" Name="quazip.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QuaZIP\quazip.dll" KeyPath="yes" />
       <File Id="zlib1.dll" Name="zlib1.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QuaZIP\zlib1.dll" />
     </Component>
-    <Component Id="MsvcRuntime" Guid="9A363005-E2DC-49AF-80BE-DE13DF202CE8"
+    <Component Id="MsvcRuntime" Guid="68E22248-2F08-4CB8-AD52-6E9F0B74C495"
       Directory="INSTALLFOLDER">
       <File Id="msvcr100.dll" Name="msvcr100.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32\msvcr100.dll" KeyPath="yes" />
       <File Id="msvcp100.dll" Name="msvcp100.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32\msvcp100.dll" />
     </Component>
-    <Component Id="QtRuntime" Guid="C19B8D6D-15A7-4BC2-A737-9B8ABD925BEF"
+    <Component Id="QtRuntime" Guid="57533C16-75F0-4F3A-B5F4-BE40C4009F6B"
       Directory="INSTALLFOLDER">
       <File Id="Qt5Core.dll" Name="Qt5Core.dll"
         Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Core.dll" KeyPath="yes" />
@@ -201,12 +160,12 @@ WXS FILE:
       <File Id="icuuc51.dll" Name="icuuc51.dll"
         Source="C:\Qt\5.2.1\msvc2010\bin\icuuc51.dll" />
     </Component>
-    <Component Id="QtPlatformPlugin" Guid="774D4540-7646-466B-AFB3-1D5E6D2F6C25"
+    <Component Id="QtPlatformPlugin" Guid="07AA8664-8DBF-4C46-AF7A-9548E2E89D0A"
       Directory="PlatformsFolder">
       <File Id="qwindows.dll" Name="qwindows.dll"
         Source="C:\Qt\5.2.1\msvc2010\bin\..\plugins\platforms\qwindows.dll" KeyPath="yes" />
     </Component>
-    <Component Id="LogsAndSettings" Guid="ABB9C683-A633-4F5A-A1ED-1CE3E01E9001"
+    <Component Id="LogsAndSettings" Guid="A2803B57-04A8-411C-8D37-A85C767A6835"
       Directory="MyAppDataFolder" KeyPath="yes">
       <CreateFolder Directory="SettingsFolder" />
       <RemoveFile Id="PurgeLogs"
@@ -217,7 +176,7 @@ WXS FILE:
       <RemoveFolder Id="RemoveSettingsFolder"
       Directory="SettingsFolder" On="uninstall" />
     </Component>
-    <Component Id="ShortcutsComponent" Guid="1F10001C-42E3-4A8B-A613-AD8508D68E4B"
+    <Component Id="ShortcutsComponent" Guid="9BCA376C-C138-48C1-8058-598D8018818A"
       Directory="ApplicationStartMenuFolder">
       <RegistryKey Root="HKCU"
         Key="Software\Rohde-Schwarz\R&amp;S S2P Extractor\Uninstall">
@@ -227,7 +186,7 @@ WXS FILE:
       </RegistryKey>
       <Shortcut Id="AppShortcut" Name="R&amp;S S2P Extractor"
         Directory="ApplicationStartMenuFolder"
-        Description="Calculates the response of unmeasurable devices such as probes and test fixtures from specific calibrations."
+        Description="Calculates the characterization of unmeasurable devices such as probes and test fixtures from specific calibrations."
         Icon="Rs.ico"
         WorkingDirectory="INSTALLFOLDER"
         Target="[INSTALLFOLDER]\R&amp;S S2P Extractor.exe" />
@@ -246,18 +205,3 @@ WXS FILE:
     </Component>
   </Fragment>
 </Wix>
-
-COMPILER:
-Generating C:\Users\Lalic\Documents\Qt\RsaS2pExtractor\Installer\__temp.wixobj
-Windows Installer XML Toolset Compiler version 3.9.1006.0
-Copyright (c) Outercurve Foundation. All rights reserved.
-
-Product.wxs
-
-LINKER:
-Generating C:\Users\Lalic\Documents\Qt\RsaS2pExtractor\Installer\R&S S2P Extractor 1.4.msi
-Windows Installer XML Toolset Linker version 3.9.1006.0
-Copyright (c) Outercurve Foundation. All rights reserved.
-
-
-Installer Created!
