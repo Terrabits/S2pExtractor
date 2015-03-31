@@ -7,8 +7,8 @@
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-	<Product Id="8C90A45D-217F-4E22-8C1C-6C2B1F67C98B" Name="R&amp;S S2P Extractor" Language="1033"
-    Version="1.5" Manufacturer="Rohde &amp; Schwarz"
+	<Product Id="32536BBE-9377-4A99-9452-B71B16B343FC" Name="R&amp;S S2P Extractor" Language="1033"
+    Version="1.4" Manufacturer="Rohde &amp; Schwarz"
     UpgradeCode="ca98bc5f-7344-448a-b765-f33a9db7903a">
 		
 		<Package InstallerVersion="200"
@@ -80,7 +80,7 @@
   <Fragment>
     <!-- Application files -->
     <Icon Id="Rs.ico" SourceFile="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer/Icons/Rs.ico" />
-    <Component Id="ExecutableComponent" Guid="5C41CDB2-3E1A-4149-AA44-27CCBD6B3A57"
+    <Component Id="ExecutableComponent" Guid="9CD545D2-84B4-4FDF-97C7-8EC67DFEEAFB"
       Directory="INSTALLFOLDER">
       <File Id="AppExecutable" Name="R&amp;S S2P Extractor.exe"
         Source="C:\Users\lalic\Documents\Qt\build-RsaS2pExtractor-Desktop_Qt_5_2_1_MSVC2010_32bit-Release\release\RsaS2pExtractor.exe" KeyPath="yes">
@@ -90,7 +90,7 @@
           Directory="ZVAExternalToolsFolder" Advertise="yes" Icon="Rs.ico" />
       </File>
     </Component>
-    <Component Id="Licenses" Guid="063E8283-0A56-44DA-A81F-601DEA2F1B47" Directory="LicensesFolder">
+    <Component Id="Licenses" Guid="80F9D109-9CCA-46C6-B872-C355BA49235D" Directory="LicensesFolder">
       <File Id="RsaLicense"
         Name="R&amp;S Terms and Conditions for Royalty-Free Products.txt"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\R&amp;S Terms and Conditions for Royalty-Free Products.txt"
@@ -111,31 +111,31 @@
         Name="ZLib Copyright and Terms and Conditions.txt"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Licenses\ZLib Copyright and Terms and Conditions.txt" />
     </Component>
-    <Component Id="RsVisa" Guid="CF23426E-EAA8-484F-A8A7-0905BD0AAA94"
+    <Component Id="RsVisa" Guid="5A81CF74-9250-4FE7-B89E-1D78BEE95DCE"
       Directory="INSTALLFOLDER">
       <File Id="RsVisa32.dll" Name="RsVisa32.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\RsVisa\RsVisa32.dll" KeyPath="yes" />
     </Component>
-    <Component Id="QCustomPlots" Guid="93D65E86-8552-4B07-899D-CAC9B705842F"
+    <Component Id="QCustomPlots" Guid="B8722812-E604-4FA6-A46C-D28C04AA3858"
       Directory="INSTALLFOLDER">
     	<File Id="qcustomplot.dll" Name="qcustomplot.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QCustomPlots\qcustomplot.dll" KeyPath="yes" />
     </Component>
-    <Component Id="QuaZip" Guid="C5F8F740-BFD0-4CEB-A36A-1552434BCDD6"
+    <Component Id="QuaZip" Guid="CF67842B-C39E-4AF4-A078-B914C4C68FD0"
       Directory="INSTALLFOLDER">
       <File Id="quazip.dll" Name="quazip.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QuaZIP\quazip.dll" KeyPath="yes" />
       <File Id="zlib1.dll" Name="zlib1.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\QuaZIP\zlib1.dll" />
     </Component>
-    <Component Id="MsvcRuntime" Guid="0E8144AB-B0A4-4470-A01B-A46F8E7B2466"
+    <Component Id="MsvcRuntime" Guid="72F4753C-E267-41DA-BA07-35809813DC61"
       Directory="INSTALLFOLDER">
       <File Id="msvcr100.dll" Name="msvcr100.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32\msvcr100.dll" KeyPath="yes" />
       <File Id="msvcp100.dll" Name="msvcp100.dll"
         Source="C:\Program Files (x86)\Rohde-Schwarz\RSA Create Installer\Msvc2010_32\msvcp100.dll" />
     </Component>
-    <Component Id="QtRuntime" Guid="ED7C33E7-AA9E-43EF-8924-47021D11C6A6"
+    <Component Id="QtRuntime" Guid="34C546E8-DDFD-4062-9D80-60501510C482"
       Directory="INSTALLFOLDER">
       <File Id="Qt5Core.dll" Name="Qt5Core.dll"
         Source="C:\Qt\5.2.1\msvc2010\bin\Qt5Core.dll" KeyPath="yes" />
@@ -160,12 +160,12 @@
       <File Id="icuuc51.dll" Name="icuuc51.dll"
         Source="C:\Qt\5.2.1\msvc2010\bin\icuuc51.dll" />
     </Component>
-    <Component Id="QtPlatformPlugin" Guid="A7F77FA3-06D7-49AD-A233-16CC77084915"
+    <Component Id="QtPlatformPlugin" Guid="1A469DBF-AC9A-46D7-9C6B-5DA95174367C"
       Directory="PlatformsFolder">
       <File Id="qwindows.dll" Name="qwindows.dll"
         Source="C:\Qt\5.2.1\msvc2010\bin\..\plugins\platforms\qwindows.dll" KeyPath="yes" />
     </Component>
-    <Component Id="LogsAndSettings" Guid="1042AFC7-1F0A-4684-B655-66264512B99C"
+    <Component Id="LogsAndSettings" Guid="5C2D8D80-7FEB-4439-A8D4-53D8627C6ED0"
       Directory="MyAppDataFolder" KeyPath="yes">
       <CreateFolder Directory="SettingsFolder" />
       <RemoveFile Id="PurgeLogs"
@@ -176,7 +176,7 @@
       <RemoveFolder Id="RemoveSettingsFolder"
       Directory="SettingsFolder" On="uninstall" />
     </Component>
-    <Component Id="ShortcutsComponent" Guid="1EC51FA4-7E43-4A35-B505-5F68C24D95F9"
+    <Component Id="ShortcutsComponent" Guid="5D2C92F6-C952-4FAF-86AE-C92A5BE5697B"
       Directory="ApplicationStartMenuFolder">
       <RegistryKey Root="HKCU"
         Key="Software\Rohde-Schwarz\R&amp;S S2P Extractor\Uninstall">
