@@ -9,7 +9,7 @@
 
 // Application settings
 const QString APP_NAME = "R&S S2P Extractor";
-const QString APP_VERSION = "1.4";
+const QString APP_VERSION = "1.5";
 const QString APP_DESCRIPTION = "Characterizes unmeasurable devices such as probes and test fixtures by subtracting specific calibrations";
 const QString MANUFACTURER_FOLDER = "Rohde-Schwarz";
 const QString APP_FOLDER = "S2P Extractor";
