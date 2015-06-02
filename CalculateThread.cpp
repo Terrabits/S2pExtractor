@@ -87,7 +87,8 @@ bool CalculateThread::isReady() {
     if (!loadCalibrations())
         return false;
 
-    if (!calibrationsMatch()
+    if (!isFull12TermErrorCorrections()
+            || !calibrationsMatch()
             || !moreThanOnePortCalibrated()
             || !portsAreCalibrated()
             || !frequencyIsKnown())
@@ -176,12 +177,24 @@ bool CalculateThread::loadCalibrations() {
 
     return true;
 }
-bool CalculateThread::calibrationsMatch() {
-    // Cal type, ports
-    if (_outerData.calibrationType() != _innerData.calibrationType()) {
-        emit error("*Calibration methods do not match");
+bool CalculateThread::isFull12TermErrorCorrections() {
+    // Cal type must provide
+    // classical 12-term error corrections
+    // in both directions (forward, reverse)
+    if (!_outerData.isFull12TermErrorCorrection()) {
+        emit error("*Outer calibration type has insufficient error terms");
         return false;
     }
+    if (!_innerData.isFull12TermErrorCorrection()) {
+        emit error("*Inner calibration type has insufficient error terms");
+        return false;
+    }
+
+    // Else
+    return true;
+}
+bool CalculateThread::calibrationsMatch() {
+    // Ports
     if (_outerData.ports() != _innerData.ports()) {
         emit error("*Calibration ports do not match");
         return false;

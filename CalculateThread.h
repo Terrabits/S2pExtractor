@@ -42,6 +42,7 @@ private:
     bool hasPorts();
     bool hasCalibrations();
     bool loadCalibrations();
+    bool isFull12TermErrorCorrections();
     bool calibrationsMatch();
     bool frequencyIsKnown();
     void calculateFrequency();
