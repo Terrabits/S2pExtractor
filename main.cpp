@@ -13,6 +13,7 @@
 #include "Keys.h"
 #include "Log.h"
 #include "Vna.h"
+#include "Update.h"
 using namespace RsaToolbox;
 
 // Qt
@@ -23,6 +24,7 @@ using namespace RsaToolbox;
 
 
 bool isAboutMenu(int argc, char *argv[]);
+bool isUpdateMenu(int argc, char *argv[], Update &update);
 bool isNoConnection(Vna &vna);
 bool isUnknownModel(Vna &vna);
 
@@ -33,14 +35,19 @@ int main(int argc, char *argv[])
     if (isAboutMenu(argc, argv))
         return 0;
 
+    Keys keys(KEY_PATH);
+
+    Update update(&keys);
+    if (isUpdateMenu(argc, argv, update)) {
+        return a.exec();
+    }
+
     Log log(LOG_FILENAME, APP_NAME, APP_VERSION);
     log.printHeader();
 
     Vna vna(CONNECTION_TYPE, INSTRUMENT_ADDRESS);
     vna.useLog(&log);
     vna.printInfo();
-
-    Keys keys(KEY_PATH);
 
     if (isNoConnection(vna) || isUnknownModel(vna))
         return(0);
@@ -52,6 +59,8 @@ int main(int argc, char *argv[])
     MainWindow w(&data);
     w.setWindowFlags(w.windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowStaysOnTopHint);
     w.show();
+    if (update.isUpdateDue())
+            update.automaticUpdate();
     return a.exec();
 }
 
@@ -70,6 +79,23 @@ bool isAboutMenu(int argc, char *argv[]) {
         about.setDescription(APP_DESCRIPTION);
         about.setContactInfo(CONTACT_INFO);
         about.exec();
+        return true;
+    }
+
+    return false;
+}
+bool isUpdateMenu(int argc, char *argv[], Update &update) {
+    update.setApplicationName(APP_NAME);
+    update.setApplicationVersion(APP_VERSION);
+    update.setJsonUrl(JSON_UPDATE_URL);
+
+    if (argc != 2)
+        return false;
+
+    QString arg(argv[1]);
+    arg = arg.trimmed().toUpper();
+    if (arg == "-UPDATE" || arg == "--UPDATE") {
+        update.manualUpdate();
         return true;
     }
 
