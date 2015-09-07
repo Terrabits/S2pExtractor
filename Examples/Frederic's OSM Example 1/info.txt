@@ -1,0 +1,5 @@
+ZVA cal files
+
+Per Frederic:
+Cal1.cal = Cal OSM at VNA port (Outer Calibration); Cal2.cal = Cal OSM at Probe port (Inner Calibration Plane).
+Between cal1 and cal2, we inserted an attenuator, I hope you could find the attenuation value ? :-)

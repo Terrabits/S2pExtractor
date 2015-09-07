@@ -1,0 +1,6 @@
+ZVA cal files
+
+Per Frederic:
+To confirm the result, I did a new measurement.
+Could you please perform a new calculation of the s2p file from these new cal files :
+Here the cal files : Cal1.cal = Cal OSM at VNA port (Outer Calibration); Cal2.cal = Cal OSM at Probe port (Inner Calibration Plane).
