@@ -19,7 +19,9 @@ HEADERS     += Settings.h \
                getFilenamesDialog.h \
                getPortsDialog.h \
                Ports.h \
-               PortsWidgetMap.h
+               PortsWidgetMap.h \
+               Calculate.h \
+    Port.h
                ...
 INCLUDEPATH += $$PWD
 SOURCES     += CalculateThread.cpp \
@@ -30,7 +32,9 @@ SOURCES     += CalculateThread.cpp \
                getFilenamesDialog.cpp \
                getPortsDialog.cpp \
                Ports.cpp \
-               PortsWidgetMap.cpp
+               PortsWidgetMap.cpp \
+               Calculate.cpp \
+    Port.cpp
 FORMS       += getCalibrationDialog.ui \
                getFilenamesDialog.ui \
                getPortsDialog.ui

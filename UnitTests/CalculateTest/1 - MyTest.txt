@@ -1,7 +1,7 @@
-CalculateTest Version 0.0
+ Version 0.0
 (C) 2016 Rohde & Schwarz North America
 
-Wed Apr 13 18:36:28 2016
+Sun Apr 17 18:37:18 2016
 
 VNA INSTRUMENT INFO
 Connection:       TCPIP
@@ -126,17 +126,5 @@ Status: 0x0 Operation completed successfully.
 
 Write:    "*CLS"
 Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    "*RST"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    "*OPC?"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Read:     "1"
-Bytes: 2
 Status: 0x0 Operation completed successfully.
 

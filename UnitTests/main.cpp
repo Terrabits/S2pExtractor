@@ -6,6 +6,8 @@
 // RsaToolbox
 #include <General.h>
 #include <TestRunner.h>
+#include <TestClass.h>
+#include <VnaTestClass.h>
 using namespace RsaToolbox;
 
 // Qt

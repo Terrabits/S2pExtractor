@@ -1,0 +1,37 @@
+S2P Extractor Procedure
+- Set data
+- isReady, if not error
+- load calibrations used (inner, outer)
+- Test for switch matrix
+- Find calibrated ports
+- Create ports left list
+- Query frequencies used
+- Get VNA ports... Something about Test port -> physical VNA port -> Switch matrix port
+- While ports left list has ports:
+  * isPort1, Port2 matrix?
+  * logicalPort1/2, physicalPort1/2
+  * Get next port pair via portPair(..)
+  *   if is error, return error
+  * calculate s2p
+  *   if is error, return error
+
+
+Major parts to separate into smaller, testable parts:
+- PortMap class
+  * Given logical port number
+  * returns: physical port, is switch matrix
+- PortPairs class
+  * Given: selected logical ports
+  * returns: PortMap pairs
+- CorrectionData class - returns frequencies, corrections
+- CalculateCorrections(CorrectionData &inner, CorrectionData &outer)
+  * Network <= firstS2pFile
+  * Network <= secondS2pFile
+
+Any assumptions I can make?
+- Only one switch matrix
+- Only one calibration (?)
+- Frequencies are the same
+- Ports are the same
+- Calibration types match
+
