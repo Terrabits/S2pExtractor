@@ -26,6 +26,12 @@ private slots:
     void ports1to4SwMat();
     void ports1to4SwMatOsm();
     void port1SwMatOsm();
+
+private:
+    QDir _calGroupDir;
+
+    void addSwitchMatrix();
+    void removeSwitchMatrices();
 };
 
 #endif // CORRECTIONSTEST_H

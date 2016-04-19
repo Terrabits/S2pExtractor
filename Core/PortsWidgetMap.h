@@ -24,8 +24,8 @@ public:
     ~PortsWidgetMap();
 
     bool isPorts() const;
-    QVector<uint> ports() const;
-    void setPorts(QVector<uint> ports);
+    RsaToolbox::Ports ports() const;
+    void setPorts(RsaToolbox::Ports ports);
 
     bool isVna() const;
     RsaToolbox::Vna *vna() const;
@@ -43,7 +43,7 @@ public slots:
     void getPorts();
 
 private:
-    QVector<uint> _ports;
+    RsaToolbox::Ports _ports;
     getPortsDialog _dialog;
 
     RsaToolbox::Vna *_vna;

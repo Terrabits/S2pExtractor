@@ -33,8 +33,8 @@ public:
     void setOuterCalibration(const Calibration &calibration);
     void setInnerCalibration(const Calibration &calibration);
 
-    QVector<uint> ports() const;
-    void setPorts(QVector<uint> ports);
+    RsaToolbox::Ports ports() const;
+    void setPorts(RsaToolbox::Ports ports);
 
     QStringList filenames() const;
     void setFilenames(QStringList filenames);
@@ -44,7 +44,7 @@ private:
     RsaToolbox::Vna *_vna;
     Calibration _outerCal;
     Calibration _innerCal;
-    QVector<uint> _ports;
+    RsaToolbox::Ports _ports;
     QStringList _filenames;
 };
 

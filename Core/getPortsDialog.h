@@ -27,13 +27,13 @@ public:
 
     bool isDefault() const;
     void clearDefault();
-    QVector<uint> defaultPorts() const;
-    void setDefaultPorts(QVector<uint> ports);
+    RsaToolbox::Ports defaultPorts() const;
+    void setDefaultPorts(RsaToolbox::Ports ports);
 
-    QVector<uint> ports() const;
+    RsaToolbox::Ports ports() const;
 
 signals:
-    void changed(QVector<uint> ports);
+    void changed(RsaToolbox::Ports ports);
 
 public slots:
     virtual int exec();
@@ -51,16 +51,16 @@ private:
     RsaToolbox::Vna *_vna;
     void updateUi();
 
-    QVector<uint> _vnaPorts;
-    QVector<uint> _default;
-    QVector<uint> selection();
+    RsaToolbox::Ports _vnaPorts;
+    RsaToolbox::Ports _default;
+    RsaToolbox::Ports selection();
 
-    QVector<uint> _ports;
+    RsaToolbox::Ports _ports;
 
     void reset();
     void checkAll();
     void uncheckAll();
-    void check(const QVector<uint> &ports);
+    void check(const RsaToolbox::Ports &ports);
 };
 
 #endif // GETPORTSDIALOG_H

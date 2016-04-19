@@ -3,7 +3,7 @@
 
 // RsaToolbox
 using namespace RsaToolbox;
-Corrections::Corrections(uint port1, QVector<uint> ports, VnaCorrections corrections, Vna *vna) :
+Corrections::Corrections(uint port1, Ports ports, VnaCorrections corrections, Vna *vna) :
     _port1(port1),
     _port2(0),
     _corrections(corrections)
@@ -173,8 +173,8 @@ void Corrections::operator=(const Corrections &other) {
     _sourceMatch2 = other._sourceMatch2;
 }
 
-QVector<uint> Corrections::findVnaPorts(uint logicalPort) const {
-    QVector<uint> ports;
+Ports Corrections::findVnaPorts(uint logicalPort) const {
+    Ports ports;
     if (!_switchMatrices) {
         ports << logicalPort;
         return ports;

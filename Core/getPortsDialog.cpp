@@ -38,14 +38,14 @@ void getPortsDialog::setVna(Vna *vna) {
 bool getPortsDialog::isDefault() const {
     return !_default.isEmpty();
 }
-QVector<uint> getPortsDialog::defaultPorts() const {
+Ports getPortsDialog::defaultPorts() const {
     return _default;
 }
-void getPortsDialog::setDefaultPorts(QVector<uint> ports) {
+void getPortsDialog::setDefaultPorts(Ports ports) {
     _default = ports;
 }
 
-QVector<uint> getPortsDialog::ports() const {
+Ports getPortsDialog::ports() const {
     return _ports;
 }
 
@@ -69,7 +69,7 @@ int getPortsDialog::exec() {
     return QDialog::exec();
 }
 void getPortsDialog::accept() {
-    const QVector<uint> _selection = selection();
+    const Ports _selection = selection();
     if (_selection.isEmpty()) {
         ui->error->showMessage("*Please choose at least one port.");
         return;
@@ -112,8 +112,8 @@ void getPortsDialog::updateUi() {
     ui->ports->addItems(portLabels(_vnaPorts));
 }
 
-QVector<uint> getPortsDialog::selection() {
-    QVector<uint> _selection;
+Ports getPortsDialog::selection() {
+    Ports _selection;
     for (int i = 0; i < ui->ports->count(); i++) {
         if (ui->ports->item(i)->checkState() == Qt::Checked)
             _selection << i+1;
@@ -136,7 +136,7 @@ void getPortsDialog::uncheckAll() {
         ui->ports->item(i)->setCheckState(Qt::Unchecked);
     }
 }
-void getPortsDialog::check(const QVector<uint> &ports) {
+void getPortsDialog::check(const Ports &ports) {
     foreach (uint port, ports) {
         int row = _vnaPorts.indexOf(port);
         if (row != -1)

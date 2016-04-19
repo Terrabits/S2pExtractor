@@ -56,9 +56,9 @@ public:
 //    bool _isError;
 
 //    bool _areMatrices;
-//    QVector<uint> _vnaPorts;
-//    QVector<uint> _calibratedPorts;
-//    QVector<uint> _portsLeft;
+//    RsaToolbox::Ports _vnaPorts;
+//    RsaToolbox::Ports _calibratedPorts;
+//    RsaToolbox::Ports _portsLeft;
 
 //    bool _deleteOuterChannel;
 //    uint _outerChannel;

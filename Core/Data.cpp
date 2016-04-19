@@ -49,10 +49,10 @@ void Data::setInnerCalibration(const Calibration &calibration) {
     _innerCal = calibration;
 }
 
-QVector<uint> Data::ports() const {
+Ports Data::ports() const {
     return _ports;
 }
-void Data::setPorts(QVector<uint> ports) {
+void Data::setPorts(Ports ports) {
     _ports = ports;
 }
 

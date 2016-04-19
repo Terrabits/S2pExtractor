@@ -1,0 +1,19 @@
+
+NO SWITCH MATRIX
+    "Ports 1,2.cal"
+    - Ports 1, 2 included
+    - UOSM
+
+    "Ports 1-4.cal"
+    - Ports 1-4 included
+    - UOSM
+
+    "Ports 1-4 OSM.cal"
+    - Ports 1-4 included
+    - OSM calibration
+
+    "Port 1 OSM.cal"
+    - OSM on port 1 only
+
+SWITCH MATRIX
+ZVA does not support switch matrix!

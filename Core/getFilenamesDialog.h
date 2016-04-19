@@ -23,8 +23,8 @@ public:
     ~getFilenamesDialog();
 
     bool isPorts() const;
-    QVector<uint> ports() const;
-    void setPorts(QVector<uint> ports);
+    RsaToolbox::Ports ports() const;
+    void setPorts(RsaToolbox::Ports ports);
 
     bool isKey() const;
     QString key() const;
@@ -45,7 +45,7 @@ private slots:
 private:
     Ui::getFilenamesDialog *ui;
 
-    QVector<uint> _ports;
+    RsaToolbox::Ports _ports;
     RsaToolbox::LastPath _lastPath;
 
     QStringList _filenames;

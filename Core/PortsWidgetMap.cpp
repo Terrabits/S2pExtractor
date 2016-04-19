@@ -23,10 +23,10 @@ PortsWidgetMap::~PortsWidgetMap()
 bool PortsWidgetMap::isPorts() const {
     return !_ports.isEmpty();
 }
-QVector<uint> PortsWidgetMap::ports() const {
+Ports PortsWidgetMap::ports() const {
     return _ports;
 }
-void PortsWidgetMap::setPorts(QVector<uint> ports) {
+void PortsWidgetMap::setPorts(Ports ports) {
     if (_ports == ports)
         return;
 

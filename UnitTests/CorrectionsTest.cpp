@@ -22,6 +22,8 @@ CorrectionsTest::CorrectionsTest(QObject *parent) :
         _logDir.cd("Zva");
     else
         _logDir.cd("Znb");
+    _calGroupDir.setPath(_logDir.filePath("CalGroups"));
+    _logDir.cd("Logs");
 
     _logFilenames << "1 - Ports 1,2.txt"
                   << "2 - Ports 1-4.txt"
@@ -38,13 +40,10 @@ CorrectionsTest::~CorrectionsTest()
 }
 
 void CorrectionsTest::ports12() {
-    if (_vna->switchMatrices()) {
-        qDebug() << "Can\'t test with switch matrix";
-        return;
-    }
+    removeSwitchMatrices();
 
     QString calGroup = "Ports 1,2.cal";
-    _vna->fileSystem().uploadFile(_logDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -59,7 +58,7 @@ void CorrectionsTest::ports12() {
     _log->printLine("directivity1: ");
     _log->printLine(toString(corrections.directivity1(), ", "));
 
-    QVector<uint> testPorts = range(uint(1), _vna->testPorts());
+    Ports testPorts = range(uint(1), _vna->testPorts());
     corrections = Corrections(1, testPorts, _vna->channel().corrections(), _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
@@ -67,18 +66,12 @@ void CorrectionsTest::ports12() {
 
     _log->printLine("directivity1: ");
     _log->printLine(toString(corrections.directivity1(), ", "));
-
-    _vna->isError();
-    _vna->clearStatus();
 }
 void CorrectionsTest::ports1to4() {
-    if (_vna->switchMatrices()) {
-        qDebug() << "Can\'t test with switch matrix";
-        return;
-    }
+    removeSwitchMatrices();
 
     QString calGroup = "Ports 1-4.cal";
-    _vna->fileSystem().uploadFile(_logDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -108,13 +101,10 @@ void CorrectionsTest::ports1to4() {
     _log->printLine(toString(corrections.directivity2(), ", "));
 }
 void CorrectionsTest::ports1to4Osm() {
-    if (_vna->switchMatrices()) {
-        qDebug() << "Can\'t test with switch matrix";
-        return;
-    }
+    removeSwitchMatrices();
 
     QString calGroup = "Ports 1-4 OSM.cal";
-    _vna->fileSystem().uploadFile(_logDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -144,18 +134,15 @@ void CorrectionsTest::ports1to4Osm() {
     _log->printLine(toString(corrections.directivity2(), ", "));
 }
 void CorrectionsTest::port1Osm() {
-    if (_vna->switchMatrices()) {
-        qDebug() << "Can\'t test with switch matrix";
-        return;
-    }
+    removeSwitchMatrices();
 
     QString calGroup = "Port 1 OSM.cal";
-    _vna->fileSystem().uploadFile(_logDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
-    QVector<uint> testPorts = range(uint(1), _vna->testPorts());
+    Ports testPorts = range(uint(1), _vna->testPorts());
     Corrections corrections(1, testPorts, _vna->channel().corrections(), _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
@@ -166,13 +153,13 @@ void CorrectionsTest::port1Osm() {
 }
 
 void CorrectionsTest::ports12SwMat() {
-    if (!_vna->switchMatrices()) {
-        qDebug() << "Can\'t test without switch matrix";
+    if (_vna->properties().isZvaFamily())
         return;
-    }
+
+    addSwitchMatrix();
 
     QString calGroup = "Ports 1,2 SwM.cal";
-    _vna->fileSystem().uploadFile(_logDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -189,7 +176,7 @@ void CorrectionsTest::ports12SwMat() {
     _log->printLine("directivity2: ");
     _log->printLine(toString(corrections.directivity2(), ", "));
 
-    QVector<uint> testPorts = range(uint(1), _vna->testPorts());
+    Ports testPorts = range(uint(1), _vna->testPorts());
     corrections = Corrections(1, testPorts, _vna->channel().corrections(), _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
@@ -200,15 +187,17 @@ void CorrectionsTest::ports12SwMat() {
 
     _vna->isError();
     _vna->clearStatus();
+
+    removeSwitchMatrices();
 }
 void CorrectionsTest::ports1to4SwMat() {
-    if (!_vna->switchMatrices()) {
-        qDebug() << "Can\'t test without switch matrix";
+    if (_vna->properties().isZvaFamily())
         return;
-    }
+
+    addSwitchMatrix();
 
     QString calGroup = "Ports 1-4 SwM.cal";
-    _vna->fileSystem().uploadFile(_logDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -236,15 +225,17 @@ void CorrectionsTest::ports1to4SwMat() {
     _log->printLine(toString(corrections.directivity1(), ", "));
     _log->printLine("directivity4: ");
     _log->printLine(toString(corrections.directivity2(), ", "));
+
+    removeSwitchMatrices();
 }
 void CorrectionsTest::ports1to4SwMatOsm() {
-    if (!_vna->switchMatrices()) {
-        qDebug() << "Can\'t test without switch matrix";
+    if (_vna->properties().isZvaFamily())
         return;
-    }
+
+    addSwitchMatrix();
 
     QString calGroup = "Ports 1-4 SwM OSM.cal";
-    _vna->fileSystem().uploadFile(_logDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -272,20 +263,22 @@ void CorrectionsTest::ports1to4SwMatOsm() {
     _log->printLine(toString(corrections.directivity1(), ", "));
     _log->printLine("directivity4: ");
     _log->printLine(toString(corrections.directivity2(), ", "));
+
+    removeSwitchMatrices();
 }
 void CorrectionsTest::port1SwMatOsm() {
-    if (!_vna->switchMatrices()) {
-        qDebug() << "Can\'t test without switch matrix";
+    if (_vna->properties().isZvaFamily())
         return;
-    }
+
+    addSwitchMatrix();
 
     QString calGroup = "Port 1 SwM OSM.cal";
-    _vna->fileSystem().uploadFile(_logDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
-    QVector<uint> testPorts = range(uint(1), _vna->testPorts());
+    Ports testPorts = range(uint(1), _vna->testPorts());
     Corrections corrections(1, testPorts, _vna->channel().corrections(), _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
@@ -293,4 +286,46 @@ void CorrectionsTest::port1SwMatOsm() {
 
     _log->printLine("directivity1: ");
     _log->printLine(toString(corrections.directivity1(), ", "));
+
+    removeSwitchMatrices();
+}
+
+void CorrectionsTest::addSwitchMatrix() {
+     removeSwitchMatrices();
+
+    PortMap vnaToTestPortMap;
+    vnaToTestPortMap[1] = 1;
+    vnaToTestPortMap[2] = 2;
+
+    PortMap matrixToVnaPortMap;
+    matrixToVnaPortMap[1] = 3;
+    matrixToVnaPortMap[2] = 4;
+
+    PortMap matrixToTestPortMap;
+    matrixToTestPortMap[1]  = 3;
+    matrixToTestPortMap[2]  = 4;
+    matrixToTestPortMap[3]  = 5;
+    matrixToTestPortMap[4]  = 6;
+    matrixToTestPortMap[5]  = 7;
+    matrixToTestPortMap[6]  = 8;
+    matrixToTestPortMap[7]  = 9;
+    matrixToTestPortMap[8]  = 10;
+    matrixToTestPortMap[9]  = 11;
+    matrixToTestPortMap[10] = 12;
+    matrixToTestPortMap[11] = 13;
+    matrixToTestPortMap[12] = 14;
+
+    _vna->registerSwitchMatrix(VnaSwitchMatrix::Driver::ZN_Z84_22,
+                               VnaSwitchMatrix::ConnectionType::Lan,
+                               "127.0.0.1");
+    _vna->includeAllSwitchMatricesInSetup();
+    _vna->beginSwitchMatrixSetup();
+    _vna->setVnaTestPorts(vnaToTestPortMap);
+    _vna->switchMatrix(1).setConnectionsToVna(matrixToVnaPortMap);
+    _vna->switchMatrix(1).setTestPorts(matrixToTestPortMap);
+    _vna->endSwitchMatrixSetup();
+}
+void CorrectionsTest::removeSwitchMatrices() {
+    _vna->excludeAllSwitchMatricesFromSetup();
+    _vna->unregisterAllSwitchMatrices();
 }

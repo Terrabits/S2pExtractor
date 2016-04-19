@@ -58,7 +58,7 @@ private:
     RsaToolbox::Vna *_vna;
     void updateUi();
 
-    QVector<uint> _channels;
+    RsaToolbox::Ports _channels;
     QStringList _calGroups;
     Calibration _default;
     Calibration _selection;

@@ -14,7 +14,7 @@
 class Corrections
 {
 public:
-    Corrections(uint port1, QVector<uint> ports, RsaToolbox::VnaCorrections corrections, RsaToolbox::Vna *vna);
+    Corrections(uint port1, RsaToolbox::Ports ports, RsaToolbox::VnaCorrections corrections, RsaToolbox::Vna *vna);
     Corrections(uint port1, uint port2, RsaToolbox::VnaCorrections corrections);
     Corrections(const Corrections &other);
     ~Corrections();
@@ -39,9 +39,9 @@ public:
 private:
     uint _port1;
     uint _port2;
-    QVector<uint> _port1VnaPorts;
-    QVector<uint> _port2VnaPorts;
-    QVector<uint> findVnaPorts(uint logicalPort) const;
+    RsaToolbox::Ports _port1VnaPorts;
+    RsaToolbox::Ports _port2VnaPorts;
+    RsaToolbox::Ports findVnaPorts(uint logicalPort) const;
 
     uint _switchMatrices;
     mutable RsaToolbox::VnaCorrections _corrections;

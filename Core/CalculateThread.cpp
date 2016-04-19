@@ -232,7 +232,7 @@ bool CalculateThread::calibrationsMatch() {
         return true;
 
 
-    QVector<uint> switchMatrices = range(uint(1), numMats);
+    Ports switchMatrices = range(uint(1), numMats);
     foreach (uint i, switchMatrices)
     {
         if (_outerData.switchMatrixToVnaPortMap(i) != _innerData.switchMatrixToVnaPortMap(i)
@@ -255,8 +255,8 @@ bool CalculateThread::moreThanOnePortCalibrated() {
 }
 
 bool CalculateThread::portsAreCalibrated() {
-    QVector<uint> calibratedPorts = _outerData.ports();
-    QVector<uint> uncalibratedPorts;
+    Ports calibratedPorts = _outerData.ports();
+    Ports uncalibratedPorts;
     foreach (uint i, _data->ports()) {
         if (!calibratedPorts.contains(i))
             uncalibratedPorts << i;
@@ -307,7 +307,7 @@ bool CalculateThread::portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix,
     _data->vna()->printLine("CalculateThread::portPair(...)\n");
     _data->vna()->clearStatus();
     _data->vna()->settings().errorDisplayOff();
-    QVector<uint> availableVnaPorts = _vnaPorts;
+    Ports availableVnaPorts = _vnaPorts;
 
     port1 = 0;
     vnaPort1 = 0;
@@ -379,7 +379,7 @@ bool CalculateThread::portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix,
     // Search through remaining ports
     // remainder:
     // _calibratedPorts - _portsLeft
-    QVector<uint> remainder = _calibratedPorts;
+    Ports remainder = _calibratedPorts;
     remainder.remove(remainder.indexOf(port1));
     foreach (uint i, _portsLeft) {
         remainder.remove(remainder.indexOf(i));
