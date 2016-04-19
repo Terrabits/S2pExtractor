@@ -32,12 +32,12 @@ getFilenamesDialog::~getFilenamesDialog()
 }
 
 bool getFilenamesDialog::isPorts() const {
-    return !_ports.isNull();
+    return !_ports.isEmpty();
 }
-SharedPorts getFilenamesDialog::ports() const {
+QVector<uint> getFilenamesDialog::ports() const {
     return _ports;
 }
-void getFilenamesDialog::setPorts(SharedPorts ports) {
+void getFilenamesDialog::setPorts(QVector<uint> ports) {
     _ports = ports;
 }
 
@@ -87,7 +87,7 @@ int getFilenamesDialog::exec() {
 }
 void getFilenamesDialog::accept() {
     _filenames.clear();
-    for (int i = 0; i < _ports->size(); i++) {
+    for (int i = 0; i < _ports.size(); i++) {
         QLineEdit *edit;
         edit = qobject_cast<QLineEdit*>(ui->filenames->cellWidget(i, 1));
         QString filename = edit->text().trimmed();
@@ -143,7 +143,7 @@ void getFilenamesDialog::on_directoryButton_clicked() {
     }
 }
 void getFilenamesDialog::updateUi() {
-    int size = _ports->size();
+    int size = _ports.size();
     QStringList header;
     header << "Port";
     header << "Filename";
@@ -155,7 +155,7 @@ void getFilenamesDialog::updateUi() {
     QString filename = "Port %1 path";
     QRegExp regExp("[^/?*:;{}\"\\<>|]+");
     for (int i = 0; i < size; i++) {
-        uint port = _ports->at(i);
+        uint port = _ports.at(i);
         QScopedPointer<QTableWidgetItem> item;
         item.reset(new QTableWidgetItem(label.arg(port)));
         item->setFlags(Qt::ItemIsEnabled);

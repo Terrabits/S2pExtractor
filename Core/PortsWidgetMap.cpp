@@ -16,18 +16,17 @@ PortsWidgetMap::PortsWidgetMap(QWidget *parent) :
     _vna = NULL;
     _lineEdit = NULL;
     _pushButton = NULL;
-    _ports = newPorts();
 }
 PortsWidgetMap::~PortsWidgetMap()
 {}
 
 bool PortsWidgetMap::isPorts() const {
-    return !_ports.isNull();
+    return !_ports.isEmpty();
 }
-SharedPorts PortsWidgetMap::ports() const {
+QVector<uint> PortsWidgetMap::ports() const {
     return _ports;
 }
-void PortsWidgetMap::setPorts(SharedPorts ports) {
+void PortsWidgetMap::setPorts(QVector<uint> ports) {
     if (_ports == ports)
         return;
 
@@ -84,7 +83,7 @@ void PortsWidgetMap::getPorts() {
         return;
 
     if (_dialog.exec() == QDialog::Accepted) {
-        *_ports = _dialog.ports();
+        _ports = _dialog.ports();
         updateView();
     }
 }
@@ -103,5 +102,5 @@ void PortsWidgetMap::disconnectView() {
 }
 void PortsWidgetMap::updateView() {
     if (isLineEdit())
-        _lineEdit->setText(portString(*_ports));
+        _lineEdit->setText(portString(_ports));
 }

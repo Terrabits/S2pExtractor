@@ -36,7 +36,7 @@ void CalculateThread::run() {
     loadCalibrations();
     _areMatrices = _outerData.areSwitchMatrices();
     _calibratedPorts = _outerData.ports();
-    _portsLeft = *(_data->ports());
+    _portsLeft = _data->ports();
     calculateFrequency();
 
     getVnaPorts();
@@ -106,12 +106,12 @@ bool CalculateThread::isError() const {
 }
 
 bool CalculateThread::areFilesWritable() {
-    if (_data->filePathNames().isEmpty()) {
+    if (_data->filenames().isEmpty()) {
         emit error("*Choose filenames for results");
         return false;
     }
 
-    QFile test(_data->filePathNames().first());
+    QFile test(_data->filenames().first());
     if (!test.open(QFile::WriteOnly)) {
         emit error("*Directory is not writable");
         return false;
@@ -123,7 +123,7 @@ bool CalculateThread::areFilesWritable() {
     }
 }
 bool CalculateThread::hasPorts() {
-    if (_data->ports()->isEmpty()) {
+    if (_data->ports().isEmpty()) {
         emit error("*Choose ports");
         return false;
     }
@@ -131,11 +131,11 @@ bool CalculateThread::hasPorts() {
     return true;
 }
 bool CalculateThread::hasCalibrations() {
-    if (_data->outerCalibration()->isEmpty()) {
+    if (_data->outerCalibration().isEmpty()) {
         emit error("*Choose outer calibration");
         return false;
     }
-    if (_data->innerCalibration()->isEmpty()) {
+    if (_data->innerCalibration().isEmpty()) {
         emit error("*Choose inner calibration");
         return false;
     }
@@ -146,32 +146,33 @@ bool CalculateThread::loadCalibrations() {
     _deleteOuterChannel = false;
     _deleteInnerChannel = false;
 
-    if (!_data->outerCalibration()->canLoad(_data->vna())) {
-        emit error("*Cannot load outer calibration");
-        return false;
-    }
-    if (!_data->innerCalibration()->canLoad(_data->vna())) {
-        emit error("*Cannot load inner calibration");
-        return false;
-    }
+    // Fix
+//    if (!_data->outerCalibration()->canLoad(_data->vna())) {
+//        emit error("*Cannot load outer calibration");
+//        return false;
+//    }
+//    if (!_data->innerCalibration()->canLoad(_data->vna())) {
+//        emit error("*Cannot load inner calibration");
+//        return false;
+//    }
 
-    if (_data->outerCalibration()->isChannel()) {
-        _outerChannel = _data->outerCalibration()->channel();
+    if (_data->outerCalibration().isChannel()) {
+        _outerChannel = _data->outerCalibration().channel();
     }
     else {
         _deleteOuterChannel = true;
         _outerChannel = _data->vna()->createChannel();
-        _data->vna()->channel(_outerChannel).setCalGroup(_data->outerCalibration()->calGroup());
+        _data->vna()->channel(_outerChannel).setCalGroup(_data->outerCalibration().calGroup());
     }
     _outerData = _data->vna()->channel(_outerChannel).corrections();
 
-    if (_data->innerCalibration()->isChannel()) {
-        _innerChannel = _data->innerCalibration()->channel();
+    if (_data->innerCalibration().isChannel()) {
+        _innerChannel = _data->innerCalibration().channel();
     }
     else {
         _deleteInnerChannel = true;
         _innerChannel = _data->vna()->createChannel();
-        _data->vna()->channel(_innerChannel).setCalGroup(_data->innerCalibration()->calGroup());
+        _data->vna()->channel(_innerChannel).setCalGroup(_data->innerCalibration().calGroup());
     }
     _innerData = _data->vna()->channel(_innerChannel).corrections();
 
@@ -256,7 +257,7 @@ bool CalculateThread::moreThanOnePortCalibrated() {
 bool CalculateThread::portsAreCalibrated() {
     QVector<uint> calibratedPorts = _outerData.ports();
     QVector<uint> uncalibratedPorts;
-    foreach (uint i, *(_data->ports())) {
+    foreach (uint i, _data->ports()) {
         if (!calibratedPorts.contains(i))
             uncalibratedPorts << i;
     }
@@ -423,9 +424,9 @@ bool CalculateThread::portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix,
     }
 }
 bool CalculateThread::calculate(uint port1, uint vnaPort1, uint port2, uint vnaPort2) {
-    if (_data->ports()->contains(port1)) {
-        const uint index = _data->ports()->indexOf(port1);
-        const QString pathName = _data->filePathNames()[index];
+    if (_data->ports().contains(port1)) {
+        const uint index = _data->ports().indexOf(port1);
+        const QString pathName = _data->filenames()[index];
         QFileInfo file(pathName);
         if (!file.exists()) {
             NetworkData s2p = calculateNetwork(port1, vnaPort1,
@@ -436,9 +437,9 @@ bool CalculateThread::calculate(uint port1, uint vnaPort1, uint port2, uint vnaP
             }
         }
     }
-    if (_data->ports()->contains(port2)) {
-        const uint index = _data->ports()->indexOf(port2);
-        const QString pathName = _data->filePathNames()[index];
+    if (_data->ports().contains(port2)) {
+        const uint index = _data->ports().indexOf(port2);
+        const QString pathName = _data->filenames()[index];
         QFileInfo file(pathName);
         if (!file.exists()) {
             NetworkData s2p = calculateNetwork(port2, vnaPort2,
@@ -520,7 +521,7 @@ void CalculateThread::deleteChannels() {
     _deleteInnerChannel = false;
 }
 void CalculateThread::deleteFiles() {
-    foreach (QString file, _data->filePathNames()) {
+    foreach (QString file, _data->filenames()) {
         QFileInfo info(file);
         if (info.exists()) {
             info.dir().remove(info.fileName());

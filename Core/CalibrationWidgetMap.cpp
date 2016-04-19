@@ -12,7 +12,6 @@ CalibrationWidgetMap::CalibrationWidgetMap(QWidget *parent) :
     _dialog(parent),
     QObject(parent)
 {
-    _calibration = newCalibration();
     _lineEdit = NULL;
     _pushButton = NULL;
 }
@@ -56,12 +55,12 @@ void CalibrationWidgetMap::setPushButton(QPushButton *button) {
 }
 
 bool CalibrationWidgetMap::isCalibration() const {
-    return !_calibration.isNull();
+    return !_calibration.isEmpty();
 }
-SharedCalibration CalibrationWidgetMap::calibration() const {
+Calibration CalibrationWidgetMap::calibration() const {
     return _calibration;
 }
-void CalibrationWidgetMap::setCalibration(SharedCalibration calibration) {
+void CalibrationWidgetMap::setCalibration(Calibration calibration) {
     if (_calibration == calibration)
         return;
 
@@ -76,7 +75,7 @@ void CalibrationWidgetMap::getCalibration() {
         return;
 
     if (_dialog.exec() == QDialog::Accepted)
-            *_calibration = _dialog.calibration();
+            _calibration = _dialog.calibration();
 }
 bool CalibrationWidgetMap::isVna() const {
     return _vna != NULL;
@@ -90,7 +89,7 @@ bool CalibrationWidgetMap::isPushButton() const {
 
 void CalibrationWidgetMap::connectView() {
     if (isLineEdit() && isCalibration()) {
-        QObject::connect(_calibration.data(), SIGNAL(changed(QString)),
+        QObject::connect(&_calibration, SIGNAL(changed(QString)),
                          _lineEdit, SLOT(setText(QString)));
     }
     if (isPushButton()) {
@@ -100,7 +99,7 @@ void CalibrationWidgetMap::connectView() {
 }
 void CalibrationWidgetMap::disconnectView() {
     if (isLineEdit() && isCalibration()) {
-        QObject::disconnect(_calibration.data(), SIGNAL(changed(QString)),
+        QObject::disconnect(&_calibration, SIGNAL(changed(QString)),
                          _lineEdit, SLOT(setText(QString)));
     }
     if (isPushButton()) {
@@ -110,5 +109,5 @@ void CalibrationWidgetMap::disconnectView() {
 }
 void CalibrationWidgetMap::updateView() {
     if (isLineEdit())
-        _lineEdit->setText(_calibration->displayText());
+        _lineEdit->setText(_calibration.displayText());
 }

@@ -2,6 +2,9 @@
 #define CALIBRATION_H
 
 
+// Project
+#include "Channel.h"
+
 //RsaToolbox
 #include "Vna.h"
 
@@ -9,10 +12,6 @@
 #include <QObject>
 #include <QSharedPointer>
 
-
-class Calibration;
-typedef QSharedPointer<Calibration> SharedCalibration;
-SharedCalibration newCalibration();
 
 class Calibration : public QObject
 {
@@ -25,12 +24,11 @@ public:
     bool isEmpty() const;
     bool isCalGroup() const;
     bool isChannel() const;
-
     QString calGroup() const;
     uint channel() const;
-
-    bool canLoad(RsaToolbox::Vna *vna);
     QString displayText() const;
+
+    Channel load(RsaToolbox::Vna *vna) const;
 
     void operator=(const Calibration &other);
 

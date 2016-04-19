@@ -9,13 +9,11 @@ using namespace RsaToolbox;
 
 Data::Data()
 {
-    _outerCal = newCalibration();
-    _innerCal = newCalibration();
-    _ports = newPorts();
+    //
 }
 Data::~Data()
 {
-
+    //
 }
 
 bool Data::isKeys() const {
@@ -38,15 +36,29 @@ void Data::setVna(RsaToolbox::Vna *vna) {
     _vna = vna;
 }
 
-SharedCalibration Data::outerCalibration() const {
+Calibration Data::outerCalibration() const {
     return _outerCal;
 }
-SharedCalibration Data::innerCalibration() const {
+Calibration Data::innerCalibration() const {
     return _innerCal;
 }
-SharedPorts Data::ports() const {
+void Data::setOuterCalibration(const Calibration &calibration) {
+    _outerCal = calibration;
+}
+void Data::setInnerCalibration(const Calibration &calibration) {
+    _innerCal = calibration;
+}
+
+QVector<uint> Data::ports() const {
     return _ports;
 }
-QStringList &Data::filePathNames() {
-    return _pathNames;
+void Data::setPorts(QVector<uint> ports) {
+    _ports = ports;
+}
+
+QStringList Data::filenames() const {
+    return _filenames;
+}
+void Data::setFilenames(QStringList filenames) {
+    _filenames = filenames;
 }

@@ -3,7 +3,6 @@
 
 
 // Project
-#include "Ports.h"
 #include "getPortsDialog.h"
 
 // RsaToolbox
@@ -25,8 +24,8 @@ public:
     ~PortsWidgetMap();
 
     bool isPorts() const;
-    SharedPorts ports() const;
-    void setPorts(SharedPorts ports);
+    QVector<uint> ports() const;
+    void setPorts(QVector<uint> ports);
 
     bool isVna() const;
     RsaToolbox::Vna *vna() const;
@@ -44,7 +43,7 @@ public slots:
     void getPorts();
 
 private:
-    SharedPorts _ports;
+    QVector<uint> _ports;
     getPortsDialog _dialog;
 
     RsaToolbox::Vna *_vna;

@@ -124,7 +124,7 @@ void MainWindow::on_generateButton_clicked() {
     if (_filenamesDialog.exec() != QDialog::Accepted)
         return;
 
-    _data->filePathNames() = _filenamesDialog.filePathNames();
+    _data->filenames() = _filenamesDialog.filePathNames();
     startCalculation();
 }
 void MainWindow::startCalculation() {
@@ -170,17 +170,17 @@ void MainWindow::hidePinwheel() {
 }
 
 bool MainWindow::isReady() {
-    if (_data->outerCalibration()->isEmpty()) {
+    if (_data->outerCalibration().isEmpty()) {
         ui->error->showMessage("*Choose outer calibration");
         ui->outerCalButton->setFocus();
         return false;
     }
-    if (_data->innerCalibration()->isEmpty()) {
+    if (_data->innerCalibration().isEmpty()) {
         ui->error->showMessage("*Choose inner calibration");
         ui->innerCalButton->setFocus();
         return false;
     }
-    if (_data->ports()->isEmpty()) {
+    if (_data->ports().isEmpty()) {
         ui->error->showMessage("*Choose ports");
         ui->portsButton->setFocus();
         return false;

@@ -35,3 +35,16 @@ Any assumptions I can make?
 - Ports are the same
 - Calibration types match
 
+How to find corrections?
+- Specify port 1
+- If applicable, specify port 2
+- Try different physical port combinations until you find corrections
+- Return corrections tied to logical port
+Need:
+- Corrections instance (VnaCorrections)
+- Port 1
+- Maybe Port 2
+- If port 1, must have corrections for port 1
+- If port 2, must have corrections for port 2
+
+

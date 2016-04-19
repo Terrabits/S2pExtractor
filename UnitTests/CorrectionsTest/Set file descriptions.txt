@@ -1,0 +1,43 @@
+
+NO SWITCH MATRIX
+    "Ports 1,2.cal"
+    - Ports 1, 2 included
+    - UOSM
+
+    "Ports 1-4.cal"
+    - Ports 1-4 included
+    - UOSM
+
+    "Ports 1-4 OSM.cal"
+    - Ports 1-4 included
+    - OSM calibration
+
+    "Port 1 OSM.cal"
+    - OSM on port 1 only
+
+SWITCH MATRIX
+ZN-Z84-22 (2 to 12 port, up to 8.? GHz)
+Map:
+    1 -> VNA port
+    2 -> VNA port
+    3 -> Switch Matrix port (Vna: 3, 4)
+    4 -> Switch Matrix port (Vna: 3, 4)
+
+    "Ports 1,2 SwM.cal"
+    - Both ports are VNA ports
+    - UOSM
+
+    "Ports 1-4 SwM.cal"
+    - Ports 1,2 VNA ports
+    - Ports 3,4 Switch matrix ports -> VnaPorts[3, 4]
+    - UOSM
+
+    "Ports 1-4 SwM OSM.cal"
+    - Ports 1,2 VNA ports
+    - Ports 3,4 switch matrix ports -> VnaPorts[3, 4]
+    - OSM
+
+    "Port 1 SwM OSM.cal"
+    - Port 1,2 VNA ports
+    - Ports 3,4 switch matrix ports -> VnaPorts[3,4]
+    - OSM on port 1 only

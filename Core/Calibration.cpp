@@ -5,13 +5,6 @@
 using namespace RsaToolbox;
 
 
-SharedCalibration newCalibration() {
-    return SharedCalibration(new Calibration());
-}
-SharedCalibration newCalibration(Vna *vna) {
-    return SharedCalibration(new Calibration(vna));
-}
-
 Calibration::Calibration(QObject *parent) :
     QObject(parent)
 {
@@ -24,9 +17,9 @@ Calibration::Calibration(const Calibration &other) :
     _calGroup = other._calGroup;
     _channel = other._channel;
 }
-
-Calibration::~Calibration()
-{ }
+Calibration::~Calibration() {
+    //
+}
 
 bool Calibration::isEmpty() const {
     if (_isCalGroup && _calGroup.isEmpty())
@@ -62,59 +55,6 @@ uint Calibration::channel() const {
     else
         return 0;
 }
-
-bool Calibration::canLoad(Vna *vna) {
-    if (vna == NULL)
-        return false;
-    if (isEmpty()) {
-        emit error("*No calibration");
-        return false;
-    }
-    if (isCalGroup()) {
-        if (!vna->calGroups().contains(_calGroup)) {
-            QString message = "*Cal group %1 doesn\'t exist";
-            message = message.arg(_calGroup);
-            emit error(message);
-            return false;
-        }
-        else {
-            vna->isError();
-            vna->clearStatus();
-            vna->settings().errorDisplayOff();
-            uint c = vna->createChannel();
-            vna->channel(c).setCalGroup(_calGroup);
-            if (vna->isError()) {
-                vna->deleteChannel(c);
-                vna->clearStatus();
-                vna->settings().errorDisplayOn();
-                emit error("*Could not load cal group\n");
-                return false;
-            }
-            else {
-                vna->deleteChannel(c);
-                vna->clearStatus();
-                vna->settings().errorDisplayOn();
-            }
-        }
-    }
-    else {
-        if (!vna->isChannel(_channel)) {
-            QString message = "*Channel %1 does not exist.";
-            message = message.arg(_channel);
-            emit error(message);
-            return false;
-        }
-        if (!vna->channel(_channel).isCalibrated()) {
-            QString message = "*Channel %1 is not calibrated.";
-            message = message.arg(_channel);
-            emit error(message);
-            return false;
-        }
-    }
-
-    // Else
-    return true;
-}
 QString Calibration::displayText() const {
     if (isCalGroup()) {
         return calGroup();
@@ -127,6 +67,13 @@ QString Calibration::displayText() const {
 
     // Else
     return QString();
+}
+
+Channel Calibration::load(Vna *vna) const {
+    if (isChannel())
+        return Channel(_channel, vna);
+    else
+        return Channel(_calGroup, vna);
 }
 
 void Calibration::operator=(const Calibration &other) {

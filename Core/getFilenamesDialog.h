@@ -2,9 +2,6 @@
 #define GETFILENAMESDIALOG_H
 
 
-// Project
-#include "Ports.h"
-
 // Rsatoolbox
 #include "LastPath.h"
 #include "Keys.h"
@@ -26,8 +23,8 @@ public:
     ~getFilenamesDialog();
 
     bool isPorts() const;
-    SharedPorts ports() const;
-    void setPorts(SharedPorts ports);
+    QVector<uint> ports() const;
+    void setPorts(QVector<uint> ports);
 
     bool isKey() const;
     QString key() const;
@@ -48,7 +45,7 @@ private slots:
 private:
     Ui::getFilenamesDialog *ui;
 
-    SharedPorts _ports;
+    QVector<uint> _ports;
     RsaToolbox::LastPath _lastPath;
 
     QStringList _filenames;

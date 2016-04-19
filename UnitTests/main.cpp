@@ -1,6 +1,7 @@
 
 
 // Tests
+#include "CorrectionsTest.h"
 #include "CalculateTest.h"
 
 // RsaToolbox
@@ -17,7 +18,8 @@ using namespace RsaToolbox;
 
 int main() {
     TestRunner testRunner;
-    testRunner.addTest(new CalculateTest);
+    testRunner.addTest(new CorrectionsTest);
+//    testRunner.addTest(new CalculateTest);
 
     qDebug() << "Global result: " << (testRunner.runTests() ? "PASS" : "FAIL");
     return 0;

@@ -4,7 +4,6 @@
 
 // Project
 #include "Calibration.h"
-#include "Ports.h"
 
 // RsaToolbox
 #include "Keys.h"
@@ -28,18 +27,25 @@ public:
     RsaToolbox::Vna *vna() const;
     void setVna(RsaToolbox::Vna *vna);
 
-    SharedCalibration outerCalibration() const;
-    SharedCalibration innerCalibration() const;
-    SharedPorts ports() const;
-    QStringList &filePathNames();
+
+    Calibration outerCalibration() const;
+    Calibration innerCalibration() const;
+    void setOuterCalibration(const Calibration &calibration);
+    void setInnerCalibration(const Calibration &calibration);
+
+    QVector<uint> ports() const;
+    void setPorts(QVector<uint> ports);
+
+    QStringList filenames() const;
+    void setFilenames(QStringList filenames);
 
 private:
     RsaToolbox::Keys *_keys;
     RsaToolbox::Vna *_vna;
-    SharedCalibration _outerCal;
-    SharedCalibration _innerCal;
-    SharedPorts _ports;
-    QStringList _pathNames;
+    Calibration _outerCal;
+    Calibration _innerCal;
+    QVector<uint> _ports;
+    QStringList _filenames;
 };
 
 #endif // DATA_H

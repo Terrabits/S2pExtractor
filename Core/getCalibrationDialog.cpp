@@ -103,8 +103,8 @@ void getCalibrationDialog::accept() {
         ui->error->showMessage("*Please choose a calibration.");
         return;
     }
-    if (!_selection.canLoad(_vna))
-        return;
+//    if (!_selection.canLoad(_vna))
+//        return;
 
     _calibration = _selection;
     QDialog::accept();

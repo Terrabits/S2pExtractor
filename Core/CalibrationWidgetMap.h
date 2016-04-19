@@ -23,8 +23,8 @@ public:
     ~CalibrationWidgetMap();
 
     bool isCalibration() const;
-    SharedCalibration calibration() const;
-    void setCalibration(SharedCalibration calibration);
+    Calibration calibration() const;
+    void setCalibration(Calibration calibration);
 
     bool isVna() const;
     RsaToolbox::Vna *vna() const;
@@ -42,7 +42,7 @@ public slots:
     void getCalibration();
 
 private:
-    SharedCalibration _calibration;
+    Calibration _calibration;
     getCalibrationDialog _dialog;
 
     RsaToolbox::Vna *_vna;
