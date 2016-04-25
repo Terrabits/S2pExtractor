@@ -7,9 +7,7 @@ DESTDIR = $$PWD
 TARGET = Core
 CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)
 
-include($$PWD/../RsaToolbox/rsatoolbox.pri)
-include($$PWD/../RsaToolbox/QuaZip/quazip.pri)
-
+include($$PWD/../RsaToolbox/_install/rsatoolbox.pri)
 HEADERS     += Settings.h \
                CalculateThread.h \
                Calibration.h \
@@ -21,7 +19,9 @@ HEADERS     += Settings.h \
                PortsWidgetMap.h \
                Calculate.h \
                Channel.h \
-               Corrections.h
+               Corrections.h \
+    CalibrationSource.h \
+    PortLoop.h
                ...
 INCLUDEPATH += $$PWD
 SOURCES     += CalculateThread.cpp \
@@ -34,11 +34,13 @@ SOURCES     += CalculateThread.cpp \
                PortsWidgetMap.cpp \
                Calculate.cpp \
                Channel.cpp \
-               Corrections.cpp
+               Corrections.cpp \
+    CalibrationSource.cpp \
+    PortLoop.cpp
 FORMS       += getCalibrationDialog.ui \
                getFilenamesDialog.ui \
                getPortsDialog.ui
-#OTHER_FILES += 
+OTHER_FILES += core.pri
 
 DEFINES     += SOURCE_DIR=\\\"$$PWD/\\\"
 CONFIG(debug, debug|release):DEFINES += DEBUG_MODE

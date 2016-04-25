@@ -19,6 +19,8 @@ public:
     Corrections(const Corrections &other);
     ~Corrections();
 
+    RsaToolbox::QRowVector frequencies() const;
+
     // Port 1
     uint port1() const;
     bool isPort1Corrections() const;

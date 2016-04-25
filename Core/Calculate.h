@@ -3,13 +3,12 @@
 
 
 // Project
-#include "Data.h"
+#include "CalibrationSource.h"
 
 // RsaToolbox
-#include "General.h"
+#include <NetworkData.h>
 
 // Qt
-#include <QThread>
 #include <QVector>
 
 
@@ -17,58 +16,21 @@ class Calculate
 {
 //    Q_OBJECT
 public:
-    explicit Calculate();
+    explicit Calculate(CalibrationSource outer, CalibrationSource inner, QVector<uint> ports, uint numberOfTestPorts);
     ~Calculate();
 
-//    bool isData() const;
-//    Data *data() const;
-//    void setData(Data *data);
+    bool isError(QString &message = QString());
+    RsaToolbox::NetworkData result(uint port);
 
-//    bool isReady();
-//    bool isError() const;
+private:
+    bool _isError;
+    QString _errorMessage;
+    QVector<uint> _ports;
+    QVector<RsaToolbox::NetworkData> _results;
 
-//private:
-//    Data *_data;
-
-//    bool areFilesWritable();
-//    bool hasPorts();
-//    bool hasCalibrations();
-//    bool loadCalibrations();
-//    bool isFull12TermErrorCorrections();
-//    bool calibrationsMatch();
-//    bool frequencyIsKnown();
-//    void calculateFrequency();
-
-//    bool moreThanOnePortCalibrated();
-//    bool portsAreCalibrated();
-
-//    bool isPortsLeft() const;
-//    void getVnaPorts();
-//    bool portPair(uint &port1, uint &vnaPort1, bool &isPort1Matrix, uint &port2, uint &vnaPort2, bool &isPort2Matrix);
-//    bool calculate(uint port1, uint vnaPort1, uint port2, uint vnaPort2);
-//    RsaToolbox::NetworkData calculateNetwork(uint port1, uint vnaPort1, uint port2, uint vnaPort2);
-//    void constructMatrix(RsaToolbox::ComplexMatrix3D &matrix, const RsaToolbox::ComplexRowVector &s11, const RsaToolbox::ComplexRowVector &s21, const RsaToolbox::ComplexRowVector &s22);
-
-//    void deleteChannels();
-//    void deleteFiles();
-//    void reset();
-
-//    bool _isError;
-
-//    bool _areMatrices;
-//    RsaToolbox::Ports _vnaPorts;
-//    RsaToolbox::Ports _calibratedPorts;
-//    RsaToolbox::Ports _portsLeft;
-
-//    bool _deleteOuterChannel;
-//    uint _outerChannel;
-//    RsaToolbox::VnaCorrections _outerData;
-
-//    bool _deleteInnerChannel;
-//    uint _innerChannel;
-//    RsaToolbox::VnaCorrections _innerData;
-
-//    RsaToolbox::QRowVector _frequency_Hz;
+    // Temporary variables,
+    // Helper functions
+    uint _numberOfTestPorts;
 };
 
 

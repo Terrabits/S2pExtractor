@@ -104,6 +104,10 @@ Corrections::~Corrections()
     //
 }
 
+QRowVector Corrections::frequencies() const {
+    return _corrections.frequencies_Hz();
+}
+
 uint Corrections::port1() const {
     return _port1;
 }

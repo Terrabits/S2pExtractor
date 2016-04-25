@@ -16,4 +16,4 @@ NO SWITCH MATRIX
     - OSM on port 1 only
 
 SWITCH MATRIX
-ZVA does not support switch matrix!
+*** ZVA DOES NOT SUPPORT SWITCH MATRICES ***

@@ -16,13 +16,19 @@ CorrectionsTest::CorrectionsTest(QObject *parent) :
     VnaTestClass(parent)
 {
     _logDir.setPath(SOURCE_DIR);
+    _logDir.mkpath("CorrectionsTest");
     _logDir.cd("CorrectionsTest");
     Vna vna(ConnectionType::VisaTcpSocketConnection, "127.0.0.1::5025");
-    if (vna.properties().isZvaFamily())
+    if (vna.properties().isZvaFamily()) {
+        _logDir.mkpath("Zva");
         _logDir.cd("Zva");
-    else
+    }
+    else {
+        _logDir.mkpath("Znb");
         _logDir.cd("Znb");
+    }
     _calGroupDir.setPath(_logDir.filePath("CalGroups"));
+    _logDir.mkpath("Logs");
     _logDir.cd("Logs");
 
     _logFilenames << "1 - Ports 1,2.txt"
@@ -291,6 +297,9 @@ void CorrectionsTest::port1SwMatOsm() {
 }
 
 void CorrectionsTest::addSwitchMatrix() {
+    if (_vna->properties().isZvaFamily())
+        return;
+
      removeSwitchMatrices();
 
     PortMap vnaToTestPortMap;
@@ -326,6 +335,9 @@ void CorrectionsTest::addSwitchMatrix() {
     _vna->endSwitchMatrixSetup();
 }
 void CorrectionsTest::removeSwitchMatrices() {
+    if (_vna->properties().isZvaFamily())
+        return;
+
     _vna->excludeAllSwitchMatricesFromSetup();
     _vna->unregisterAllSwitchMatrices();
 }
