@@ -7,10 +7,12 @@ CONFIG    += testcase
 
 include(../Core/core.pri)
 HEADERS     += CalculateTest.h \
-               CorrectionsTest.h
+               CorrectionsTest.h \
+    PortLoopTest.h
 SOURCES     += main.cpp \
                CalculateTest.cpp \
-               CorrectionsTest.cpp
+               CorrectionsTest.cpp \
+    PortLoopTest.cpp
 #OTHER_FILES += LogName.txt
 
 DEFINES   += SOURCE_DIR=\\\"$$PWD/\\\"

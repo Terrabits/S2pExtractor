@@ -3,6 +3,7 @@
 // Tests
 #include "CorrectionsTest.h"
 #include "CalculateTest.h"
+#include "PortLoopTest.h"
 
 // RsaToolbox
 #include <General.h>
@@ -18,6 +19,7 @@ using namespace RsaToolbox;
 
 int main() {
     TestRunner testRunner;
+    testRunner.addTest(new PortLoopTest);
     testRunner.addTest(new CorrectionsTest);
 //    testRunner.addTest(new CalculateTest);
 

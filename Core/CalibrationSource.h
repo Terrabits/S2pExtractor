@@ -23,7 +23,6 @@ public:
     void clear();
 
 private:
-    bool isChannel() const;
     uint _channel;
     QString _calGroup;
 };

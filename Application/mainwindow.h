@@ -47,18 +47,18 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    Data *_data;
-    CalibrationWidgetMap _outerCalMap;
-    CalibrationWidgetMap _innerCalMap;
-    PortsWidgetMap _portsMap;
-    getFilenamesDialog _filenamesDialog;
+//    Data *_data;
+//    CalibrationWidgetMap _outerCalMap;
+//    CalibrationWidgetMap _innerCalMap;
+//    PortsWidgetMap _portsMap;
+//    getFilenamesDialog _filenamesDialog;
 
-    CalculateThread _calcThread;
+//    CalculateThread _calcThread;
 
-    bool isReady();
+//    bool isReady();
 
-    void initPinwheel();
-    QLabel _pinwheel;
+//    void initPinwheel();
+//    QLabel _pinwheel;
 };
 
 

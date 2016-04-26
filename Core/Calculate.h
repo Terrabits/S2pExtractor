@@ -27,6 +27,7 @@ private:
     QString _errorMessage;
     QVector<uint> _ports;
     QVector<RsaToolbox::NetworkData> _results;
+    void setResult(uint port, RsaToolbox::NetworkData &data);
 
     // Temporary variables,
     // Helper functions

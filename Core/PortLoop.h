@@ -13,7 +13,7 @@ public:
 
     bool isUnprocessedPorts() const;
 
-    void beginLoop();
+    void begin();
 
     uint port1() const;
 
@@ -33,6 +33,7 @@ private:
     void markPortProcessed(uint port);
 
     uint _port1;
+    uint _port2;
     QVector<uint> _portList;
 };
 
