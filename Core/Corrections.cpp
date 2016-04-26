@@ -3,10 +3,11 @@
 
 // RsaToolbox
 using namespace RsaToolbox;
-Corrections::Corrections(uint port1, Ports ports, VnaCorrections corrections, Vna *vna) :
+
+
+Corrections::Corrections(uint port1, Ports ports, CalibrationSource source, Vna *vna) :
     _port1(port1),
-    _port2(0),
-    _corrections(corrections)
+    _port2(0)
 {
     int index = ports.indexOf(port1);
     if (index != -1)
@@ -16,7 +17,7 @@ Corrections::Corrections(uint port1, Ports ports, VnaCorrections corrections, Vn
     vna->clearStatus();
     vna->settings().errorDisplayOff();
     foreach (uint port2, ports) {
-        Corrections attempt(port1, port2, _corrections);
+        Corrections attempt(port1, port2, source, vna);
         if (attempt.isPort1Corrections()) {
             (*this) = attempt;
             _port2 = 0;
@@ -30,44 +31,46 @@ Corrections::Corrections(uint port1, Ports ports, VnaCorrections corrections, Vn
     vna->clearStatus();
     vna->settings().errorDisplayOn();
 }
-Corrections::Corrections(uint port1, uint port2, VnaCorrections corrections) :
+Corrections::Corrections(uint port1, uint port2, CalibrationSource source, Vna *vna) :
     _port1(port1),
-    _port2(port2),
-    _corrections(corrections)
+    _port2(port2)
 {
-    _switchMatrices = _corrections.switchMatrices();
+    Channel channel(source, vna);
+    _frequencies_Hz = channel.frequencies_Hz();
+
+    uint switchMatrices = channel.corrections().switchMatrices();
 
     // Logical port -> Physical vna port(s)
-    _port1VnaPorts = findVnaPorts(_port1);
-    _port2VnaPorts = findVnaPorts(_port2);
+    QVector<uint> port1VnaPorts = findVnaPorts(_port1);
+    QVector<uint> port2VnaPorts = findVnaPorts(_port2);
 
     // No switch matrices:
     // logical == physical
-    if (!_switchMatrices) {
-        _directivity1 = _corrections.directivity(port2, port1);
-        _reflectionTracking1 = _corrections.reflectionTracking(port2, port1);
-        _sourceMatch1 = _corrections.sourceMatch(port2, port1);
+    if (!switchMatrices) {
+        _directivity1 = channel.corrections().directivity(port2, port1);
+        _reflectionTracking1 = channel.corrections().reflectionTracking(port2, port1);
+        _sourceMatch1 = channel.corrections().sourceMatch(port2, port1);
 
-        _directivity2 = _corrections.directivity(port1, port2);
-        _reflectionTracking2 = _corrections.reflectionTracking(port1, port2);
-        _sourceMatch2 = _corrections.sourceMatch(port1, port2);
+        _directivity2 = channel.corrections().directivity(port1, port2);
+        _reflectionTracking2 = channel.corrections().reflectionTracking(port1, port2);
+        _sourceMatch2 = channel.corrections().sourceMatch(port1, port2);
         return;
     }
 
     // Switch matrix
     // Find switch matrix path
     // with corrections
-    foreach (uint vnaPort1, _port1VnaPorts) {
-        foreach (uint vnaPort2, _port2VnaPorts) {
+    foreach (uint vnaPort1, port1VnaPorts) {
+        foreach (uint vnaPort2, port2VnaPorts) {
             if (vnaPort1 == vnaPort2)
                 continue;
 
-            _directivity1 = _corrections.directivity(_port2, vnaPort2, _port1, vnaPort1);
-            _reflectionTracking1 = _corrections.reflectionTracking(_port2, vnaPort2, _port1, vnaPort1);
-            _sourceMatch1 = _corrections.sourceMatch(_port2, vnaPort2, _port1, vnaPort1);
-            _directivity2 = _corrections.directivity(_port1, vnaPort1, _port2, vnaPort2);
-            _reflectionTracking2 = _corrections.reflectionTracking(_port1, vnaPort1, _port2, vnaPort2);
-            _sourceMatch2 = _corrections.sourceMatch(_port1, vnaPort1, _port2, vnaPort2);
+            _directivity1 = channel.corrections().directivity(_port2, vnaPort2, _port1, vnaPort1);
+            _reflectionTracking1 = channel.corrections().reflectionTracking(_port2, vnaPort2, _port1, vnaPort1);
+            _sourceMatch1 = channel.corrections().sourceMatch(_port2, vnaPort2, _port1, vnaPort1);
+            _directivity2 = channel.corrections().directivity(_port1, vnaPort1, _port2, vnaPort2);
+            _reflectionTracking2 = channel.corrections().reflectionTracking(_port1, vnaPort1, _port2, vnaPort2);
+            _sourceMatch2 = channel.corrections().sourceMatch(_port1, vnaPort1, _port2, vnaPort2);
 
             if (isPort1Corrections()) {
                 return;
@@ -84,12 +87,9 @@ Corrections::Corrections(uint port1, uint port2, VnaCorrections corrections) :
     }
 }
 Corrections::Corrections(const Corrections &other) :
-    _switchMatrices(other._switchMatrices),
     _port1(other._port1),
     _port2(other._port2),
-    _port1VnaPorts(other._port1VnaPorts),
-    _port2VnaPorts(other._port2VnaPorts),
-    _corrections(other._corrections),
+    _frequencies_Hz(other._frequencies_Hz),
     _directivity1(other._directivity1),
     _reflectionTracking1(other._reflectionTracking1),
     _sourceMatch1(other.sourceMatch1()),
@@ -105,7 +105,7 @@ Corrections::~Corrections()
 }
 
 QRowVector Corrections::frequencies() const {
-    return _corrections.frequencies_Hz();
+    return _frequencies_Hz;
 }
 
 uint Corrections::port1() const {
@@ -165,10 +165,7 @@ ComplexRowVector Corrections::sourceMatch2() const {
 void Corrections::operator=(const Corrections &other) {
     _port1 = other._port1;
     _port2 = other._port2;
-    _port1VnaPorts = other._port1VnaPorts;
-    _port2VnaPorts = other._port2VnaPorts;
-    _switchMatrices = other._switchMatrices;
-    _corrections = other._corrections;
+    _frequencies_Hz = other._frequencies_Hz;
     _directivity1 = other._directivity1;
     _reflectionTracking1 = other._reflectionTracking1;
     _sourceMatch1 = other._sourceMatch1;
@@ -183,14 +180,14 @@ Ports Corrections::findVnaPorts(uint logicalPort) const {
         ports << logicalPort;
         return ports;
     }
-    else if (_corrections.testPortToVnaMap().contains(logicalPort)) {
-        ports << _corrections.testPortToVnaMap()[logicalPort];
+    else if (_channel.corrections().testPortToVnaMap().contains(logicalPort)) {
+        ports << _channel.corrections().testPortToVnaMap()[logicalPort];
         return ports;
     }
     else {
         for (uint i = 1; i <= _switchMatrices; i++) {
-            if (_corrections.testPortToSwitchMatrixMap(i).contains(logicalPort)) {
-                ports << _corrections.switchMatrixToVnaPortMap(i).values().toVector();
+            if (_channel.corrections().testPortToSwitchMatrixMap(i).contains(logicalPort)) {
+                ports << _channel.corrections().switchMatrixToVnaPortMap(i).values().toVector();
                 return ports;
             }
         }

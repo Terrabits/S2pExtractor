@@ -15,12 +15,16 @@ public:
     bool isEmpty() const;
 
     bool isChannel() const;
+    uint channel() const;
     void setChannel(uint index);
 
     bool isCalGroup() const;
+    QString calGroup() const;
     void setCalGroup(QString calGroup);
 
     void clear();
+
+    QString displayText() const;
 
 private:
     uint _channel;

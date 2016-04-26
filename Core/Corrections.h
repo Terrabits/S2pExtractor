@@ -2,6 +2,10 @@
 #define CORRECTIONS_H
 
 
+// Project
+#include "CalibrationSource.h"
+#include "Channel.h"
+
 // RsaToolbox
 #include <Vna.h>
 #include <VnaCorrections.h>
@@ -14,8 +18,8 @@
 class Corrections
 {
 public:
-    Corrections(uint port1, RsaToolbox::Ports ports, RsaToolbox::VnaCorrections corrections, RsaToolbox::Vna *vna);
-    Corrections(uint port1, uint port2, RsaToolbox::VnaCorrections corrections);
+    Corrections(uint port1, RsaToolbox::Ports ports, CalibrationSource source, RsaToolbox::Vna *vna);
+    Corrections(uint port1, uint port2, CalibrationSource source, RsaToolbox::Vna *vna);
     Corrections(const Corrections &other);
     ~Corrections();
 
@@ -41,13 +45,11 @@ public:
 private:
     uint _port1;
     uint _port2;
-    RsaToolbox::Ports _port1VnaPorts;
-    RsaToolbox::Ports _port2VnaPorts;
     RsaToolbox::Ports findVnaPorts(uint logicalPort) const;
 
-    uint _switchMatrices;
-    mutable RsaToolbox::VnaCorrections _corrections;
+    RsaToolbox::QRowVector _frequencies_Hz;
 
+    // Port 1
     RsaToolbox::ComplexRowVector _directivity1;
     RsaToolbox::ComplexRowVector _reflectionTracking1;
     RsaToolbox::ComplexRowVector _sourceMatch1;
