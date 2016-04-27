@@ -6,6 +6,18 @@ CalibrationSource::CalibrationSource() :
 {
     //
 }
+CalibrationSource::CalibrationSource(uint channel) :
+    _channel(channel)
+{
+    //
+}
+CalibrationSource::CalibrationSource(QString calGroup) :
+    _channel(0),
+    _calGroup(calGroup)
+{
+    //
+}
+
 CalibrationSource::~CalibrationSource()
 {
     //

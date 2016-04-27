@@ -23,7 +23,7 @@ public:
     Corrections(const Corrections &other);
     ~Corrections();
 
-    RsaToolbox::QRowVector frequencies() const;
+    RsaToolbox::QRowVector frequencies_Hz() const;
 
     // Port 1
     uint port1() const;
@@ -45,7 +45,7 @@ public:
 private:
     uint _port1;
     uint _port2;
-    RsaToolbox::Ports findVnaPorts(uint logicalPort) const;
+    RsaToolbox::Ports findVnaPorts(Channel &channel, uint logicalPort) const;
 
     RsaToolbox::QRowVector _frequencies_Hz;
 

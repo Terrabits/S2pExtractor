@@ -10,6 +10,8 @@ class CalibrationSource
 {
 public:
     CalibrationSource();
+    CalibrationSource(uint channel);
+    CalibrationSource(QString calGroup);
     ~CalibrationSource();
 
     bool isEmpty() const;

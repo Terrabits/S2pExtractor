@@ -10,10 +10,6 @@ CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)
 include($$PWD/../RsaToolbox/_install/rsatoolbox.pri)
 HEADERS     += Settings.h \
                CalculateThread.h \
-               getCalibrationDialog.h \
-               getFilenamesDialog.h \
-               getPortsDialog.h \
-               PortsWidgetMap.h \
                Calculate.h \
                Channel.h \
                Corrections.h \
@@ -22,10 +18,6 @@ HEADERS     += Settings.h \
                ...
 INCLUDEPATH += $$PWD
 SOURCES     += CalculateThread.cpp \
-               getCalibrationDialog.cpp \
-               getFilenamesDialog.cpp \
-               getPortsDialog.cpp \
-               PortsWidgetMap.cpp \
                Calculate.cpp \
                Channel.cpp \
                Corrections.cpp \

@@ -17,11 +17,17 @@ public:
     ~CorrectionsTest();
 
 private slots:
+    // Source test
+    void channelSource();
+    void calGroupSource();
+
+    // Vna ports
     void ports12();
     void ports1to4();
     void ports1to4Osm();
     void port1Osm();
 
+    // Switch matrix ports
     void ports12SwMat();
     void ports1to4SwMat();
     void ports1to4SwMatOsm();

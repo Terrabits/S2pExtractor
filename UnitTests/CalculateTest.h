@@ -21,7 +21,8 @@ public:
     ~CalculateTest();
 
 private slots:
-    void myTest();
+    void uosmCalculations();
+    void osmCalculations();
 
 };
 

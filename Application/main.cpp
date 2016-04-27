@@ -2,18 +2,15 @@
 
 // Project
 #include "Settings.h"
-#include "Data.h"
 #include "mainwindow.h"
-#include "getFilenamesDialog.h"
 
 // RsaToolbox
-#include "Definitions.h"
-#include "General.h"
-#include "About.h"
-#include "Keys.h"
-#include "Log.h"
-#include "Vna.h"
-#include "Update.h"
+
+#include <Log.h>
+#include <Log.h>
+#include <Vna.h>
+#include <About.h>
+#include <Update.h>
 using namespace RsaToolbox;
 
 // Qt
@@ -52,11 +49,7 @@ int main(int argc, char *argv[])
     if (isNoConnection(vna) || isUnknownModel(vna))
         return(0);
 
-    Data data;
-    data.setKeys(&keys);
-    data.setVna(&vna);
-
-    MainWindow w(&data);
+    MainWindow w;
     w.setWindowFlags(w.windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowStaysOnTopHint);
     w.show();
     if (update.isUpdateDue())

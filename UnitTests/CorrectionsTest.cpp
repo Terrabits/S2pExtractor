@@ -3,12 +3,14 @@
 
 // Project
 #include "Corrections.h"
+#include "CalibrationSource.h"
 
 // RsaToolbox
 #include <General.h>
 using namespace RsaToolbox;
 
 // Qt
+#include <QScopedPointer>
 #include <QTest>
 
 
@@ -31,18 +33,58 @@ CorrectionsTest::CorrectionsTest(QObject *parent) :
     _logDir.mkpath("Logs");
     _logDir.cd("Logs");
 
-    _logFilenames << "1 - Ports 1,2.txt"
-                  << "2 - Ports 1-4.txt"
-                  << "3 - Ports 1-4 OSM.txt"
-                  << "4 - Port  1   OSM.txt"
-                  << "5 - Ports 1,2 SwMat.txt"
-                  << "6 - Ports 1-4 SwMat.txt"
-                  << "7 - Ports 1-4 SwMat OSM.txt"
-                  << "8 - Port  1   SwMat OSM.txt";
+    _logFilenames << "1  - Channel source.txt"
+                  << "2  - CalGroup source.txt"
+                  << "3  - Ports 1,2.txt"
+                  << "4  - Ports 1-4.txt"
+                  << "5  - Ports 1-4 OSM.txt"
+                  << "6  - Port  1   OSM.txt"
+                  << "7  - Ports 1,2 SwMat.txt"
+                  << "8  - Ports 1-4 SwMat.txt"
+                  << "9  - Ports 1-4 SwMat OSM.txt"
+                  << "10 - Port  1   SwMat OSM.txt";
 }
 CorrectionsTest::~CorrectionsTest()
 {
     //
+}
+
+void CorrectionsTest::channelSource() {
+    removeSwitchMatrices();
+
+    QString calGroup = "Ports 1,2.cal";
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    _vna->channel().setCalGroup(calGroup);
+    QVERIFY(!_vna->channel().calGroup().isEmpty());
+    QVERIFY(_vna->channel().isCalibrated());
+
+    const int numberOfChannels = _vna->channels().size();
+
+    CalibrationSource source(1);
+    QScopedPointer<Corrections> corrections(new Corrections(1, 2, source, _vna.data()));
+    QVERIFY(corrections->isPort1Corrections());
+    QVERIFY(corrections->isPort2Corrections());
+    QCOMPARE(numberOfChannels, _vna->channels().size());
+
+    corrections.reset();
+    QCOMPARE(numberOfChannels, _vna->channels().size());
+}
+void CorrectionsTest::calGroupSource() {
+    removeSwitchMatrices();
+
+    QString calGroup = "Ports 1,2.cal";
+    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+
+    const int numberOfChannels = _vna->channels().size();
+
+    CalibrationSource source(calGroup);
+    QScopedPointer<Corrections> corrections(new Corrections(1, 2, source, _vna.data()));
+    QCOMPARE(numberOfChannels, _vna->channels().size());
+    QVERIFY(corrections->isPort1Corrections());
+    QVERIFY(corrections->isPort2Corrections());
+
+    corrections.reset();
+    QCOMPARE(numberOfChannels, _vna->channels().size());
 }
 
 void CorrectionsTest::ports12() {
@@ -54,7 +96,8 @@ void CorrectionsTest::ports12() {
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
-    Corrections corrections(1, 2, _vna->channel().corrections());
+    CalibrationSource source(1);
+    Corrections corrections(1, 2, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -65,7 +108,7 @@ void CorrectionsTest::ports12() {
     _log->printLine(toString(corrections.directivity1(), ", "));
 
     Ports testPorts = range(uint(1), _vna->testPorts());
-    corrections = Corrections(1, testPorts, _vna->channel().corrections(), _vna.data());
+    corrections = Corrections(1, testPorts, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(!_vna->isError());
@@ -82,7 +125,8 @@ void CorrectionsTest::ports1to4() {
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
-    Corrections corrections(1, 2, _vna->channel().corrections());
+    CalibrationSource source(1);
+    Corrections corrections(1, 2, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -94,7 +138,7 @@ void CorrectionsTest::ports1to4() {
     _log->printLine("directivity2: ");
     _log->printLine(toString(corrections.directivity2(), ", "));
 
-    corrections = Corrections(3, 4, _vna->channel().corrections());
+    corrections = Corrections(3, 4, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -115,7 +159,8 @@ void CorrectionsTest::ports1to4Osm() {
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
-    Corrections corrections(1, 2, _vna->channel().corrections());
+    CalibrationSource source(1);
+    Corrections corrections(1, 2, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -127,7 +172,7 @@ void CorrectionsTest::ports1to4Osm() {
     _log->printLine("directivity2: ");
     _log->printLine(toString(corrections.directivity2(), ", "));
 
-    corrections = Corrections(3, 4, _vna->channel().corrections());
+    corrections = Corrections(3, 4, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -148,8 +193,9 @@ void CorrectionsTest::port1Osm() {
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
+    CalibrationSource source(1);
     Ports testPorts = range(uint(1), _vna->testPorts());
-    Corrections corrections(1, testPorts, _vna->channel().corrections(), _vna.data());
+    Corrections corrections(1, testPorts, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(!_vna->isError());
@@ -170,7 +216,8 @@ void CorrectionsTest::ports12SwMat() {
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
-    Corrections corrections(1, 2, _vna->channel().corrections());
+    CalibrationSource source(1);
+    Corrections corrections(1, 2, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -183,7 +230,7 @@ void CorrectionsTest::ports12SwMat() {
     _log->printLine(toString(corrections.directivity2(), ", "));
 
     Ports testPorts = range(uint(1), _vna->testPorts());
-    corrections = Corrections(1, testPorts, _vna->channel().corrections(), _vna.data());
+    corrections = Corrections(1, testPorts, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(!_vna->isError());
@@ -208,7 +255,8 @@ void CorrectionsTest::ports1to4SwMat() {
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
-    Corrections corrections(1, 2, _vna->channel().corrections());
+    CalibrationSource source(1);
+    Corrections corrections(1, 2, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -220,7 +268,7 @@ void CorrectionsTest::ports1to4SwMat() {
     _log->printLine("directivity2: ");
     _log->printLine(toString(corrections.directivity2(), ", "));
 
-    corrections = Corrections(3, 4, _vna->channel().corrections());
+    corrections = Corrections(3, 4, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -246,7 +294,8 @@ void CorrectionsTest::ports1to4SwMatOsm() {
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
-    Corrections corrections(1, 2, _vna->channel().corrections());
+    CalibrationSource source(1);
+    Corrections corrections(1, 2, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -258,7 +307,7 @@ void CorrectionsTest::ports1to4SwMatOsm() {
     _log->printLine("directivity2: ");
     _log->printLine(toString(corrections.directivity2(), ", "));
 
-    corrections = Corrections(3, 4, _vna->channel().corrections());
+    corrections = Corrections(3, 4, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(corrections.isPort2Corrections());
@@ -284,8 +333,9 @@ void CorrectionsTest::port1SwMatOsm() {
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
 
+    CalibrationSource source(1);
     Ports testPorts = range(uint(1), _vna->testPorts());
-    Corrections corrections(1, testPorts, _vna->channel().corrections(), _vna.data());
+    Corrections corrections(1, testPorts, source, _vna.data());
     QVERIFY(corrections.isPort1Corrections());
     QCOMPARE(corrections.directivity1().size(), uint(201));
     QVERIFY(!_vna->isError());

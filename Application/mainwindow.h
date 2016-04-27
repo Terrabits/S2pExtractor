@@ -3,14 +3,10 @@
 
 
 // Project
-#include "Data.h"
-#include "CalibrationWidgetMap.h"
-#include "PortsWidgetMap.h"
-#include "getFilenamesDialog.h"
-#include "CalculateThread.h"
+//#include
 
 // RsaToolbox
-#include "NetworkData.h"
+//#include
 
 // Qt
 #include <QMainWindow>
@@ -27,7 +23,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(Data *data, QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 protected:
@@ -35,8 +31,6 @@ protected:
 
 private slots:
     void on_generateButton_clicked();
-    void startCalculation();
-    void finishCalculation();
 
     void enableInputs();
     void disableInputs();
@@ -47,18 +41,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-//    Data *_data;
-//    CalibrationWidgetMap _outerCalMap;
-//    CalibrationWidgetMap _innerCalMap;
-//    PortsWidgetMap _portsMap;
-//    getFilenamesDialog _filenamesDialog;
-
-//    CalculateThread _calcThread;
-
-//    bool isReady();
-
-//    void initPinwheel();
-//    QLabel _pinwheel;
+    void initPinwheel();
+    QLabel _pinwheel;
 };
 
 

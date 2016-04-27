@@ -41,8 +41,8 @@ Corrections::Corrections(uint port1, uint port2, CalibrationSource source, Vna *
     uint switchMatrices = channel.corrections().switchMatrices();
 
     // Logical port -> Physical vna port(s)
-    QVector<uint> port1VnaPorts = findVnaPorts(_port1);
-    QVector<uint> port2VnaPorts = findVnaPorts(_port2);
+    QVector<uint> port1VnaPorts = findVnaPorts(channel, _port1);
+    QVector<uint> port2VnaPorts = findVnaPorts(channel, _port2);
 
     // No switch matrices:
     // logical == physical
@@ -104,7 +104,7 @@ Corrections::~Corrections()
     //
 }
 
-QRowVector Corrections::frequencies() const {
+QRowVector Corrections::frequencies_Hz() const {
     return _frequencies_Hz;
 }
 
@@ -174,20 +174,21 @@ void Corrections::operator=(const Corrections &other) {
     _sourceMatch2 = other._sourceMatch2;
 }
 
-Ports Corrections::findVnaPorts(uint logicalPort) const {
+Ports Corrections::findVnaPorts(Channel &channel, uint logicalPort) const {
     Ports ports;
-    if (!_switchMatrices) {
+    const uint switchMatrices = channel.corrections().switchMatrices();
+    if (!switchMatrices) {
         ports << logicalPort;
         return ports;
     }
-    else if (_channel.corrections().testPortToVnaMap().contains(logicalPort)) {
-        ports << _channel.corrections().testPortToVnaMap()[logicalPort];
+    else if (channel.corrections().testPortToVnaMap().contains(logicalPort)) {
+        ports << channel.corrections().testPortToVnaMap()[logicalPort];
         return ports;
     }
     else {
-        for (uint i = 1; i <= _switchMatrices; i++) {
-            if (_channel.corrections().testPortToSwitchMatrixMap(i).contains(logicalPort)) {
-                ports << _channel.corrections().switchMatrixToVnaPortMap(i).values().toVector();
+        for (uint i = 1; i <= switchMatrices; i++) {
+            if (channel.corrections().testPortToSwitchMatrixMap(i).contains(logicalPort)) {
+                ports << channel.corrections().switchMatrixToVnaPortMap(i).values().toVector();
                 return ports;
             }
         }
