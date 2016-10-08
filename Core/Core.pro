@@ -7,7 +7,7 @@ DESTDIR = $$PWD
 TARGET = Core
 CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)
 
-include($$PWD/../RsaToolbox/_install/rsatoolbox.pri)
+include($$PWD/../RsaToolbox/rsatoolbox.pri)
 HEADERS     += Settings.h \
                CalculateThread.h \
                Calculate.h \

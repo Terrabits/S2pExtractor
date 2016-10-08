@@ -2,7 +2,7 @@
 
 QT          += core gui widgets
 
-include($$PWD/../RsaToolbox/_install/rsatoolbox.pri)
+include($$PWD/../RsaToolbox/rsatoolbox.pri)
 INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD
 
