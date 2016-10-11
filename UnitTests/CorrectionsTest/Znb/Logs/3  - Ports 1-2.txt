@@ -1,7 +1,7 @@
  Version 0.0
 (C) 2016 Rohde & Schwarz North America
 
-Mon Oct 10 20:41:16 2016
+Mon Oct 10 20:41:03 2016
 
 VNA INSTRUMENT INFO
 Connection:       TCPIP
@@ -54,54 +54,649 @@ Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
 Bytes: 47
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:CDIR?"
+Write:    "*IDN?"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
+Bytes: 47
+Status: 0x0 Operation completed successfully.
+
+Write:    ":INST:SMAT 0"
+Bytes: 13
+Status: 0x0 Operation completed successfully.
+
+Write:    "*IDN?"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
+Bytes: 47
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:COMM:RDEV:SMAT:DEL"
+Bytes: 25
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:LOAD:CORR 1,'Ports 1-2.cal'"
+Bytes: 34
+Status: 0x0 Operation completed successfully.
+
+Write:    ":MMEM:LOAD:CORR? 1"
+Bytes: 19
+Status: 0x0 Operation completed successfully.
+
+Read:     "'Ports 1-2.cal'"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR:COUN?"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "1"
+Bytes: 2
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "201"
+Bytes: 4
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD?"
 Bytes: 12
 Status: 0x0 Operation completed successfully.
 
-Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\VNA'"
-Bytes: 46
+Read:     "SWAP"
+Bytes: 5
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:CDIR DEF"
-Bytes: 15
+Write:    ":FORM REAL,64"
+Bytes: 14
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:CDIR '.\Calibration\Data'"
-Bytes: 32
+Write:    ":FORM:BORD SWAP"
+Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:DATA 'OuterCal.cal', #6547747??"
-Bytes: 547784
+Write:    ":SENS1:CORR:STIM?"
+Bytes: 18
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\VNA'"
-Bytes: 57
+Read:     "#41608..."
+Bytes: 1615
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:CDIR?"
+Write:    ":FORM ASC"
+Bytes: 10
+Status: 0x0 Operation completed successfully.
+
+Write:    "*IDN?"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
+Bytes: 47
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "0,"No error""
+Bytes: 13
+Status: 0x0 Operation completed successfully.
+
+Write:    "*CLS"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR:DISP?"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Read:     "1"
+Bytes: 2
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR:DISP 0"
+Bytes: 17
+Status: 0x0 Operation completed successfully.
+
+Write:    "*IDN?"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
+Bytes: 47
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
+Bytes: 29
+Status: 0x0 Operation completed successfully.
+
+Read:     ""
+Bytes: 1
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "-220,"Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1""
+Bytes: 52
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "0,"No error""
+Bytes: 13
+Status: 0x0 Operation completed successfully.
+
+SCPI Errors:
+-220: Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1
+
+Write:    "*CLS"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR:DISP 1"
+Bytes: 17
+Status: 0x0 Operation completed successfully.
+
+Write:    "*IDN?"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
+Bytes: 47
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "0,"No error""
+Bytes: 13
+Status: 0x0 Operation completed successfully.
+
+Write:    "*CLS"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR:DISP?"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Read:     "1"
+Bytes: 2
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR:DISP 0"
+Bytes: 17
+Status: 0x0 Operation completed successfully.
+
+Write:    "*IDN?"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
+Bytes: 47
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
+Bytes: 29
+Status: 0x0 Operation completed successfully.
+
+Read:     ""
+Bytes: 1
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "-220,"Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1""
+Bytes: 52
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "0,"No error""
+Bytes: 13
+Status: 0x0 Operation completed successfully.
+
+SCPI Errors:
+-220: Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1
+
+Write:    "*CLS"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR:DISP 1"
+Bytes: 17
+Status: 0x0 Operation completed successfully.
+
+Write:    "*IDN?"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
+Bytes: 47
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "0,"No error""
+Bytes: 13
+Status: 0x0 Operation completed successfully.
+
+Write:    "*CLS"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR:DISP?"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Read:     "1"
+Bytes: 2
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR:DISP 0"
+Bytes: 17
+Status: 0x0 Operation completed successfully.
+
+Write:    "*IDN?"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
+Bytes: 47
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
+Bytes: 29
+Status: 0x0 Operation completed successfully.
+
+Read:     ""
+Bytes: 1
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "-220,"Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1""
+Bytes: 52
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "0,"No error""
+Bytes: 13
+Status: 0x0 Operation completed successfully.
+
+SCPI Errors:
+-220: Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1
+
+Write:    "*CLS"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR:DISP 1"
+Bytes: 17
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "201"
+Bytes: 4
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD?"
 Bytes: 12
 Status: 0x0 Operation completed successfully.
 
-Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\VNA'"
-Bytes: 46
+Read:     "SWAP"
+Bytes: 5
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:CDIR DEF"
-Bytes: 15
+Write:    ":FORM REAL,64"
+Bytes: 14
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:CDIR '.\Calibration\Data'"
-Bytes: 32
+Write:    ":FORM:BORD SWAP"
+Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:DATA 'InnerCal.cal', #6666017??"
-Bytes: 666054
+Write:    ":SENS1:CORR:CDAT? 'DIRECTIVITY',1,2"
+Bytes: 36
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\VNA'"
-Bytes: 57
+Read:     "#43216..."
+Bytes: 3223
 Status: 0x0 Operation completed successfully.
 
+Write:    ":FORM ASC"
+Bytes: 10
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "201"
+Bytes: 4
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD?"
+Bytes: 12
+Status: 0x0 Operation completed successfully.
+
+Read:     "SWAP"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM REAL,64"
+Bytes: 14
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD SWAP"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:CDAT? 'REFLTRACK',1,2"
+Bytes: 34
+Status: 0x0 Operation completed successfully.
+
+Read:     "#43216..."
+Bytes: 3223
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM ASC"
+Bytes: 10
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "201"
+Bytes: 4
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD?"
+Bytes: 12
+Status: 0x0 Operation completed successfully.
+
+Read:     "SWAP"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM REAL,64"
+Bytes: 14
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD SWAP"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:CDAT? 'SRCMATCH',1,2"
+Bytes: 33
+Status: 0x0 Operation completed successfully.
+
+Read:     "#43216..."
+Bytes: 3223
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM ASC"
+Bytes: 10
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "201"
+Bytes: 4
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD?"
+Bytes: 12
+Status: 0x0 Operation completed successfully.
+
+Read:     "SWAP"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM REAL,64"
+Bytes: 14
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD SWAP"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:CDAT? 'DIRECTIVITY',2,1"
+Bytes: 36
+Status: 0x0 Operation completed successfully.
+
+Read:     "#43216..."
+Bytes: 3223
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM ASC"
+Bytes: 10
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "201"
+Bytes: 4
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD?"
+Bytes: 12
+Status: 0x0 Operation completed successfully.
+
+Read:     "SWAP"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM REAL,64"
+Bytes: 14
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD SWAP"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:CDAT? 'REFLTRACK',2,1"
+Bytes: 34
+Status: 0x0 Operation completed successfully.
+
+Read:     "#43216..."
+Bytes: 3223
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM ASC"
+Bytes: 10
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
+Bytes: 27
+Status: 0x0 Operation completed successfully.
+
+Read:     "201"
+Bytes: 4
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM?"
+Bytes: 7
+Status: 0x0 Operation completed successfully.
+
+Read:     "ASC,0"
+Bytes: 6
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD?"
+Bytes: 12
+Status: 0x0 Operation completed successfully.
+
+Read:     "SWAP"
+Bytes: 5
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM REAL,64"
+Bytes: 14
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM:BORD SWAP"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SENS1:CORR:CDAT? 'SRCMATCH',2,1"
+Bytes: 33
+Status: 0x0 Operation completed successfully.
+
+Read:     "#43216..."
+Bytes: 3223
+Status: 0x0 Operation completed successfully.
+
+Write:    ":FORM ASC"
+Bytes: 10
+Status: 0x0 Operation completed successfully.
+
+Write:    ":SYST:ERR?"
+Bytes: 11
+Status: 0x0 Operation completed successfully.
+
+Read:     "0,"No error""
+Bytes: 13
+Status: 0x0 Operation completed successfully.
+
+directivity1: 
+(-0.486411, 0.0415321), (-0.500399, 0.0381689), (-0.50808, 0.0646075), (-0.478789, 0.0972374), (-0.465255, 0.124702), (-0.440033, 0.148934), (-0.426594, 0.177991), (-0.409435, 0.204086), (-0.372081, 0.216326), (-0.351772, 0.234254), (-0.319293, 0.243313), (-0.285009, 0.253718), (-0.244004, 0.2603), (-0.206412, 0.250524), (-0.173338, 0.237192), (-0.136287, 0.229064), (-0.100617, 0.205417), (-0.0669242, 0.181464), (-0.0434417, 0.155059), (-0.0204124, 0.123784), (-0.00387844, 0.0790129), (0.0043876, 0.036867), (0.00772117, -0.00692959), (0.00350711, -0.0492472), (-0.00806181, -0.0937755), (-0.0266531, -0.129983), (-0.0486388, -0.166522), (-0.0801896, -0.192488), (-0.108058, -0.223963), (-0.149071, -0.237676), (-0.193752, -0.254479), (-0.229246, -0.266667), (-0.266357, -0.266748), (-0.312554, -0.261776), (-0.349671, -0.250717), (-0.376306, -0.233686), (-0.403704, -0.217716), (-0.450839, -0.191878), (-0.463914, -0.170449), (-0.479124, -0.141413), (-0.511436, -0.112998), (-0.497281, -0.0748994), (-0.507739, -0.0415017), (-0.529279, -0.00658488), (-0.513557, 0.0284334), (-0.51101, 0.0661437), (-0.495344, 0.0972629), (-0.500908, 0.131755), (-0.460363, 0.163906), (-0.421565, 0.194782), (-0.399421, 0.223145), (-0.372667, 0.231964), (-0.338103, 0.255732), (-0.292727, 0.257176), (-0.236241, 0.268458), (-0.190246, 0.252885), (-0.143288, 0.252136), (-0.0969265, 0.230968), (-0.0542827, 0.196767), (-0.0169163, 0.160351), (0.0152351, 0.118533), (0.0353024, 0.0682934), (0.0509458, 0.0175451), (0.0520129, -0.0381403), (0.0473095, -0.0900977), (0.0308482, -0.133674), (0.0087999, -0.184385), (-0.0210473, -0.219475), (-0.0571689, -0.261665), (-0.0906561, -0.278484), (-0.137496, -0.29988), (-0.184957, -0.317809), (-0.224854, -0.307033), (-0.256777, -0.30002), (-0.313585, -0.298341), (-0.337385, -0.286898), (-0.367325, -0.255027), (-0.400128, -0.230952), (-0.424131, -0.201095), (-0.4429, -0.168034), (-0.457465, -0.132476), (-0.464822, -0.0992836), (-0.440841, -0.0651085), (-0.459889, -0.0267753), (-0.452952, 0.00912593), (-0.451105, 0.0441397), (-0.425201, 0.0780335), (-0.414475, 0.107743), (-0.369869, 0.132224), (-0.345991, 0.153895), (-0.304892, 0.179701), (-0.268953, 0.193478), (-0.227828, 0.196913), (-0.184136, 0.195649), (-0.151984, 0.197602), (-0.111794, 0.182032), (-0.0754948, 0.163325), (-0.0390073, 0.146719), (-0.010634, 0.116546), (0.0150902, 0.0856779), (0.0365875, 0.0496808), (0.0493488, 0.0125483), (0.0577697, -0.0269972), (0.0644461, -0.0658976), (0.0572133, -0.105086), (0.0508656, -0.150496), (0.0372851, -0.16569), (0.0116126, -0.222019), (-0.0174526, -0.26785), (-0.0552025, -0.288935), (-0.108018, -0.329421), (-0.165508, -0.343858), (-0.233628, -0.345498), (-0.297982, -0.336329), (-0.363834, -0.305136), (-0.436337, -0.251985), (-0.491414, -0.190872), (-0.514738, -0.0964506), (-0.526814, 0.028452), (-0.513063, 0.190441), (-0.319481, 0.330779), (-0.0522366, 0.287426), (0.0574117, 0.0761426), (0.00806592, -0.082739), (-0.0837875, -0.151807), (-0.162679, -0.166465), (-0.214153, -0.151155), (-0.262036, -0.126915), (-0.282318, -0.094869), (-0.305022, -0.0581442), (-0.308513, -0.0201501), (-0.309873, 0.0146327), (-0.284105, 0.050131), (-0.266114, 0.0830136), (-0.248834, 0.111243), (-0.20235, 0.141669), (-0.167998, 0.156842), (-0.109685, 0.159984), (-0.052636, 0.160703), (0.0113312, 0.136047), (0.0846538, 0.0953296), (0.15056, 0.0258726), (0.158582, 0.00805486), (0.162632, 0.00845396), (0.159948, 0.00816882), (0.16638, 0.00821451), (0.170501, 0.00805995), (0.162106, 0.00811164), (0.158913, 0.00809221), (0.164828, 0.00823568), (0.157446, 0.00806018), (0.165007, 0.00816247), (0.160299, 0.00809795), (0.163898, 0.00802464), (0.159286, 0.0083028), (0.16725, 0.0082888), (0.163426, 0.00801436), (0.16699, 0.00810899), (0.158202, 0.00820036), (0.169081, 0.0081474), (0.163342, 0.0081481), (0.167731, 0.00819659), (0.167424, 0.00794336), (0.15885, 0.00847931), (0.164651, 0.00801948), (0.154812, 0.00820393), (0.162842, 0.00826845), (0.16598, 0.0079864), (0.166137, 0.00819102), (0.167439, 0.00809299), (0.159317, 0.00814912), (0.164598, 0.00837518), (0.164674, 0.00787582), (0.161026, 0.00800371), (0.163603, 0.00819781), (0.161025, 0.00789834), (0.162697, 0.00822977), (0.138006, 0.00838328), (0.16018, 0.00840855), (0.160662, 0.0082005), (0.162437, 0.00847751), (0.161666, 0.00783957), (0.159564, 0.00821357), (0.162394, 0.00787217), (0.163491, 0.00823829), (0.165836, 0.00846684), (0.165636, 0.00821769), (0.162188, 0.00837089), (0.163951, 0.00861043), (0.159025, 0.00830024), (0.162977, 0.00818401), (0.160622, 0.00837275), (0.159696, 0.00815856), (0.164193, 0.00801423), (0.163205, 0.00837244), (0.163481, 0.00835729), (0.161223, 0.00827526), (0.162883, 0.0081538), (0.166781, 0.00811065), (0.162022, 0.00833155), (0.162177, 0.00806634)
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
@@ -118,27 +713,27 @@ Read:     "4"
 Bytes: 2
 Status: 0x0 Operation completed successfully.
 
-Write:    ":CONF:CHAN:CAT?"
-Bytes: 16
+Write:    ":SYST:ERR?"
+Bytes: 11
 Status: 0x0 Operation completed successfully.
 
-Read:     "'1,Ch1'"
-Bytes: 8
+Read:     "0,"No error""
+Bytes: 13
 Status: 0x0 Operation completed successfully.
 
-Write:    ":CONF:CHAN2 1"
-Bytes: 14
+Write:    "*CLS"
+Bytes: 5
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:LOAD:CORR 2,'OuterCal.cal'"
-Bytes: 33
+Write:    ":SYST:ERR:DISP 0"
+Bytes: 17
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
 Bytes: 27
 Status: 0x0 Operation completed successfully.
 
-Read:     "911"
+Read:     "201"
 Bytes: 4
 Status: 0x0 Operation completed successfully.
 
@@ -174,12 +769,12 @@ Write:    ":FORM:BORD SWAP"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:STIM?"
+Write:    ":SENS1:CORR:STIM?"
 Bytes: 18
 Status: 0x0 Operation completed successfully.
 
-Read:     "#47288..."
-Bytes: 7295
+Read:     "#41608..."
+Bytes: 1615
 Status: 0x0 Operation completed successfully.
 
 Write:    ":FORM ASC"
@@ -210,7 +805,7 @@ Write:    ":SYST:ERR:DISP?"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Read:     "1"
+Read:     "0"
 Bytes: 2
 Status: 0x0 Operation completed successfully.
 
@@ -226,7 +821,7 @@ Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
 Bytes: 47
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? MVNA,1"
+Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
 Bytes: 29
 Status: 0x0 Operation completed successfully.
 
@@ -238,7 +833,7 @@ Write:    ":SYST:ERR?"
 Bytes: 11
 Status: 0x0 Operation completed successfully.
 
-Read:     "-220,"Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1""
+Read:     "-220,"Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1""
 Bytes: 52
 Status: 0x0 Operation completed successfully.
 
@@ -251,13 +846,13 @@ Bytes: 13
 Status: 0x0 Operation completed successfully.
 
 SCPI Errors:
--220: Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1
+-220: Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1
 
 Write:    "*CLS"
 Bytes: 5
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SYST:ERR:DISP 1"
+Write:    ":SYST:ERR:DISP 0"
 Bytes: 17
 Status: 0x0 Operation completed successfully.
 
@@ -285,7 +880,7 @@ Write:    ":SYST:ERR:DISP?"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Read:     "1"
+Read:     "0"
 Bytes: 2
 Status: 0x0 Operation completed successfully.
 
@@ -301,7 +896,7 @@ Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
 Bytes: 47
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? MVNA,1"
+Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
 Bytes: 29
 Status: 0x0 Operation completed successfully.
 
@@ -313,7 +908,7 @@ Write:    ":SYST:ERR?"
 Bytes: 11
 Status: 0x0 Operation completed successfully.
 
-Read:     "-220,"Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1""
+Read:     "-220,"Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1""
 Bytes: 52
 Status: 0x0 Operation completed successfully.
 
@@ -326,13 +921,13 @@ Bytes: 13
 Status: 0x0 Operation completed successfully.
 
 SCPI Errors:
--220: Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1
+-220: Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1
 
 Write:    "*CLS"
 Bytes: 5
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SYST:ERR:DISP 1"
+Write:    ":SYST:ERR:DISP 0"
 Bytes: 17
 Status: 0x0 Operation completed successfully.
 
@@ -360,7 +955,7 @@ Write:    ":SYST:ERR:DISP?"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Read:     "1"
+Read:     "0"
 Bytes: 2
 Status: 0x0 Operation completed successfully.
 
@@ -376,7 +971,7 @@ Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
 Bytes: 47
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? MVNA,1"
+Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
 Bytes: 29
 Status: 0x0 Operation completed successfully.
 
@@ -388,7 +983,7 @@ Write:    ":SYST:ERR?"
 Bytes: 11
 Status: 0x0 Operation completed successfully.
 
-Read:     "-220,"Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1""
+Read:     "-220,"Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1""
 Bytes: 52
 Status: 0x0 Operation completed successfully.
 
@@ -401,21 +996,21 @@ Bytes: 13
 Status: 0x0 Operation completed successfully.
 
 SCPI Errors:
--220: Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1
+-220: Parameter error;:SENS1:CORR:DATA:PAR? MVNA,1
 
 Write:    "*CLS"
 Bytes: 5
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SYST:ERR:DISP 1"
+Write:    ":SYST:ERR:DISP 0"
 Bytes: 17
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
 Bytes: 27
 Status: 0x0 Operation completed successfully.
 
-Read:     "911"
+Read:     "201"
 Bytes: 4
 Status: 0x0 Operation completed successfully.
 
@@ -451,23 +1046,23 @@ Write:    ":FORM:BORD SWAP"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:CDAT? 'DIRECTIVITY',1,2"
+Write:    ":SENS1:CORR:CDAT? 'DIRECTIVITY',1,2"
 Bytes: 36
 Status: 0x0 Operation completed successfully.
 
-Read:     "#514576..."
-Bytes: 14584
+Read:     "#43216..."
+Bytes: 3223
 Status: 0x0 Operation completed successfully.
 
 Write:    ":FORM ASC"
 Bytes: 10
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
 Bytes: 27
 Status: 0x0 Operation completed successfully.
 
-Read:     "911"
+Read:     "201"
 Bytes: 4
 Status: 0x0 Operation completed successfully.
 
@@ -503,23 +1098,23 @@ Write:    ":FORM:BORD SWAP"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:CDAT? 'REFLTRACK',1,2"
+Write:    ":SENS1:CORR:CDAT? 'REFLTRACK',1,2"
 Bytes: 34
 Status: 0x0 Operation completed successfully.
 
-Read:     "#514576..."
-Bytes: 14584
+Read:     "#43216..."
+Bytes: 3223
 Status: 0x0 Operation completed successfully.
 
 Write:    ":FORM ASC"
 Bytes: 10
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
 Bytes: 27
 Status: 0x0 Operation completed successfully.
 
-Read:     "911"
+Read:     "201"
 Bytes: 4
 Status: 0x0 Operation completed successfully.
 
@@ -555,23 +1150,23 @@ Write:    ":FORM:BORD SWAP"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:CDAT? 'SRCMATCH',1,2"
+Write:    ":SENS1:CORR:CDAT? 'SRCMATCH',1,2"
 Bytes: 33
 Status: 0x0 Operation completed successfully.
 
-Read:     "#514576..."
-Bytes: 14584
+Read:     "#43216..."
+Bytes: 3223
 Status: 0x0 Operation completed successfully.
 
 Write:    ":FORM ASC"
 Bytes: 10
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
 Bytes: 27
 Status: 0x0 Operation completed successfully.
 
-Read:     "911"
+Read:     "201"
 Bytes: 4
 Status: 0x0 Operation completed successfully.
 
@@ -607,23 +1202,23 @@ Write:    ":FORM:BORD SWAP"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:CDAT? 'DIRECTIVITY',2,1"
+Write:    ":SENS1:CORR:CDAT? 'DIRECTIVITY',2,1"
 Bytes: 36
 Status: 0x0 Operation completed successfully.
 
-Read:     "#514576..."
-Bytes: 14584
+Read:     "#43216..."
+Bytes: 3223
 Status: 0x0 Operation completed successfully.
 
 Write:    ":FORM ASC"
 Bytes: 10
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
 Bytes: 27
 Status: 0x0 Operation completed successfully.
 
-Read:     "911"
+Read:     "201"
 Bytes: 4
 Status: 0x0 Operation completed successfully.
 
@@ -659,23 +1254,23 @@ Write:    ":FORM:BORD SWAP"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:CDAT? 'REFLTRACK',2,1"
+Write:    ":SENS1:CORR:CDAT? 'REFLTRACK',2,1"
 Bytes: 34
 Status: 0x0 Operation completed successfully.
 
-Read:     "#514576..."
-Bytes: 14584
+Read:     "#43216..."
+Bytes: 3223
 Status: 0x0 Operation completed successfully.
 
 Write:    ":FORM ASC"
 Bytes: 10
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
+Write:    ":SENS1:CORR:DATA:PAR? POIN"
 Bytes: 27
 Status: 0x0 Operation completed successfully.
 
-Read:     "911"
+Read:     "201"
 Bytes: 4
 Status: 0x0 Operation completed successfully.
 
@@ -711,104 +1306,16 @@ Write:    ":FORM:BORD SWAP"
 Bytes: 16
 Status: 0x0 Operation completed successfully.
 
-Write:    ":SENS2:CORR:CDAT? 'SRCMATCH',2,1"
+Write:    ":SENS1:CORR:CDAT? 'SRCMATCH',2,1"
 Bytes: 33
 Status: 0x0 Operation completed successfully.
 
-Read:     "#514576..."
-Bytes: 14584
+Read:     "#43216..."
+Bytes: 3223
 Status: 0x0 Operation completed successfully.
 
 Write:    ":FORM ASC"
 Bytes: 10
-Status: 0x0 Operation completed successfully.
-
-Write:    ":CONF:CHAN:CAT?"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Read:     "'1,Ch1,2,Ch2'"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":CONF:CHAN2 0"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":CONF:CHAN:CAT?"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Read:     "'1,Ch1'"
-Bytes: 8
-Status: 0x0 Operation completed successfully.
-
-Write:    ":CONF:CHAN2 1"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:LOAD:CORR 2,'InnerCal.cal'"
-Bytes: 33
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-Bytes: 27
-Status: 0x0 Operation completed successfully.
-
-Read:     "911"
-Bytes: 4
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD?"
-Bytes: 12
-Status: 0x0 Operation completed successfully.
-
-Read:     "SWAP"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM REAL,64"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD SWAP"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:STIM?"
-Bytes: 18
-Status: 0x0 Operation completed successfully.
-
-Read:     "#47288..."
-Bytes: 7295
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM ASC"
-Bytes: 10
-Status: 0x0 Operation completed successfully.
-
-Write:    "*IDN?"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
-Bytes: 47
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -818,57 +1325,6 @@ Status: 0x0 Operation completed successfully.
 Read:     "0,"No error""
 Bytes: 13
 Status: 0x0 Operation completed successfully.
-
-Write:    "*CLS"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR:DISP?"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Read:     "1"
-Bytes: 2
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR:DISP 0"
-Bytes: 17
-Status: 0x0 Operation completed successfully.
-
-Write:    "*IDN?"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
-Bytes: 47
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? MVNA,1"
-Bytes: 29
-Status: 0x0 Operation completed successfully.
-
-Read:     ""
-Bytes: 1
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR?"
-Bytes: 11
-Status: 0x0 Operation completed successfully.
-
-Read:     "-220,"Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1""
-Bytes: 52
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR?"
-Bytes: 11
-Status: 0x0 Operation completed successfully.
-
-Read:     "0,"No error""
-Bytes: 13
-Status: 0x0 Operation completed successfully.
-
-SCPI Errors:
--220: Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1
 
 Write:    "*CLS"
 Bytes: 5
@@ -878,14 +1334,6 @@ Write:    ":SYST:ERR:DISP 1"
 Bytes: 17
 Status: 0x0 Operation completed successfully.
 
-Write:    "*IDN?"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
-Bytes: 47
-Status: 0x0 Operation completed successfully.
-
 Write:    ":SYST:ERR?"
 Bytes: 11
 Status: 0x0 Operation completed successfully.
@@ -894,472 +1342,8 @@ Read:     "0,"No error""
 Bytes: 13
 Status: 0x0 Operation completed successfully.
 
-Write:    "*CLS"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR:DISP?"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Read:     "1"
-Bytes: 2
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR:DISP 0"
-Bytes: 17
-Status: 0x0 Operation completed successfully.
-
-Write:    "*IDN?"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
-Bytes: 47
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? MVNA,1"
-Bytes: 29
-Status: 0x0 Operation completed successfully.
-
-Read:     ""
-Bytes: 1
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR?"
-Bytes: 11
-Status: 0x0 Operation completed successfully.
-
-Read:     "-220,"Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1""
-Bytes: 52
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR?"
-Bytes: 11
-Status: 0x0 Operation completed successfully.
-
-Read:     "0,"No error""
-Bytes: 13
-Status: 0x0 Operation completed successfully.
-
-SCPI Errors:
--220: Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1
-
-Write:    "*CLS"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR:DISP 1"
-Bytes: 17
-Status: 0x0 Operation completed successfully.
-
-Write:    "*IDN?"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
-Bytes: 47
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR?"
-Bytes: 11
-Status: 0x0 Operation completed successfully.
-
-Read:     "0,"No error""
-Bytes: 13
-Status: 0x0 Operation completed successfully.
-
-Write:    "*CLS"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR:DISP?"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Read:     "1"
-Bytes: 2
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR:DISP 0"
-Bytes: 17
-Status: 0x0 Operation completed successfully.
-
-Write:    "*IDN?"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
-Bytes: 47
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? MVNA,1"
-Bytes: 29
-Status: 0x0 Operation completed successfully.
-
-Read:     ""
-Bytes: 1
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR?"
-Bytes: 11
-Status: 0x0 Operation completed successfully.
-
-Read:     "-220,"Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1""
-Bytes: 52
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR?"
-Bytes: 11
-Status: 0x0 Operation completed successfully.
-
-Read:     "0,"No error""
-Bytes: 13
-Status: 0x0 Operation completed successfully.
-
-SCPI Errors:
--220: Parameter error;:SENS2:CORR:DATA:PAR? MVNA,1
-
-Write:    "*CLS"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR:DISP 1"
-Bytes: 17
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-Bytes: 27
-Status: 0x0 Operation completed successfully.
-
-Read:     "911"
-Bytes: 4
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD?"
-Bytes: 12
-Status: 0x0 Operation completed successfully.
-
-Read:     "SWAP"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM REAL,64"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD SWAP"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:CDAT? 'DIRECTIVITY',1,2"
-Bytes: 36
-Status: 0x0 Operation completed successfully.
-
-Read:     "#514576..."
-Bytes: 14584
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM ASC"
-Bytes: 10
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-Bytes: 27
-Status: 0x0 Operation completed successfully.
-
-Read:     "911"
-Bytes: 4
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD?"
-Bytes: 12
-Status: 0x0 Operation completed successfully.
-
-Read:     "SWAP"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM REAL,64"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD SWAP"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:CDAT? 'REFLTRACK',1,2"
-Bytes: 34
-Status: 0x0 Operation completed successfully.
-
-Read:     "#514576..."
-Bytes: 14584
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM ASC"
-Bytes: 10
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-Bytes: 27
-Status: 0x0 Operation completed successfully.
-
-Read:     "911"
-Bytes: 4
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD?"
-Bytes: 12
-Status: 0x0 Operation completed successfully.
-
-Read:     "SWAP"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM REAL,64"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD SWAP"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:CDAT? 'SRCMATCH',1,2"
-Bytes: 33
-Status: 0x0 Operation completed successfully.
-
-Read:     "#514576..."
-Bytes: 14584
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM ASC"
-Bytes: 10
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-Bytes: 27
-Status: 0x0 Operation completed successfully.
-
-Read:     "911"
-Bytes: 4
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD?"
-Bytes: 12
-Status: 0x0 Operation completed successfully.
-
-Read:     "SWAP"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM REAL,64"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD SWAP"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:CDAT? 'DIRECTIVITY',2,1"
-Bytes: 36
-Status: 0x0 Operation completed successfully.
-
-Read:     "#514576..."
-Bytes: 14584
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM ASC"
-Bytes: 10
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-Bytes: 27
-Status: 0x0 Operation completed successfully.
-
-Read:     "911"
-Bytes: 4
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD?"
-Bytes: 12
-Status: 0x0 Operation completed successfully.
-
-Read:     "SWAP"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM REAL,64"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD SWAP"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:CDAT? 'REFLTRACK',2,1"
-Bytes: 34
-Status: 0x0 Operation completed successfully.
-
-Read:     "#514576..."
-Bytes: 14584
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM ASC"
-Bytes: 10
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:DATA:PAR? POIN"
-Bytes: 27
-Status: 0x0 Operation completed successfully.
-
-Read:     "911"
-Bytes: 4
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM?"
-Bytes: 7
-Status: 0x0 Operation completed successfully.
-
-Read:     "ASC,0"
-Bytes: 6
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD?"
-Bytes: 12
-Status: 0x0 Operation completed successfully.
-
-Read:     "SWAP"
-Bytes: 5
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM REAL,64"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM:BORD SWAP"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SENS2:CORR:CDAT? 'SRCMATCH',2,1"
-Bytes: 33
-Status: 0x0 Operation completed successfully.
-
-Read:     "#514576..."
-Bytes: 14584
-Status: 0x0 Operation completed successfully.
-
-Write:    ":FORM ASC"
-Bytes: 10
-Status: 0x0 Operation completed successfully.
-
-Write:    ":CONF:CHAN:CAT?"
-Bytes: 16
-Status: 0x0 Operation completed successfully.
-
-Read:     "'1,Ch1,2,Ch2'"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":CONF:CHAN2 0"
-Bytes: 14
-Status: 0x0 Operation completed successfully.
-
-Write:    ":SYST:ERR?"
-Bytes: 11
-Status: 0x0 Operation completed successfully.
-
-Read:     "0,"No error""
-Bytes: 13
-Status: 0x0 Operation completed successfully.
-
+directivity1: 
+(-0.486411, 0.0415321), (-0.500399, 0.0381689), (-0.50808, 0.0646075), (-0.478789, 0.0972374), (-0.465255, 0.124702), (-0.440033, 0.148934), (-0.426594, 0.177991), (-0.409435, 0.204086), (-0.372081, 0.216326), (-0.351772, 0.234254), (-0.319293, 0.243313), (-0.285009, 0.253718), (-0.244004, 0.2603), (-0.206412, 0.250524), (-0.173338, 0.237192), (-0.136287, 0.229064), (-0.100617, 0.205417), (-0.0669242, 0.181464), (-0.0434417, 0.155059), (-0.0204124, 0.123784), (-0.00387844, 0.0790129), (0.0043876, 0.036867), (0.00772117, -0.00692959), (0.00350711, -0.0492472), (-0.00806181, -0.0937755), (-0.0266531, -0.129983), (-0.0486388, -0.166522), (-0.0801896, -0.192488), (-0.108058, -0.223963), (-0.149071, -0.237676), (-0.193752, -0.254479), (-0.229246, -0.266667), (-0.266357, -0.266748), (-0.312554, -0.261776), (-0.349671, -0.250717), (-0.376306, -0.233686), (-0.403704, -0.217716), (-0.450839, -0.191878), (-0.463914, -0.170449), (-0.479124, -0.141413), (-0.511436, -0.112998), (-0.497281, -0.0748994), (-0.507739, -0.0415017), (-0.529279, -0.00658488), (-0.513557, 0.0284334), (-0.51101, 0.0661437), (-0.495344, 0.0972629), (-0.500908, 0.131755), (-0.460363, 0.163906), (-0.421565, 0.194782), (-0.399421, 0.223145), (-0.372667, 0.231964), (-0.338103, 0.255732), (-0.292727, 0.257176), (-0.236241, 0.268458), (-0.190246, 0.252885), (-0.143288, 0.252136), (-0.0969265, 0.230968), (-0.0542827, 0.196767), (-0.0169163, 0.160351), (0.0152351, 0.118533), (0.0353024, 0.0682934), (0.0509458, 0.0175451), (0.0520129, -0.0381403), (0.0473095, -0.0900977), (0.0308482, -0.133674), (0.0087999, -0.184385), (-0.0210473, -0.219475), (-0.0571689, -0.261665), (-0.0906561, -0.278484), (-0.137496, -0.29988), (-0.184957, -0.317809), (-0.224854, -0.307033), (-0.256777, -0.30002), (-0.313585, -0.298341), (-0.337385, -0.286898), (-0.367325, -0.255027), (-0.400128, -0.230952), (-0.424131, -0.201095), (-0.4429, -0.168034), (-0.457465, -0.132476), (-0.464822, -0.0992836), (-0.440841, -0.0651085), (-0.459889, -0.0267753), (-0.452952, 0.00912593), (-0.451105, 0.0441397), (-0.425201, 0.0780335), (-0.414475, 0.107743), (-0.369869, 0.132224), (-0.345991, 0.153895), (-0.304892, 0.179701), (-0.268953, 0.193478), (-0.227828, 0.196913), (-0.184136, 0.195649), (-0.151984, 0.197602), (-0.111794, 0.182032), (-0.0754948, 0.163325), (-0.0390073, 0.146719), (-0.010634, 0.116546), (0.0150902, 0.0856779), (0.0365875, 0.0496808), (0.0493488, 0.0125483), (0.0577697, -0.0269972), (0.0644461, -0.0658976), (0.0572133, -0.105086), (0.0508656, -0.150496), (0.0372851, -0.16569), (0.0116126, -0.222019), (-0.0174526, -0.26785), (-0.0552025, -0.288935), (-0.108018, -0.329421), (-0.165508, -0.343858), (-0.233628, -0.345498), (-0.297982, -0.336329), (-0.363834, -0.305136), (-0.436337, -0.251985), (-0.491414, -0.190872), (-0.514738, -0.0964506), (-0.526814, 0.028452), (-0.513063, 0.190441), (-0.319481, 0.330779), (-0.0522366, 0.287426), (0.0574117, 0.0761426), (0.00806592, -0.082739), (-0.0837875, -0.151807), (-0.162679, -0.166465), (-0.214153, -0.151155), (-0.262036, -0.126915), (-0.282318, -0.094869), (-0.305022, -0.0581442), (-0.308513, -0.0201501), (-0.309873, 0.0146327), (-0.284105, 0.050131), (-0.266114, 0.0830136), (-0.248834, 0.111243), (-0.20235, 0.141669), (-0.167998, 0.156842), (-0.109685, 0.159984), (-0.052636, 0.160703), (0.0113312, 0.136047), (0.0846538, 0.0953296), (0.15056, 0.0258726), (0.158582, 0.00805486), (0.162632, 0.00845396), (0.159948, 0.00816882), (0.16638, 0.00821451), (0.170501, 0.00805995), (0.162106, 0.00811164), (0.158913, 0.00809221), (0.164828, 0.00823568), (0.157446, 0.00806018), (0.165007, 0.00816247), (0.160299, 0.00809795), (0.163898, 0.00802464), (0.159286, 0.0083028), (0.16725, 0.0082888), (0.163426, 0.00801436), (0.16699, 0.00810899), (0.158202, 0.00820036), (0.169081, 0.0081474), (0.163342, 0.0081481), (0.167731, 0.00819659), (0.167424, 0.00794336), (0.15885, 0.00847931), (0.164651, 0.00801948), (0.154812, 0.00820393), (0.162842, 0.00826845), (0.16598, 0.0079864), (0.166137, 0.00819102), (0.167439, 0.00809299), (0.159317, 0.00814912), (0.164598, 0.00837518), (0.164674, 0.00787582), (0.161026, 0.00800371), (0.163603, 0.00819781), (0.161025, 0.00789834), (0.162697, 0.00822977), (0.138006, 0.00838328), (0.16018, 0.00840855), (0.160662, 0.0082005), (0.162437, 0.00847751), (0.161666, 0.00783957), (0.159564, 0.00821357), (0.162394, 0.00787217), (0.163491, 0.00823829), (0.165836, 0.00846684), (0.165636, 0.00821769), (0.162188, 0.00837089), (0.163951, 0.00861043), (0.159025, 0.00830024), (0.162977, 0.00818401), (0.160622, 0.00837275), (0.159696, 0.00815856), (0.164193, 0.00801423), (0.163205, 0.00837244), (0.163481, 0.00835729), (0.161223, 0.00827526), (0.162883, 0.0081538), (0.166781, 0.00811065), (0.162022, 0.00833155), (0.162177, 0.00806634)
 Write:    ":SYST:ERR?"
 Bytes: 11
 Status: 0x0 Operation completed successfully.

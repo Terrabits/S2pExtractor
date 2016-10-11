@@ -6,7 +6,9 @@
 #include <VnaTestClass.h>
 
 // Qt
+#include <QDir>
 #include <QObject>
+#include <QStringList>
 
 
 class CorrectionsTest : public RsaToolbox::VnaTestClass
@@ -17,6 +19,10 @@ public:
     ~CorrectionsTest();
 
 private slots:
+    // Once
+    virtual void initTestCase();
+    virtual void cleanupTestCase();
+
     // Source test
     void channelSource();
     void calGroupSource();
@@ -35,6 +41,7 @@ private slots:
 
 private:
     QDir _calGroupDir;
+    QStringList _calGroups;
 
     void addSwitchMatrix();
     void removeSwitchMatrices();

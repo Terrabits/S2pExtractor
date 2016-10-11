@@ -1,6 +1,9 @@
 
+Points: 201
+4-Port VNA
+
 NO SWITCH MATRIX
-    "Ports 1,2.cal"
+    "Ports 1-2.cal"
     - Ports 1, 2 included
     - UOSM
 
@@ -15,7 +18,7 @@ NO SWITCH MATRIX
     "Port 1 OSM.cal"
     - OSM on port 1 only
 
-SWITCH MATRIX
+SWITCH MATRIX (ZNB only)
 ZN-Z84-22 (2 to 12 port, up to 8.? GHz)
 Map:
     1 -> VNA port
@@ -23,7 +26,7 @@ Map:
     3 -> Switch Matrix port (Vna: 3, 4)
     4 -> Switch Matrix port (Vna: 3, 4)
 
-    "Ports 1,2 SwM.cal"
+    "Ports 1-2 SwM.cal"
     - Both ports are VNA ports
     - UOSM
 

@@ -7,9 +7,11 @@
 
 // RsaToolbox
 #include <General.h>
+#include <Test.h>
 using namespace RsaToolbox;
 
 // Qt
+#include <QDebug>
 #include <QScopedPointer>
 #include <QTest>
 
@@ -35,11 +37,11 @@ CorrectionsTest::CorrectionsTest(QObject *parent) :
 
     _logFilenames << "1  - Channel source.txt"
                   << "2  - CalGroup source.txt"
-                  << "3  - Ports 1,2.txt"
+                  << "3  - Ports 1-2.txt"
                   << "4  - Ports 1-4.txt"
                   << "5  - Ports 1-4 OSM.txt"
                   << "6  - Port  1   OSM.txt"
-                  << "7  - Ports 1,2 SwMat.txt"
+                  << "7  - Ports 1-2 SwMat.txt"
                   << "8  - Ports 1-4 SwMat.txt"
                   << "9  - Ports 1-4 SwMat OSM.txt"
                   << "10 - Port  1   SwMat OSM.txt";
@@ -49,11 +51,47 @@ CorrectionsTest::~CorrectionsTest()
     //
 }
 
+void CorrectionsTest::initTestCase() {
+    _initTestCase();
+
+    _vna.reset(new Vna(_connectionType, _address));
+
+    // Get all test cal groups
+    QDir::Filters filters = QDir::Files;
+    QDir::SortFlags sort = QDir::Name | QDir::IgnoreCase;
+    QStringList nameFilters;
+    nameFilters << "*.cal";
+    _calGroups = _calGroupDir.entryList(nameFilters, filters, sort);
+
+    // Upload Cal groups
+    foreach (const QString &file, _calGroups) {
+        const QString filePath = _calGroupDir.filePath(file);
+        _vna->fileSystem().uploadFile(filePath, file, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    }
+    _vna->pause(10000);
+
+    _vna.reset();
+}
+void CorrectionsTest::cleanupTestCase() {
+    _vna.reset(new Vna(_connectionType, _address));
+    if (_vna->isConnected()) {
+        removeSwitchMatrices();
+
+        // Delete cal groups
+        QString dir = _vna->fileSystem().directory();
+        _vna->fileSystem().changeDirectory(VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+        _vna->fileSystem().deleteFiles(_calGroups);
+        _vna->pause();
+        _vna->fileSystem().changeDirectory(dir);
+    }
+
+    _cleanupTestCase();
+}
+
 void CorrectionsTest::channelSource() {
     removeSwitchMatrices();
 
-    QString calGroup = "Ports 1,2.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    QString calGroup = "Ports 1-2.cal";
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -72,8 +110,7 @@ void CorrectionsTest::channelSource() {
 void CorrectionsTest::calGroupSource() {
     removeSwitchMatrices();
 
-    QString calGroup = "Ports 1,2.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    QString calGroup = "Ports 1-2.cal";
 
     const int numberOfChannels = _vna->channels().size();
 
@@ -90,8 +127,7 @@ void CorrectionsTest::calGroupSource() {
 void CorrectionsTest::ports12() {
     removeSwitchMatrices();
 
-    QString calGroup = "Ports 1,2.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    QString calGroup = "Ports 1-2.cal";
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -120,7 +156,6 @@ void CorrectionsTest::ports1to4() {
     removeSwitchMatrices();
 
     QString calGroup = "Ports 1-4.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -154,7 +189,6 @@ void CorrectionsTest::ports1to4Osm() {
     removeSwitchMatrices();
 
     QString calGroup = "Ports 1-4 OSM.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -188,7 +222,6 @@ void CorrectionsTest::port1Osm() {
     removeSwitchMatrices();
 
     QString calGroup = "Port 1 OSM.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -210,8 +243,7 @@ void CorrectionsTest::ports12SwMat() {
 
     addSwitchMatrix();
 
-    QString calGroup = "Ports 1,2 SwM.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
+    QString calGroup = "Ports 1-2 SwM.cal";
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -250,7 +282,6 @@ void CorrectionsTest::ports1to4SwMat() {
     addSwitchMatrix();
 
     QString calGroup = "Ports 1-4 SwM.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -289,7 +320,6 @@ void CorrectionsTest::ports1to4SwMatOsm() {
     addSwitchMatrix();
 
     QString calGroup = "Ports 1-4 SwM OSM.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());
@@ -328,7 +358,6 @@ void CorrectionsTest::port1SwMatOsm() {
     addSwitchMatrix();
 
     QString calGroup = "Port 1 SwM OSM.cal";
-    _vna->fileSystem().uploadFile(_calGroupDir.filePath(calGroup), calGroup, VnaFileSystem::Directory::CAL_GROUP_DIRECTORY);
     _vna->channel().setCalGroup(calGroup);
     QVERIFY(!_vna->channel().calGroup().isEmpty());
     QVERIFY(_vna->channel().isCalibrated());

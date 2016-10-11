@@ -12,7 +12,9 @@ using namespace RsaToolbox;
 #include <QDebug>
 
 
-Calculate::Calculate(CalibrationSource outer, CalibrationSource inner, QVector<uint> ports, RsaToolbox::Vna *vna)
+Calculate::Calculate(CalibrationSource outer, CalibrationSource inner, QVector<uint> ports, RsaToolbox::Vna *vna) :
+    _isError(false),
+    _numberOfTestPorts(0)
 {
     _ports = ports;
     QVector<uint> allPorts = range(uint(1), vna->testPorts());
