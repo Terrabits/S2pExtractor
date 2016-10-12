@@ -1,7 +1,7 @@
  Version 0.0
 (C) 2016 Rohde & Schwarz North America
 
-Tue Oct 11 19:40:51 2016
+Tue Oct 11 21:13:27 2016
 
 VNA INSTRUMENT INFO
 Connection:       TCPIP
@@ -54,54 +54,6 @@ Read:     "Rohde-Schwarz,ZNB8-4Port,1311601044100104,2.70"
 Bytes: 47
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:CDIR?"
-Bytes: 12
-Status: 0x0 Operation completed successfully.
-
-Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\VNA'"
-Bytes: 46
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:CDIR DEF"
-Bytes: 15
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:CDIR '.\Calibration\Data'"
-Bytes: 32
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:DATA 'OuterCal.cal', #6547747??"
-Bytes: 547784
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\VNA'"
-Bytes: 57
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:CDIR?"
-Bytes: 12
-Status: 0x0 Operation completed successfully.
-
-Read:     "'C:\Users\Public\Documents\Rohde-Schwarz\VNA'"
-Bytes: 46
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:CDIR DEF"
-Bytes: 15
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:CDIR '.\Calibration\Data'"
-Bytes: 32
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:DATA 'InnerCal.cal', #6666017??"
-Bytes: 666054
-Status: 0x0 Operation completed successfully.
-
-Write:    ":MMEM:CDIR 'C:\Users\Public\Documents\Rohde-Schwarz\VNA'"
-Bytes: 57
-Status: 0x0 Operation completed successfully.
-
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
@@ -130,8 +82,8 @@ Write:    ":CONF:CHAN2 1"
 Bytes: 14
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:LOAD:CORR 2,'OuterCal.cal'"
-Bytes: 33
+Write:    ":MMEM:LOAD:CORR 2,'UOSM Outer.cal'"
+Bytes: 35
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS2:CORR:DATA:PAR? POIN"
@@ -747,8 +699,8 @@ Write:    ":CONF:CHAN2 1"
 Bytes: 14
 Status: 0x0 Operation completed successfully.
 
-Write:    ":MMEM:LOAD:CORR 2,'InnerCal.cal'"
-Bytes: 33
+Write:    ":MMEM:LOAD:CORR 2,'UOSM Inner.cal'"
+Bytes: 35
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS2:CORR:DATA:PAR? POIN"

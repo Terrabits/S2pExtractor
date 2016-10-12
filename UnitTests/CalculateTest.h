@@ -21,9 +21,19 @@ public:
     ~CalculateTest();
 
 private slots:
+    // Once
+    virtual void initTestCase();
+    virtual void cleanupTestCase();
+
+    // Tests
     void uosmCalculations();
     void osmCalculations();
 
+private:
+    QDir _calGroupDir;
+    QStringList _calGroups;
+
+    QDir _resultsDir;
 };
 
 #endif // CALCULATETEST_H
