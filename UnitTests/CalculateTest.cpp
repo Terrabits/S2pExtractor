@@ -66,6 +66,6 @@ void CalculateTest::uosmCalculations() {
     Touchstone::write(calculate.result(2), calGroupDir.filePath("Port 2"));
 }
 void CalculateTest::osmCalculations() {
-
+    qDebug() << "Not implemented";
 }
 
