@@ -1,0 +1,7 @@
+Calibrations:
+500 MHz - 5 GHz
+Point spacing: 50 MHz
+Points: 91
+
+Port 1: 3 dB attenuator
+Port 2: 6 dB attenuator
