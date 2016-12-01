@@ -22,6 +22,7 @@ public:
 
     void usePorts();
     bool next();
+    uint percentComplete() const;
     void end();
 
 private:

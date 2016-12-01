@@ -51,6 +51,11 @@ void PortLoop::usePorts() {
     markPortProcessed(port1());
     markPortProcessed(port2());
 }
+uint PortLoop::percentComplete() const {
+    const double done = _processedPorts.size();
+    const double total = done + _unprocessedPorts.size();
+    return 100.0 * done / total;
+}
 void PortLoop::end() {
     _portList.clear();
 }

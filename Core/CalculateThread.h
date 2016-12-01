@@ -3,12 +3,15 @@
 
 
 // Project
-#include "Corrections.h"
+#include "Calculate.h"
+#include "CalibrationSource.h"
 
 // RsaToolbox
 #include <NetworkData.h>
+#include <Vna.h>
 
 // Qt
+#include <QScopedPointer>
 #include <QThread>
 #include <QVector>
 
@@ -17,24 +20,24 @@ class CalculateThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit CalculateThread(QObject *parent = 0);
+    explicit CalculateThread(CalibrationSource outer, CalibrationSource inner, QVector<uint> ports, RsaToolbox::Vna *vna, QObject *parent = 0);
     ~CalculateThread();
 
-    void setOuterCorrections(const Corrections &corrections);
-    void setInnerCorrections(const Corrections &corrections);
-    void setPorts(QVector<uint> ports);
+    Calculate *result();
 
-    bool isError(QString &message = QString());
-    QVector<RsaToolbox::NetworkData> results();
+signals:
+    void progress(int percent);
+
 protected:
     virtual void run();
 
 private:
-    Corrections _outerCorrections;
-    Corrections _innerCorrections;
+    CalibrationSource _outerSource;
+    CalibrationSource _innerSource;
     QVector<uint> _ports;
+    RsaToolbox::Vna *_vna;
 
-    QVector<RsaToolbox::NetworkData> _results;
+    QScopedPointer<Calculate> _calculate;
 };
 
 

@@ -2,6 +2,7 @@
 
 
 // Project
+#include "Channel.h"
 #include "PortLoop.h"
 
 // RsaToolbox
@@ -12,23 +13,125 @@ using namespace RsaToolbox;
 #include <QDebug>
 
 
-Calculate::Calculate(CalibrationSource outer, CalibrationSource inner, QVector<uint> ports, RsaToolbox::Vna *vna) :
-    _isError(false),
-    _numberOfTestPorts(0)
+Calculate::Calculate(CalibrationSource outer, CalibrationSource inner, QVector<uint> ports, RsaToolbox::Vna *vna, QObject *parent) :
+    QObject(parent),
+    _outerSource(outer),
+    _innerSource(inner),
+    _ports(ports),
+    _vna(vna)
 {
-    _ports = ports;
-    QVector<uint> allPorts = range(uint(1), vna->testPorts());
 
-    _results.resize(ports.size());
-    PortLoop loop(ports, allPorts);
+}
+Calculate::~Calculate()
+{
+    //
+}
+
+bool Calculate::isValid(Error &error) {
+    error.clear();
+
+    if (_outerSource.isEmpty()) {
+        error.code = Error::Code::OuterCalibration;
+        error.message = "No calibration specified";
+        return false;
+    }
+    if (_innerSource.isEmpty()) {
+        error.code = Error::Code::InnerCalibration;
+        error.message = "No calibration specified";
+        return false;
+    }
+
+    if (_ports.isEmpty()) {
+        error.code = Error::Code::Ports;
+        error.message = "must specify at least one port";
+        return false;
+    }
+    if (_ports.contains(0)) {
+        error.code = Error::Code::Ports;
+        error.message = "must be greater than 0";
+        return false;
+    }
+
+    QVector<uint> testPorts = range(uint(1), _vna->testPorts());
+    foreach (uint port, _ports) {
+        if (!testPorts.contains(port)) {
+            error.code = Error::Code::Ports;
+            error.message = "Port %1 does not exist";
+            error.message = error.message.arg(port);
+            return false;
+        }
+    }
+
+    Channel outer(_outerSource, _vna);
+    if (!outer.isReady()) {
+        error.code = Error::Code::OuterCalibration;
+        error.message = "calibration not found";
+        return false;
+    }
+
+    Channel inner(_innerSource, _vna);
+    if (!inner.isReady()) {
+        error.code = Error::Code::InnerCalibration;
+        error.message = "calibration not found";
+        return false;
+    }
+
+    if (outer.frequencies_Hz() != inner.frequencies_Hz()) {
+        error.code = Error::Code::Other;
+        error.message = "frequency points do not match";
+        return false;
+    }
+
+    if (outer.corrections().switchMatrices() != inner.corrections().switchMatrices()) {
+        error.code = Error::Code::Other;
+        error.message = "switch matrix setups don't match";
+        return false;
+    }
+
+    foreach (uint port, _ports) {
+        if (!outer.ports().contains(port)) {
+            error.code = Error::Code::OuterCalibration;
+            error.message = "port %1 corrections not found";
+            error.message = error.message.arg(port);
+            return false;
+        }
+        if (!inner.ports().contains(port)) {
+            error.code = Error::Code::InnerCalibration;
+            error.message = "port %1 corrections not found";
+            error.message = error.message.arg(port);
+            return false;
+        }
+    }
+
+    // Else
+    return true;
+}
+
+bool Calculate::isError() const {
+    return _error.isError();
+}
+Error Calculate::error() const {
+    return _error;
+}
+
+void Calculate::run() {
+    if (!isValid(_error))
+        return;
+
+    emit progress(0);
+
+    QVector<uint> allPorts = range(uint(1), _vna->testPorts());
+
+    _results.resize(_ports.size());
+    PortLoop loop(_ports, allPorts);
     while (loop.isUnprocessedPorts()) {
         loop.begin();
         bool success = false;
         do {
-            Corrections outerCorrections(loop.port1(), loop.port2(), outer, vna);
+            Corrections outerCorrections(loop.port1(), loop.port2(), _outerSource, _vna);
             if (!outerCorrections.isPort1Corrections())
                 continue;
-            Corrections innerCorrections(loop.port1(), loop.port2(), inner, vna);
+            Corrections innerCorrections(loop.port1(), loop.port2(), _innerSource, _vna);
             if (!innerCorrections.isPort1Corrections())
                 continue;
 
@@ -38,7 +141,7 @@ Calculate::Calculate(CalibrationSource outer, CalibrationSource inner, QVector<u
             loop.end();
             setResult(loop.port1(), processPort1(outerCorrections, innerCorrections));
 
-            if (!ports.contains(loop.port2()))
+            if (!_ports.contains(loop.port2()))
                 continue;
             if (!outerCorrections.isPort2Corrections())
                 continue;
@@ -47,37 +150,29 @@ Calculate::Calculate(CalibrationSource outer, CalibrationSource inner, QVector<u
 
             // Process Port 2
             setResult(loop.port2(), processPort2(outerCorrections, innerCorrections));
+
+            emit progress(loop.percentComplete());
         } while (loop.next());
 
         // No corrections found for port 1
         if (!success) {
-            QString msg = "Could not complete calculation for port %1";
+            QString msg = "Could not find corrections for port %1";
             msg = msg.arg(loop.port1());
-            setError(msg);
+            setError(Error::Code::Other, msg);
             break;
         }
     }
-}
-Calculate::~Calculate()
-{
-    //
+    emit progress(100);
 }
 
-bool Calculate::isError(QString &message) const {
-    if (_isError)
-        message = _errorMessage;
-    else
-        message.clear();
-    return _isError;
-}
 NetworkData Calculate::result(uint port) const {
     const int index = _ports.indexOf(port);
     return _results[index];
 }
 
-void Calculate::setError(const QString &message) {
-    _isError = true;
-    _errorMessage = message;
+void Calculate::setError(Error::Code code, const QString &message) {
+    _error.code = code;
+    _error.message = message;
 }
 
 NetworkData Calculate::processPort1(Corrections &outer, Corrections &inner) {

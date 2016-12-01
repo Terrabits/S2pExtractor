@@ -14,7 +14,8 @@ HEADERS     += Settings.h \
                Channel.h \
                Corrections.h \
     CalibrationSource.h \
-    PortLoop.h
+    PortLoop.h \
+    Error.h
                ...
 INCLUDEPATH += $$PWD
 SOURCES     += CalculateThread.cpp \
@@ -22,7 +23,8 @@ SOURCES     += CalculateThread.cpp \
                Channel.cpp \
                Corrections.cpp \
     CalibrationSource.cpp \
-    PortLoop.cpp
+    PortLoop.cpp \
+    Error.cpp
 FORMS       += getCalibrationDialog.ui \
                getFilenamesDialog.ui \
                getPortsDialog.ui

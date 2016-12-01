@@ -5,39 +5,49 @@
 // Project
 #include "CalibrationSource.h"
 #include "Corrections.h"
+#include "Error.h"
 
 // RsaToolbox
 #include <NetworkData.h>
 #include <Vna.h>
 
 // Qt
+#include <QObject>
 #include <QVector>
 
 
-class Calculate
+class Calculate : public QObject
 {
-//    Q_OBJECT
+    Q_OBJECT
 public:
-    explicit Calculate(CalibrationSource outer, CalibrationSource inner, QVector<uint> ports, RsaToolbox::Vna *vna);
+    explicit Calculate(CalibrationSource outer, CalibrationSource inner, QVector<uint> ports, RsaToolbox::Vna *vna, QObject *parent = 0);
     ~Calculate();
 
-    bool isError(QString &message = QString()) const;
+    bool isValid(Error &error);
+    bool isError() const;
+    Error error() const;
+
     RsaToolbox::NetworkData result(uint port) const;
 
-private:
-    bool _isError;
-    QString _errorMessage;
-    void setError(const QString &message);
+signals:
+    void progress(int percent);
 
+public slots:
+    void run();
+
+private:
+    Error _error;
+    void setError(Error::Code code, const QString &message);
+
+    CalibrationSource _outerSource;
+    CalibrationSource _innerSource;
     QVector<uint> _ports;
+    RsaToolbox::Vna *_vna;
+
     QVector<RsaToolbox::NetworkData> _results;
     static RsaToolbox::NetworkData processPort1(Corrections &outer, Corrections &inner);
     static RsaToolbox::NetworkData processPort2(Corrections &outer, Corrections &inner);
     void setResult(uint port, RsaToolbox::NetworkData &data);
-
-    // Temporary variables,
-    // Helper functions
-    uint _numberOfTestPorts;
 };
 
 

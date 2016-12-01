@@ -100,9 +100,8 @@ void CalculateTest::uosmCalculations() {
     CalibrationSource innerSource(innerCal);
 
     Calculate calculate(outerSource, innerSource, ports, _vna.data());
-    QString msg;
-    calculate.isError(msg);
-    QCOMPARE(QString(), msg);
+    calculate.run();
+    QCOMPARE(QString(), calculate.error().message);
     QVERIFY(!calculate.isError());
     QCOMPARE(calculate.result(1).points(), uint(911));
     QCOMPARE(calculate.result(2).points(), uint(911));
@@ -123,9 +122,8 @@ void CalculateTest::osmCalculations() {
     CalibrationSource innerSource(innerCal);
 
     Calculate calculate(outerSource, innerSource, ports, _vna.data());
-    QString msg;
-    calculate.isError(msg);
-    QCOMPARE(QString(), msg);
+    calculate.run();
+    QCOMPARE(QString(), calculate.error().message);
     QVERIFY(!calculate.isError());
     QCOMPARE(calculate.result(1).points(), uint(91));
     QCOMPARE(calculate.result(2).points(), uint(91));
