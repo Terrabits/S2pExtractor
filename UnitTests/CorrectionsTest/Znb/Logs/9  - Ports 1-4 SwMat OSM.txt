@@ -1,36 +1,28 @@
  Version 0.0
 (C) 2016 Rohde & Schwarz North America
 
-Wed Nov 30 20:49:55 2016
+Thu Dec 1 22:39:18 2016
 
 VNA INSTRUMENT INFO
 Connection:       TCPIP
 Address:          127.0.0.1::5025
 Make:             Rohde & Schwarz
-Model:            ZNBT
-Serial No:        1318700624100104
+Model:            ZNB
+Serial No:        1311601064100104
 Firmware Version: 2.70
-Min Frequency:    9 KHz
-Max Frequency:    8.5 GHz
-Number of Ports:  16
-Options:          ZNBT-K2
-                  ZNBT-K4
-                  ZNBT-K14
-                  ZNBT-K17
-                  ZNBT-K19
-                  ZNBT-K20
-                  ZNBT-B108
-                  ZNBT-B112
-                  ZNBT-B116
-                  ZNBT-B21
-                  ZNBT-B22
-                  ZNBT-B23
-                  ZNBT-B24
-                  ZNBT-B361
-                  ZNBT-B362
-                  ZNBT-B363
-                  ZNBT-B364
-                  ZNBT-B81
+Min Frequency:    100 KHz
+Max Frequency:    20 GHz
+Number of Ports:  4
+Options:          ZNB-K2
+                  ZNB-K4
+                  ZNB-K14
+                  ZNB-K17
+                  ZNB-K19
+                  ZNB-K20
+                  ZNB20-B24
+                  ZNB-B81
+                  ZNB-B1
+                  ZNB20-B2
 
 
 Write:    "*CLS"
@@ -53,32 +45,32 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":INST:SMAT 0"
@@ -89,8 +81,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:COMM:RDEV:SMAT:DEL"
@@ -101,8 +93,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:COMM:RDEV:SMAT:COUN?"
@@ -121,8 +113,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":INST:SMAT 1"
@@ -167,6 +159,14 @@ Status: 0x0 Operation completed successfully.
 
 Read:     "1"
 Bytes: 2
+Status: 0x0 Operation completed successfully.
+
+Write:    ":CONF:CHAN:CAT?"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Read:     "'1,Ch1'"
+Bytes: 8
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? POIN"
@@ -225,8 +225,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -257,8 +257,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -281,8 +281,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -324,8 +324,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -356,8 +356,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -380,8 +380,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -423,8 +423,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -439,8 +439,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -455,8 +455,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -487,8 +487,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -511,8 +511,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -554,8 +554,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -570,8 +570,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -906,6 +906,14 @@ directivity1:
 (-0.481647, 0.0431633), (-0.493976, 0.0386895), (-0.489093, 0.0649098), (-0.480081, 0.0952257), (-0.462095, 0.123081), (-0.439635, 0.148425), (-0.438288, 0.174047), (-0.401064, 0.194574), (-0.376046, 0.220265), (-0.344955, 0.228464), (-0.312812, 0.238895), (-0.28033, 0.242337), (-0.246445, 0.253829), (-0.211315, 0.246342), (-0.170407, 0.240602), (-0.138231, 0.223775), (-0.102474, 0.210722), (-0.067517, 0.182845), (-0.0426164, 0.150819), (-0.018153, 0.114863), (-0.00384402, 0.0784391), (0.00467962, 0.0381098), (0.00773685, -0.00684005), (0.00367263, -0.0503549), (-0.00799799, -0.0932574), (-0.0265634, -0.132693), (-0.0504198, -0.162587), (-0.0786371, -0.20236), (-0.114898, -0.22367), (-0.149115, -0.246407), (-0.191517, -0.256414), (-0.229959, -0.266968), (-0.268298, -0.272992), (-0.301573, -0.258966), (-0.34118, -0.254873), (-0.380432, -0.237581), (-0.420258, -0.217963), (-0.440792, -0.1936), (-0.456433, -0.169883), (-0.477387, -0.140999), (-0.490005, -0.104899), (-0.499545, -0.0733857), (-0.526824, -0.0440859), (-0.538391, -0.0088768), (-0.515832, 0.0290318), (-0.523812, 0.0656519), (-0.515417, 0.100304), (-0.490127, 0.130036), (-0.455176, 0.160708), (-0.440284, 0.197688), (-0.40695, 0.214179), (-0.372337, 0.235578), (-0.325966, 0.254581), (-0.27953, 0.264464), (-0.238965, 0.271435), (-0.182402, 0.258499), (-0.139577, 0.245951), (-0.0942268, 0.222115), (-0.0529621, 0.203771), (-0.016655, 0.159405), (0.0144556, 0.120112), (0.0378738, 0.0715696), (0.0492679, 0.0169171), (0.0525023, -0.0386289), (0.0472393, -0.0881931), (0.0321448, -0.140891), (0.00905084, -0.185834), (-0.0208714, -0.214283), (-0.0572557, -0.249471), (-0.097394, -0.283059), (-0.136898, -0.287792), (-0.177317, -0.307464), (-0.220545, -0.313681), (-0.258605, -0.302823), (-0.312439, -0.306244), (-0.33403, -0.277751), (-0.369769, -0.251807), (-0.396883, -0.233984), (-0.41914, -0.203751), (-0.437978, -0.171531), (-0.460606, -0.135657), (-0.464025, -0.103388), (-0.463014, -0.0634432), (-0.463645, -0.0255399), (-0.449019, 0.00893069), (-0.431548, 0.0454526), (-0.4274, 0.077837), (-0.400246, 0.106103), (-0.366246, 0.134782), (-0.342028, 0.164616), (-0.318975, 0.181476), (-0.271279, 0.18767), (-0.228159, 0.193182), (-0.19428, 0.193485), (-0.149209, 0.195071), (-0.109072, 0.188309), (-0.0742792, 0.164616), (-0.0408357, 0.147443), (-0.0101664, 0.11815), (0.0155631, 0.083971), (0.0366209, 0.0510317), (0.0472224, 0.0129435), (0.0591477, -0.0263995), (0.065009, -0.0670767), (0.0594558, -0.107826), (0.0503988, -0.150907), (0.0355337, -0.184415), (0.0112939, -0.227376), (-0.0172157, -0.264162), (-0.0552759, -0.30196), (-0.103588, -0.319345), (-0.158646, -0.356406), (-0.228477, -0.349593), (-0.304238, -0.334473), (-0.360727, -0.308442), (-0.434987, -0.25753), (-0.482599, -0.190848), (-0.529087, -0.095295), (-0.544058, 0.0295077), (-0.465099, 0.181835), (-0.316264, 0.332025), (-0.0527248, 0.293871), (0.0574098, 0.0759463), (0.00804329, -0.0818051), (-0.0862017, -0.149359), (-0.160895, -0.161261), (-0.211392, -0.151765), (-0.259174, -0.122624), (-0.27758, -0.0946503), (-0.285995, -0.0666657), (-0.310076, -0.0205936), (-0.308223, 0.0144977), (-0.288627, 0.0505562), (-0.271233, 0.0835533), (-0.239617, 0.110426), (-0.199482, 0.130302), (-0.168188, 0.154873), (-0.113344, 0.162354), (-0.0511513, 0.157704), (0.0111089, 0.135642), (0.0835104, 0.096139), (0.152732, 0.0255723), (0.162043, 0.0069418), (0.162308, 0.00807858), (0.165504, 0.00802231), (0.157546, 0.00830936), (0.161236, 0.00824642), (0.163671, 0.00476454), (0.163622, 0.00837898), (0.16507, 0.00822448), (0.162887, 0.00823021), (0.161382, 0.00801468), (0.159407, 0.00814343), (0.15834, 0.00761414), (0.161906, 0.00842476), (0.161274, 0.00845909), (0.162556, 0.00847435), (0.163279, 0.00822449), (0.162145, 0.00829887), (0.159224, 0.00551987), (0.164113, 0.00805855), (0.164338, 0.00823117), (0.16497, 0.00894165), (0.162874, 0.0124906), (0.157987, 0.00741768), (0.161638, 0.00800704), (0.160666, 0.00850774), (0.158621, 0.00822831), (0.161954, 0.00844907), (0.164015, 0.00776672), (0.167748, 0.00794458), (0.16642, 0.0087428), (0.16353, 0.00804138), (0.160089, 0.00963592), (0.165886, 0.00747299), (0.162506, 0.00783157), (0.160748, 0.00861931), (0.163744, 0.00825405), (0.162506, 0.0110865), (0.163399, 0.00918579), (0.162659, -0.00239563), (0.160326, 0.00962448), (0.163004, 0.00841331), (0.155934, 0.0108232), (0.161647, 0.00483704), (0.164674, 0.0076189), (0.159619, 0.00866889), (0.161373, 0.00815105), (0.160234, 0.00779152), (0.165993, 0.00804329), (0.163654, 0.00722885), (0.158124, 0.00786591), (0.163384, 0.00791168), (0.162107, 0.00790214), (0.1605, 0.00860976), (0.157141, 0.0101013), (0.159241, -0.0365906), (0.161473, 0.00790595), (0.160604, 0.00743389), (0.160433, 0.00756264), (0.161789, -0.0132294)
 directivity2: 
 (-0.465434, 0.109474), (-0.464964, 0.0999382), (-0.4347, 0.156987), (-0.379452, 0.203873), (-0.32478, 0.2256), (-0.247095, 0.234674), (-0.209793, 0.219658), (-0.16868, 0.213069), (-0.139962, 0.187793), (-0.118696, 0.163579), (-0.104386, 0.1372), (-0.0940669, 0.119288), (-0.0959478, 0.0935667), (-0.0939915, 0.0776371), (-0.103574, 0.0639787), (-0.106802, 0.0537713), (-0.111121, 0.0447361), (-0.120335, 0.0360932), (-0.122081, 0.0352054), (-0.134193, 0.0302317), (-0.135424, 0.0282879), (-0.138832, 0.0266659), (-0.145888, 0.0237422), (-0.139512, 0.0202899), (-0.143067, 0.0157713), (-0.150161, 0.00798166), (-0.155831, -0.00141144), (-0.16346, -0.0109994), (-0.172308, -0.0194584), (-0.186698, -0.0316327), (-0.217863, -0.0372295), (-0.250003, -0.0433576), (-0.28361, -0.0388632), (-0.315501, -0.0249834), (-0.362586, 0.00296092), (-0.393637, 0.0477566), (-0.43044, 0.110693), (-0.419934, 0.182719), (-0.404729, 0.268422), (-0.345943, 0.294243), (-0.282207, 0.375415), (-0.205811, 0.39226), (-0.131055, 0.381879), (-0.0759788, 0.344471), (-0.0376396, 0.306311), (-0.0142014, 0.261624), (-0.0031085, 0.218531), (-0.000615361, 0.188098), (-0.00588065, 0.15436), (-0.0134867, 0.133281), (-0.026611, 0.113463), (-0.0476565, 0.100524), (-0.0505719, 0.0916159), (-0.0621942, 0.0860375), (-0.0729582, 0.0816056), (-0.0819924, 0.0854951), (-0.0870799, 0.0868969), (-0.0949383, 0.0895111), (-0.0977907, 0.0897513), (-0.103407, 0.0928802), (-0.102879, 0.0900505), (-0.103885, 0.0872717), (-0.107808, 0.0887741), (-0.113563, 0.0810079), (-0.118937, 0.0779147), (-0.130319, 0.0736004), (-0.139189, 0.0729697), (-0.157723, 0.0738101), (-0.185683, 0.0767481), (-0.20142, 0.092027), (-0.228074, 0.115962), (-0.256592, 0.16365), (-0.281776, 0.201508), (-0.266825, 0.249215), (-0.254476, 0.320668), (-0.20247, 0.381389), (-0.137444, 0.434204), (-0.0623257, 0.44595), (0.0241013, 0.445445), (0.101763, 0.396577), (0.149972, 0.350142), (0.177582, 0.295187), (0.18937, 0.226582), (0.178508, 0.180232), (0.162161, 0.145082), (0.137591, 0.11779), (0.117201, 0.101752), (0.0952016, 0.0905195), (0.0763209, 0.0878334), (0.0583465, 0.0852961), (0.0446176, 0.0898822), (0.0335789, 0.0935421), (0.0235558, 0.100693), (0.0176916, 0.103182), (0.0136671, 0.112846), (0.0102787, 0.11778), (0.00763106, 0.129083), (0.00731182, 0.125748), (0.00178469, 0.135551), (0.000109673, 0.138183), (-0.00484228, 0.148742), (-0.0111332, 0.149808), (-0.0153685, 0.15843), (-0.0233879, 0.173122), (-0.0301905, 0.18202), (-0.033474, 0.205757), (-0.034687, 0.224768), (-0.0351496, 0.252683), (-0.0246372, 0.278306), (-0.00260352, 0.315007), (0.0313034, 0.342815), (0.0764103, 0.362001), (0.128769, 0.352157), (0.177776, 0.349804), (0.217091, 0.319522), (0.242273, 0.278849), (0.249383, 0.23955), (0.25321, 0.214463), (0.246111, 0.190636), (0.246796, 0.175758), (0.246211, 0.181287), (0.276885, 0.165634), (0.2894, 0.0967598), (0.269349, 0.0429192), (0.227966, 0.0236206), (0.166142, 0.00730513), (0.126539, 0.0212984), (0.0975254, 0.0370872), (0.0809791, 0.0539331), (0.0722842, 0.075579), (0.0612735, 0.10116), (0.0574636, 0.114314), (0.0644922, 0.126992), (0.0677638, 0.142479), (0.0724688, 0.153366), (0.0808845, 0.166094), (0.0814867, 0.164336), (0.0858192, 0.170519), (0.0934753, 0.158882), (0.0897341, 0.173792), (0.0879631, 0.19173), (0.0820527, 0.206511), (0.0810471, 0.204603), (0.0797548, 0.199955), (0.080018, 0.200533), (0.0785294, 0.204579), (0.0786981, 0.199082), (0.0764737, 0.205821), (0.0825996, 0.205251), (0.0776482, 0.203549), (0.0793891, 0.204409), (0.0793934, 0.20234), (0.077836, 0.201419), (0.0787716, 0.20727), (0.0790157, 0.204301), (0.0815801, 0.20452), (0.0793533, 0.200638), (0.0776747, 0.208108), (0.0796785, 0.205671), (0.0793195, 0.203139), (0.080184, 0.199631), (0.0791883, 0.205674), (0.0774431, 0.20417), (0.0787401, 0.202364), (0.0817928, 0.209778), (0.0784588, 0.208202), (0.0789235, 0.202787), (0.0801849, 0.203101), (0.0788574, 0.210262), (0.0791097, 0.194803), (0.0816984, 0.204581), (0.0787711, 0.207481), (0.0680542, 0.209712), (0.0723, 0.214839), (0.0798862, 0.204902), (0.0791073, 0.200708), (0.0799179, 0.208255), (0.079318, 0.203194), (0.0832186, 0.198788), (0.0794105, 0.205502), (0.0787904, 0.203693), (0.0774212, 0.205597), (0.0793915, 0.207214), (0.0782232, 0.203594), (0.0807552, 0.208124), (0.076889, 0.204601), (0.0792074, 0.205012), (0.0780899, 0.209266), (0.0772781, 0.203796), (0.0799408, 0.206146), (0.0774651, 0.199997), (0.0931721, 0.201141), (0.081665, 0.207561), (0.0786056, 0.194946), (0.0770225, 0.204126), (0.0789775, 0.205981), (0.0800867, 0.206559), (0.0772123, 0.197274), (0.0796075, 0.205587), (0.0747337, 0.206558), (0.079711, 0.20364)
+Write:    ":CONF:CHAN:CAT?"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Read:     "'1,Ch1'"
+Bytes: 8
+Status: 0x0 Operation completed successfully.
+
 Write:    ":SENS1:CORR:DATA:PAR? POIN"
 Bytes: 27
 Status: 0x0 Operation completed successfully.
@@ -962,8 +970,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -994,8 +1002,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -1018,8 +1026,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -1061,8 +1069,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -1093,8 +1101,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -1117,8 +1125,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -1160,8 +1168,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -1176,8 +1184,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MTES,1"
@@ -1192,8 +1200,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -1208,8 +1216,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -1240,8 +1248,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -1264,8 +1272,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -1307,8 +1315,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -1323,8 +1331,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MTES,1"
@@ -1339,8 +1347,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -1679,16 +1687,16 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":INST:SMAT 0"
@@ -1699,8 +1707,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:COMM:RDEV:SMAT:DEL"

@@ -1,21 +1,19 @@
 #include "CalibrationSource.h"
 
 
-CalibrationSource::CalibrationSource() :
-    _channel(0)
+CalibrationSource::CalibrationSource()
 {
-    //
+    clear();
 }
-CalibrationSource::CalibrationSource(uint channel) :
-    _channel(channel)
+CalibrationSource::CalibrationSource(uint channel)
 {
-    //
+    clear();
+    setChannel(channel);
 }
-CalibrationSource::CalibrationSource(QString calGroup) :
-    _channel(0),
-    _calGroup(calGroup)
+CalibrationSource::CalibrationSource(QString calGroup)
 {
-    //
+    clear();
+    setCalGroup(calGroup);
 }
 
 CalibrationSource::~CalibrationSource()
@@ -46,6 +44,8 @@ QString CalibrationSource::calGroup() const {
 }
 void CalibrationSource::setCalGroup(QString calGroup) {
     clear();
+    if (calGroup.endsWith(".cal", Qt::CaseInsensitive))
+        calGroup.chop(4);
     _calGroup = calGroup;
 }
 

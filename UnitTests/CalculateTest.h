@@ -6,9 +6,7 @@
 #include <VnaTestClass.h>
 
 // Qt
-#include <QString>
 #include <QStringList>
-#include <QScopedPointer>
 #include <QDir>
 #include <QObject>
 
@@ -26,6 +24,9 @@ private slots:
     virtual void cleanupTestCase();
 
     // Tests
+    void isReady_data();
+    void isReady();
+
     void uosmCalculations();
     void osmCalculations();
 

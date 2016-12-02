@@ -27,7 +27,7 @@ Calculate::~Calculate()
     //
 }
 
-bool Calculate::isValid(Error &error) {
+bool Calculate::isReady(Error &error) {
     error.clear();
 
     if (_outerSource.isEmpty()) {
@@ -88,17 +88,26 @@ bool Calculate::isValid(Error &error) {
         return false;
     }
 
+    // No common ports
+    if (!isCommonPorts(outer.ports(), inner.ports())) {
+        error.code = Error::Code::Other;
+        error.message = "no common cal ports";
+        return false;
+    }
+
     foreach (uint port, _ports) {
         if (!outer.ports().contains(port)) {
-            error.code = Error::Code::OuterCalibration;
-            error.message = "port %1 corrections not found";
+            error.code = Error::Code::Ports;
+            error.message = "port %1 not found in %2";
             error.message = error.message.arg(port);
+            error.message = error.message.arg(_outerSource.displayText());
             return false;
         }
         if (!inner.ports().contains(port)) {
-            error.code = Error::Code::InnerCalibration;
-            error.message = "port %1 corrections not found";
+            error.code = Error::Code::Ports;
+            error.message = "port %1 not found in %2";
             error.message = error.message.arg(port);
+            error.message = error.message.arg(_innerSource.displayText());
             return false;
         }
     }
@@ -115,7 +124,7 @@ Error Calculate::error() const {
 }
 
 void Calculate::run() {
-    if (!isValid(_error))
+    if (!isReady(_error))
         return;
 
     emit progress(0);
@@ -173,6 +182,15 @@ NetworkData Calculate::result(uint port) const {
 void Calculate::setError(Error::Code code, const QString &message) {
     _error.code = code;
     _error.message = message;
+}
+
+bool Calculate::isCommonPorts(QVector<uint> a, QVector<uint> b) {
+    foreach (uint port, a) {
+        if (b.contains(port))
+            return true;
+    }
+
+    return false;
 }
 
 NetworkData Calculate::processPort1(Corrections &outer, Corrections &inner) {

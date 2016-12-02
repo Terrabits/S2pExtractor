@@ -32,8 +32,14 @@ public:
 private:
     bool _isManaged;
     uint _channel;
+    CalibrationSource _source;
     mutable RsaToolbox::Vna *_vna;
 
+    void clear();
+    bool vnaHasChannel(uint c);
+    bool vnaHasCalGroup(const QString &calGroup);
+    void setChannel(uint c);
+    void setCalGroup(const QString &calGroup);
     void cleanup();
 };
 

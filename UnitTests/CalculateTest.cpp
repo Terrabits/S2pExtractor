@@ -3,6 +3,8 @@
 
 // Project
 #include "Calculate.h"
+#include "CalibrationSource.h"
+#include "Error.h"
 
 // RsaToolbox
 #include <Vna.h>
@@ -13,6 +15,7 @@ using namespace RsaToolbox;
 
 // Qt
 #include <QFileInfo>
+#include <QString>
 #include <QTest>
 #include <QDebug>
 
@@ -27,8 +30,23 @@ CalculateTest::CalculateTest(QObject *parent) :
     _logDir.cd("Znb");
     _logDir.mkpath("Logs");
     _logDir.cd("Logs");
-    _logFilenames << "1 - UOSM Calculations.txt"
-                  << "2 - OSM Calculations.txt";
+    _logFilenames << "1  - isReady No error.txt"
+                  << "2  - isReady No ports.txt"
+                  << "3  - isReady Outer ports.txt"
+                  << "4  - isReady Inner ports.txt"
+                  << "5  - isReady Extra port.txt"
+                  << "6  - isReady No common ports.txt"
+                  << "7  - isReady empty outer.txt"
+                  << "8  - isReady empty inner.txt"
+                  << "9  - isReady Missing outer cal.txt"
+                  << "10 - isReady Missing inner cal.txt"
+                  << "11 - isReady Missing outer channel.txt"
+                  << "12 - isReady Missing inner channel.txt"
+                  << "13 - isReady Missing outer channel cal.txt"
+                  << "14 - isReady Missing inner channel cal.txt"
+                  << "15 - isReady frequency.txt"
+                  << "16 - UOSM calculations.txt"
+                  << "17 - OSM calculations.txt";
 
     _calGroupDir = _logDir;
     _calGroupDir.cdUp();
@@ -86,6 +104,72 @@ void CalculateTest::cleanupTestCase() {
     }
 
     _cleanupTestCase();
+}
+
+void CalculateTest::isReady_data() {
+    QTest::addColumn<CalibrationSource>("outer");
+    QTest::addColumn<CalibrationSource>("inner");
+    QTest::addColumn<QVector<uint>>("ports");
+    QTest::addColumn<Error::Code>("errorCode");
+
+    CalibrationSource outer("outer_ready");
+    CalibrationSource inner("inner_ready");
+
+    QVector<uint> ports;
+    ports << 1 << 2;
+
+    // To generate errors
+    QVector<uint> noPorts;
+    QVector<uint> threePorts;
+    threePorts << 1 << 2 << 3;
+
+    CalibrationSource outerMissingPort("outer_ready_missing_port");
+    CalibrationSource innerMissingPort("inner_ready_missing_port");
+    CalibrationSource innerWrongPorts("inner_ready_ports3-4");
+    CalibrationSource emptyCal;
+    CalibrationSource missingCal("missing_cal");
+    CalibrationSource missingChannelCal(1);
+    CalibrationSource missingChannel(10);
+    CalibrationSource innerWrongFreq("inner_ready_freq");
+
+    // Tests
+    QTest::newRow("No error")    << outer            << inner            << ports << Error::Code::None;
+
+    // Ports
+    ports.clear();
+    QTest::newRow("No ports")    << outer            << inner            << ports << Error::Code::Ports;
+    ports << 1 << 2;
+    QTest::newRow("Outer ports") << outerMissingPort << inner            << ports << Error::Code::Ports;
+    QTest::newRow("Inner ports") << outer            << innerMissingPort << ports << Error::Code::Ports;
+    ports << 3;
+    QTest::newRow("Extra port")  << outer            << inner            << ports << Error::Code::Ports;
+    ports.clear();
+    ports << 1 << 2;
+    QTest::newRow("No common ports") << outer        << innerWrongPorts  << ports << Error::Code::Other;
+
+    // Calibration
+    QTest::newRow("Empty outer")               << emptyCal          << inner             << ports << Error::Code::OuterCalibration;
+    QTest::newRow("Empty inner")               << outer             << emptyCal          << ports << Error::Code::InnerCalibration;
+    QTest::newRow("Missing outer cal")         << missingCal        << inner             << ports << Error::Code::OuterCalibration;
+    QTest::newRow("Missing inner cal")         << outer             << missingCal        << ports << Error::Code::InnerCalibration;
+    QTest::newRow("Missing outer channel")     << missingChannel    << inner             << ports << Error::Code::OuterCalibration;
+    QTest::newRow("Missing inner channel")     << outer             << missingChannel    << ports << Error::Code::InnerCalibration;
+    QTest::newRow("Missing outer channel cal") << missingChannelCal << inner             << ports << Error::Code::OuterCalibration;
+    QTest::newRow("Missing inner channel cal") << outer             << missingChannelCal << ports << Error::Code::InnerCalibration;
+
+    QTest::newRow("freq")                      << outer             << innerWrongFreq    << ports << Error::Code::Other;
+}
+void CalculateTest::isReady() {
+    QFETCH(CalibrationSource, outer);
+    QFETCH(CalibrationSource, inner);
+    QFETCH(QVector<uint>, ports);
+    QFETCH(Error::Code, errorCode);
+
+    Calculate calculate(outer, inner, ports, _vna.data());
+
+    Error error;
+    QCOMPARE(calculate.isReady(error), errorCode == Error::Code::None);
+    QCOMPARE(error.code,               errorCode);
 }
 
 void CalculateTest::uosmCalculations() {

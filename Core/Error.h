@@ -2,6 +2,7 @@
 #define ERROR_H
 
 // Qt
+#include <QMetaType>
 #include <QString>
 
 
@@ -28,5 +29,7 @@ struct Error
 
     QString display() const;
 };
+
+Q_DECLARE_METATYPE(Error::Code)
 
 #endif // ERROR_H

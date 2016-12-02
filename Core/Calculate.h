@@ -23,7 +23,7 @@ public:
     explicit Calculate(CalibrationSource outer, CalibrationSource inner, QVector<uint> ports, RsaToolbox::Vna *vna, QObject *parent = 0);
     ~Calculate();
 
-    bool isValid(Error &error);
+    bool isReady(Error &error);
     bool isError() const;
     Error error() const;
 
@@ -43,6 +43,8 @@ private:
     CalibrationSource _innerSource;
     QVector<uint> _ports;
     RsaToolbox::Vna *_vna;
+
+    static bool isCommonPorts(QVector<uint> a, QVector<uint> b);
 
     QVector<RsaToolbox::NetworkData> _results;
     static RsaToolbox::NetworkData processPort1(Corrections &outer, Corrections &inner);

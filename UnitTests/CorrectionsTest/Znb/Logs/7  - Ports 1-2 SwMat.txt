@@ -1,36 +1,28 @@
  Version 0.0
 (C) 2016 Rohde & Schwarz North America
 
-Wed Nov 30 20:49:54 2016
+Thu Dec 1 22:39:16 2016
 
 VNA INSTRUMENT INFO
 Connection:       TCPIP
 Address:          127.0.0.1::5025
 Make:             Rohde & Schwarz
-Model:            ZNBT
-Serial No:        1318700624100104
+Model:            ZNB
+Serial No:        1311601064100104
 Firmware Version: 2.70
-Min Frequency:    9 KHz
-Max Frequency:    8.5 GHz
-Number of Ports:  16
-Options:          ZNBT-K2
-                  ZNBT-K4
-                  ZNBT-K14
-                  ZNBT-K17
-                  ZNBT-K19
-                  ZNBT-K20
-                  ZNBT-B108
-                  ZNBT-B112
-                  ZNBT-B116
-                  ZNBT-B21
-                  ZNBT-B22
-                  ZNBT-B23
-                  ZNBT-B24
-                  ZNBT-B361
-                  ZNBT-B362
-                  ZNBT-B363
-                  ZNBT-B364
-                  ZNBT-B81
+Min Frequency:    100 KHz
+Max Frequency:    20 GHz
+Number of Ports:  4
+Options:          ZNB-K2
+                  ZNB-K4
+                  ZNB-K14
+                  ZNB-K17
+                  ZNB-K19
+                  ZNB-K20
+                  ZNB20-B24
+                  ZNB-B81
+                  ZNB-B1
+                  ZNB20-B2
 
 
 Write:    "*CLS"
@@ -53,32 +45,32 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":INST:SMAT 0"
@@ -89,8 +81,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:COMM:RDEV:SMAT:DEL"
@@ -101,8 +93,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:COMM:RDEV:SMAT:COUN?"
@@ -121,8 +113,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":INST:SMAT 1"
@@ -167,6 +159,14 @@ Status: 0x0 Operation completed successfully.
 
 Read:     "1"
 Bytes: 2
+Status: 0x0 Operation completed successfully.
+
+Write:    ":CONF:CHAN:CAT?"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Read:     "'1,Ch1'"
+Bytes: 8
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? POIN"
@@ -225,8 +225,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -257,8 +257,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -281,8 +281,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -324,8 +324,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -356,8 +356,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -380,8 +380,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -423,8 +423,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -439,8 +439,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -455,8 +455,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -487,8 +487,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -511,8 +511,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -554,8 +554,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -570,8 +570,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -910,15 +910,15 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":INST:TPORT:COUN?"
 Bytes: 18
 Status: 0x0 Operation completed successfully.
 
-Read:     "26"
+Read:     "14"
 Bytes: 3
 Status: 0x0 Operation completed successfully.
 
@@ -936,6 +936,14 @@ Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR:DISP 0"
 Bytes: 17
+Status: 0x0 Operation completed successfully.
+
+Write:    ":CONF:CHAN:CAT?"
+Bytes: 16
+Status: 0x0 Operation completed successfully.
+
+Read:     "'1,Ch1'"
+Bytes: 8
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? POIN"
@@ -994,8 +1002,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -1026,8 +1034,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -1050,8 +1058,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -1093,8 +1101,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -1125,8 +1133,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -1149,8 +1157,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -1192,8 +1200,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -1208,8 +1216,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -1224,8 +1232,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:ERR?"
@@ -1256,8 +1264,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,1"
@@ -1280,8 +1288,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? MVNA,2"
@@ -1323,8 +1331,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -1339,8 +1347,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SENS1:CORR:DATA:PAR? TVNA"
@@ -1705,16 +1713,16 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":INST:SMAT 0"
@@ -1725,8 +1733,8 @@ Write:    "*IDN?"
 Bytes: 6
 Status: 0x0 Operation completed successfully.
 
-Read:     "Rohde-Schwarz,ZNBT8-16Port,1318700624100104,2.70"
-Bytes: 49
+Read:     "Rohde-Schwarz,ZNB20-4Port,1311601064100104,2.70"
+Bytes: 48
 Status: 0x0 Operation completed successfully.
 
 Write:    ":SYST:COMM:RDEV:SMAT:DEL"

@@ -3,6 +3,7 @@
 
 
 // Qt
+#include <QMetaType>
 #include <QString>
 
 
@@ -32,5 +33,7 @@ private:
     uint _channel;
     QString _calGroup;
 };
+
+Q_DECLARE_METATYPE(CalibrationSource)
 
 #endif // CALIBRATION_SOURCE_H

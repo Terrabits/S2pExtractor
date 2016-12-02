@@ -1,0 +1,16 @@
+Basic calibration:
+1 GHz - 2 GHz
+101 points
+ports 1, 2
+no switch matrix
+
+=> outer_ready.cal, inner_ready.cal
+
+
+For tests:
+
+| Cal file                 | Modification      |
+|--------------------------|-------------------|
+| outer_ready_missing_port | port 1 only       |
+| inner_ready_missing_port | port 1 only       |
+| inner_ready_freq         | 100 points        |
