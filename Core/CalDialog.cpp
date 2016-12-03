@@ -18,6 +18,9 @@ CalDialog::CalDialog(const QStringList &calGroups, const QVector<uint> &channels
     ui->setupUi(this);
     setCalGroupsList(calGroups);
     setChannelsList(channels);
+
+    setWindowFlags(windowFlags() | Qt::WindowTitleHint);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 CalDialog::~CalDialog()

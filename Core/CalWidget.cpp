@@ -8,6 +8,10 @@
 // RsaToolbox
 using namespace RsaToolbox;
 
+// Qt
+#include <QDebug>
+
+
 CalWidget::CalWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CalWidget),
@@ -34,7 +38,7 @@ void CalWidget::setSource(CalibrationSource source) {
 }
 
 void CalWidget::on_pushButton_clicked() {
-    CalDialog dialog(calGroups(), channels(), this);
+    CalDialog dialog(calGroups(), channels(), topLevelWidget());
     dialog.setSource(_source);
     dialog.exec();
 

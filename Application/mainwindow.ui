@@ -150,94 +150,6 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="outerLabel">
-         <property name="palette">
-          <palette>
-           <active>
-            <colorrole role="WindowText">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>15</red>
-               <green>87</green>
-               <blue>255</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </active>
-           <inactive>
-            <colorrole role="WindowText">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>15</red>
-               <green>87</green>
-               <blue>255</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </inactive>
-           <disabled>
-            <colorrole role="WindowText">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>120</red>
-               <green>120</green>
-               <blue>120</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </disabled>
-          </palette>
-         </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Outer Cal:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="outerCalEdit">
-         <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QPushButton" name="outerCalButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>31</width>
-           <height>28</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>31</width>
-           <height>28</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="innerLabel">
          <property name="palette">
@@ -288,44 +200,6 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="innerCalEdit">
-         <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QPushButton" name="innerCalButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>31</width>
-           <height>28</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>31</width>
-           <height>28</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>...</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="portsLabel">
          <property name="font">
@@ -339,22 +213,53 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QPushButton" name="portsButton">
-         <property name="minimumSize">
-          <size>
-           <width>31</width>
-           <height>28</height>
-          </size>
+       <item row="0" column="0">
+        <widget class="QLabel" name="outerLabel">
+         <property name="palette">
+          <palette>
+           <active>
+            <colorrole role="WindowText">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>15</red>
+               <green>87</green>
+               <blue>255</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </active>
+           <inactive>
+            <colorrole role="WindowText">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>15</red>
+               <green>87</green>
+               <blue>255</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </inactive>
+           <disabled>
+            <colorrole role="WindowText">
+             <brush brushstyle="SolidPattern">
+              <color alpha="255">
+               <red>120</red>
+               <green>120</green>
+               <blue>120</blue>
+              </color>
+             </brush>
+            </colorrole>
+           </disabled>
+          </palette>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>31</width>
-           <height>28</height>
-          </size>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
          </property>
          <property name="text">
-          <string>...</string>
+          <string>Outer Cal:</string>
          </property>
         </widget>
        </item>
@@ -370,6 +275,12 @@
           <bool>true</bool>
          </property>
         </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="CalWidget" name="outerCal" native="true"/>
+       </item>
+       <item row="1" column="1">
+        <widget class="CalWidget" name="innerCal" native="true"/>
        </item>
       </layout>
      </widget>
@@ -449,15 +360,16 @@
    <header>ErrorLabel.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>CalWidget</class>
+   <extends>QWidget</extends>
+   <header>CalWidget.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>portOrderCheckbox</tabstop>
-  <tabstop>outerCalEdit</tabstop>
-  <tabstop>outerCalButton</tabstop>
-  <tabstop>innerCalEdit</tabstop>
-  <tabstop>innerCalButton</tabstop>
   <tabstop>portsEdit</tabstop>
-  <tabstop>portsButton</tabstop>
   <tabstop>generateButton</tabstop>
  </tabstops>
  <resources>

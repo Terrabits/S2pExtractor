@@ -6,7 +6,8 @@
 //#include
 
 // RsaToolbox
-//#include
+#include <Keys.h>
+#include <Vna.h>
 
 // Qt
 #include <QMainWindow>
@@ -23,7 +24,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(RsaToolbox::Vna *vna, RsaToolbox::Keys *keys, QWidget *parent = 0);
     ~MainWindow();
 
 protected:
@@ -40,6 +41,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    RsaToolbox::Vna  *_vna;
+    RsaToolbox::Keys *_keys;
 
     void initPinwheel();
     QLabel _pinwheel;

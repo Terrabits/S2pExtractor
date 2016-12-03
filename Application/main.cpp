@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     if (isNoConnection(vna) || isUnknownModel(vna))
         return(0);
 
-    MainWindow w;
+    MainWindow w(&vna, &keys);
     w.setWindowFlags(w.windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowStaysOnTopHint);
     w.show();
     if (update.isUpdateDue())

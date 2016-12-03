@@ -18,15 +18,20 @@ using namespace RsaToolbox;
 #include <QMovie>
 
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(Vna *vna, Keys *keys, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    _vna(vna),
+    _keys(keys),
     _pinwheel(this)
+
 {
     ui->setupUi(this);
     setWindowTitle(APP_NAME + " " + APP_VERSION);
     ui->portOrderCheckbox->setVisible(false);
 
+    ui->outerCal->setVna(_vna);
+    ui->innerCal->setVna(_vna);
 }
 MainWindow::~MainWindow()
 {
