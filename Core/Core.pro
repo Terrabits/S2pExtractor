@@ -15,7 +15,8 @@ HEADERS     += Settings.h \
                Corrections.h \
     CalibrationSource.h \
     PortLoop.h \
-    Error.h
+    Error.h \
+    CalDialog.h
                ...
 INCLUDEPATH += $$PWD
 SOURCES     += CalculateThread.cpp \
@@ -24,10 +25,10 @@ SOURCES     += CalculateThread.cpp \
                Corrections.cpp \
     CalibrationSource.cpp \
     PortLoop.cpp \
-    Error.cpp
-FORMS       += getCalibrationDialog.ui \
-               getFilenamesDialog.ui \
-               getPortsDialog.ui
+    Error.cpp \
+    CalDialog.cpp
+FORMS       += \
+    CalDialog.ui
 OTHER_FILES += core.pri
 
 DEFINES     += SOURCE_DIR=\\\"$$PWD/\\\"

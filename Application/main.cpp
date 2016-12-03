@@ -5,8 +5,7 @@
 #include "mainwindow.h"
 
 // RsaToolbox
-
-#include <Log.h>
+#include <Keys.h>
 #include <Log.h>
 #include <Vna.h>
 #include <About.h>
@@ -120,4 +119,3 @@ bool isUnknownModel(Vna &vna) {
     else
         return(false);
 }
-
