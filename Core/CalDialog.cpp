@@ -4,6 +4,7 @@
 
 // RsaToolbox
 #include <General.h>
+#include <Shake.h>
 using namespace RsaToolbox;
 
 // Qt
@@ -35,7 +36,8 @@ void CalDialog::setSource(CalibrationSource source) {
 void CalDialog::accept() {
     _source = selectedSource();
     if (_source.isEmpty()) {
-        ui->error->showMessage("*please select calibration");
+        ui->error->showMessage("*select calibration");
+        shake(this);
         return;
     }
 
@@ -144,7 +146,9 @@ void CalDialog::selectSource() {
         const QString selection = _source.calGroup();
         for (int i = 0; i < _calGroups.size(); i++) {
             const QString cal = _calGroups[i];
-            if (cal.compare(selection, Qt::CaseInsensitive)) {
+            if (cal.compare(selection, Qt::CaseInsensitive) == 0) {
+                ui->tabWidget->setCurrentWidget(ui->calGroupsTab);
+                ui->calGroups->setFocus();
                 ui->calGroups->setCurrentRow(i);
                 return;
             }
@@ -155,6 +159,8 @@ void CalDialog::selectSource() {
         for (int i = 0; i < _channels.size(); i++) {
             const uint ch = _channels[i];
             if (ch == selection) {
+                ui->tabWidget->setCurrentWidget(ui->channelsTab);
+                ui->channels->setFocus();
                 ui->channels->setCurrentRow(i);
                 return;
             }

@@ -3,6 +3,7 @@
 // Project
 #include "Settings.h"
 #include "CalDialog.h"
+#include "CalWidget.h"
 
 // RsaToolbox
 #include <Keys.h>
@@ -30,18 +31,20 @@ int main(int argc, char *argv[])
     vna.useLog(&log);
     vna.printInfo();
 
-    QStringList calGroups;
-    calGroups << "cal group 1"
-              << "cal group 2.cal"
-              << "cal group 3";
+//    QStringList calGroups;
+//    calGroups << "cal group 1"
+//              << "cal group 2.cal"
+//              << "cal group 3";
 
-    QVector<uint> channels;
-    channels << 1 << 2 << 3;
+//    QVector<uint> channels;
+//    channels << 1 << 2 << 3;
 
-    CalDialog calDialog(calGroups, channels);
+//    CalDialog calDialog(calGroups, channels);
+//    calDialog.exec();
+//    qDebug() << "Selected: " << calDialog.source().displayText();
 
-    calDialog.exec();
-
-    qDebug() << "Selected: " << calDialog.source().displayText();
-    return 0;
+    CalWidget widget;
+    widget.setVna(&vna);
+    widget.show();
+    return a.exec();
 }
