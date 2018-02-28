@@ -30,7 +30,10 @@ public:
     RsaToolbox::NetworkData result(uint port) const;
 
 signals:
+    void started();
     void progress(int percent);
+    void error(QString message);
+    void finished();
 
 public slots:
     void run();

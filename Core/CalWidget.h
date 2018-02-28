@@ -4,6 +4,7 @@
 
 // Project
 #include "CalibrationSource.h"
+#include "labeledbutton.h"
 
 // RsaToolbox
 #include <Vna.h>
@@ -11,12 +12,7 @@
 // Qt
 #include <QWidget>
 
-
-namespace Ui {
-class CalWidget;
-}
-
-class CalWidget : public QWidget
+class CalWidget : public LabeledButton
 {
     Q_OBJECT
 
@@ -29,17 +25,19 @@ public:
     CalibrationSource source() const;
     void setSource(CalibrationSource source);
 
+signals:
+    void sourceChanged(CalibrationSource source);
+
 private slots:
-    void on_pushButton_clicked();
+    void showDialog();
 
 private:
-    Ui::CalWidget *ui;
-    void updateDisplay();
+    void updateLabel();
 
     bool isVna() const;
     RsaToolbox::Vna  *_vna;
     QStringList calGroups();
-    QVector<uint> channels();
+    QVector<uint> calibratedChannels();
 
     CalibrationSource _source;
 };

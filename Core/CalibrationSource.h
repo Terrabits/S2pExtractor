@@ -34,6 +34,8 @@ private:
     QString _calGroup;
 };
 
+bool operator==(const CalibrationSource &left, const CalibrationSource &right);
+bool operator!=(const CalibrationSource &left, const CalibrationSource &right);
 Q_DECLARE_METATYPE(CalibrationSource)
 
 #endif // CALIBRATION_SOURCE_H

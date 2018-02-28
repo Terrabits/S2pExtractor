@@ -15,7 +15,7 @@
 
 QT      += core gui widgets #printsupport
 
-TARGET = PACompressionTest
+TARGET = S2PExtractor
 TEMPLATE = app
 
 include(../Core/core.pri)

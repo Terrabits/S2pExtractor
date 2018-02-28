@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
         return(0);
 
     MainWindow w(&vna, &keys);
-    w.setWindowFlags(w.windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowStaysOnTopHint);
+//    w.setWindowFlags(w.windowFlags() | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowStaysOnTopHint);
     w.show();
     if (update.isUpdateDue())
             update.automaticUpdate();

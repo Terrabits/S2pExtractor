@@ -92,3 +92,15 @@ void CalibrationSourceTest::switchSource() {
     QCOMPARE(calGroup, source.calGroup());
     QCOMPARE(calGroup, source.displayText());
 }
+void CalibrationSourceTest::assignmentOperator() {
+    CalibrationSource source1;
+    CalibrationSource source2("Cal Group");
+    QVERIFY (source1.isEmpty());
+    QVERIFY (source2.isCalGroup());
+    QCOMPARE(source2.calGroup(), QString("Cal Group"));
+
+    source1 = source2;
+    QVERIFY(!source1.isEmpty());
+    QVERIFY (source1.isCalGroup());
+    QCOMPARE(source1.calGroup(), QString("Cal Group"));
+}

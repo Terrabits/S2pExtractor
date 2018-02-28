@@ -9,6 +9,7 @@ using namespace RsaToolbox;
 
 // Qt
 #include <QDebug>
+#include <QMouseEvent>
 
 
 CalDialog::CalDialog(const QStringList &calGroups, const QVector<uint> &channels, QWidget *parent) :
@@ -21,6 +22,7 @@ CalDialog::CalDialog(const QStringList &calGroups, const QVector<uint> &channels
 
     setWindowFlags(windowFlags() | Qt::WindowTitleHint);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    ui->tabWidget->setFocus();
 }
 
 CalDialog::~CalDialog()

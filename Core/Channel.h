@@ -20,9 +20,29 @@ public:
     Channel(CalibrationSource source, RsaToolbox::Vna *vna);
     ~Channel();
 
+    class Error {
+    public:
+        enum Code {
+            NoSource,
+            ChannelMissing,
+            CalGroupMissing,
+            CalGroupProblem,
+            NoCalData,
+            None
+        };
+        Error();
+
+        Code  code;
+        QString message;
+
+        bool isError() const;
+        void clear();
+    };
+
     bool isChannel() const;
     bool isCalibrated() const;
     bool isReady() const;
+    bool isReady(Error &error) const;
     RsaToolbox::VnaCorrections corrections() const;
 
     // Unnecessary?
@@ -36,10 +56,8 @@ private:
     mutable RsaToolbox::Vna *_vna;
 
     void clear();
-    bool vnaHasChannel(uint c);
-    bool vnaHasCalGroup(const QString &calGroup);
-    void setChannel(uint c);
-    void setCalGroup(const QString &calGroup);
+    void processChannel(uint c);
+    void processCalGroup(const QString &calGroup);
     void cleanup();
 };
 

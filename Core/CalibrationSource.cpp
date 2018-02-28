@@ -64,3 +64,21 @@ QString CalibrationSource::displayText() const {
 
     return QString();
 }
+
+bool operator==(const CalibrationSource &left, const CalibrationSource &right) {
+    if (left.isEmpty() && right.isEmpty()) {
+        return true;
+    }
+    if (left.isChannel() && right.isChannel()) {
+        return left.channel() == right.channel();
+    }
+    if (left.isCalGroup() && right.isCalGroup()) {
+        return (left.calGroup().compare(right.calGroup(), Qt::CaseInsensitive) == 0);
+    }
+
+    // different source types
+    return false;
+}
+bool operator!=(const CalibrationSource &left, const CalibrationSource &right) {
+    return !(left == right);
+}

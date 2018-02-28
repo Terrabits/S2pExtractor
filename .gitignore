@@ -1,3 +1,13 @@
 # Whatever local build exists
 build/
 _build/
+Application/DEBUG_LOGFILE.txt
+Application/Keys
+UnitTests/CoreUnitTests/CalculateTest/Zva/Logs/
+UnitTests/CoreUnitTests/CalculateTest/Zva/Results/
+UnitTests/CoreUnitTests/CalculateTest/Znb/Logs/
+UnitTests/CoreUnitTests/CalculateTest/Znb/Results/
+UnitTests/CoreUnitTests/ChannelTest/Zva/Logs/
+UnitTests/CoreUnitTests/ChannelTest/Znb/Logs/
+UnitTests/CoreUnitTests/CorrectionsTest/Zva/Logs/
+UnitTests/CoreUnitTests/CorrectionsTest/Znb/Logs/

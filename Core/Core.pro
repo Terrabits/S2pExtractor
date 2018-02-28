@@ -9,7 +9,6 @@ CONFIG(debug, debug|release): TARGET = $$join(TARGET,,,d)
 
 include($$PWD/../RsaToolbox/rsatoolbox.pri)
 HEADERS     += Settings.h \
-               CalculateThread.h \
                Calculate.h \
                Channel.h \
                Corrections.h \
@@ -17,10 +16,17 @@ HEADERS     += Settings.h \
     PortLoop.h \
     Error.h \
     CalDialog.h \
-    CalWidget.h
+    CalWidget.h \
+    labeledbutton.h \
+    portswidget.h \
+    filenamedelegate.h \
+    tabthroughtable.h \
+    commonports.h \
+    fixfilenameextensions.h \
+    saveresults.h
                ...
 INCLUDEPATH += $$PWD
-SOURCES     += CalculateThread.cpp \
+SOURCES     += \
                Calculate.cpp \
                Channel.cpp \
                Corrections.cpp \
@@ -28,13 +34,24 @@ SOURCES     += CalculateThread.cpp \
     PortLoop.cpp \
     Error.cpp \
     CalDialog.cpp \
-    CalWidget.cpp
+    CalWidget.cpp \
+    labeledbutton.cpp \
+    portswidget.cpp \
+    filenamedelegate.cpp \
+    tabthroughtable.cpp \
+    commonports.cpp \
+    fixfilenameextensions.cpp \
+    saveresults.cpp
 FORMS       += \
     CalDialog.ui \
-    CalWidget.ui
+    labeledbutton.ui \
+    portswidget.ui
 OTHER_FILES += core.pri
 
 DEFINES     += SOURCE_DIR=\\\"$$PWD/\\\"
 CONFIG(debug, debug|release):DEFINES += DEBUG_MODE
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
+
+RESOURCES += \
+    coreresources.qrc
 

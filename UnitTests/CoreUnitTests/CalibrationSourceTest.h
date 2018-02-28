@@ -20,6 +20,7 @@ private slots:
     void channel();
     void calGroup();
     void switchSource();
+    void assignmentOperator();
 };
 
 #endif // CALIBRATIONSOURCETEST_H

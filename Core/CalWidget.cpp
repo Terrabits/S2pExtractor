@@ -1,5 +1,4 @@
 #include "CalWidget.h"
-#include "ui_CalWidget.h"
 
 
 // Project
@@ -13,16 +12,15 @@ using namespace RsaToolbox;
 
 
 CalWidget::CalWidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::CalWidget),
+    LabeledButton(parent),
     _vna(0)
 {
-    ui->setupUi(this);
+    connect(this, SIGNAL(buttonClicked()),
+            this, SLOT(showDialog()));
 }
 
 CalWidget::~CalWidget()
 {
-    delete ui;
 }
 
 void CalWidget::setVna(Vna *vna) {
@@ -33,27 +31,29 @@ CalibrationSource CalWidget::source() const {
     return _source;
 }
 void CalWidget::setSource(CalibrationSource source) {
+    if (_source == source)
+        return;
+
     _source = source;
-    updateDisplay();
+    updateLabel();
+    emit sourceChanged(_source);
 }
 
-void CalWidget::on_pushButton_clicked() {
-    CalDialog dialog(calGroups(), channels(), topLevelWidget());
+void CalWidget::showDialog() {
+    CalDialog dialog(calGroups(), calibratedChannels(), topLevelWidget());
     dialog.setSource(_source);
     dialog.exec();
-
     if (dialog.result() == QDialog::Accepted) {
-        _source = dialog.source();
-        updateDisplay();
+        setSource(dialog.source());
     }
 }
 
-void CalWidget::updateDisplay() {
+void CalWidget::updateLabel() {
     if (!_source.isEmpty()) {
-        ui->lineEdit->setText(_source.displayText());
+        setLabel(_source.displayText());
     }
     else {
-        ui->lineEdit->clear();
+        clearLabel();
     }
 }
 
@@ -64,7 +64,7 @@ bool CalWidget::isVna() const {
 QStringList CalWidget::calGroups() {
     return _vna->calGroups();
 }
-QVector<uint> CalWidget::channels() {
+QVector<uint> CalWidget::calibratedChannels() {
     QVector<uint> result;
     foreach (uint c, _vna->channels()) {
         if (_vna->channel(c).isCalibrated())

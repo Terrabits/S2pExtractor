@@ -37,10 +37,12 @@ void Error::clear() {
 }
 
 QString Error::display() const {
-    if (!isError())
+    if (!isError()) {
         return "No Error";
-    if (code == Code::Other)
+    }
+    if (code == Code::Other) {
         return message;
+    }
 
     QString s = "%1: %2";
     s = s.arg(toString(code));

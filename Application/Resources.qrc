@@ -1,14 +1,7 @@
 <RCC>
-    <qresource prefix="/diagrams">
+    <qresource prefix="/">
         <file>RS.ico</file>
-        <file>Images/CalPlanes_60.png</file>
-        <file>Images/CalPlanes_90.png</file>
-        <file>Images/CalPlanes_120.png</file>
-        <file>Images/CalPlanes_150.png</file>
-        <file>Images/CalPlanes_Reverse_60.png</file>
-        <file>Images/CalPlanes_Reverse_90.png</file>
-        <file>Images/CalPlanes_Reverse_120.png</file>
-        <file>Images/CalPlanes_Reverse_150.png</file>
-        <file>Images/pinwheel.gif</file>
+        <file>Images/cal planes.png</file>
+        <file>Images/cal planes reversed ports.png</file>
     </qresource>
 </RCC>
