@@ -40,6 +40,7 @@ void PortsWidget::setPorts(const QVector<uint> &ports) {
         }
     }
     applyHistory();
+    applyDefaults();
     updateTable();
 }
 void PortsWidget::setFilenames(const QMap<uint, QString> &filenames) {
@@ -179,6 +180,15 @@ void PortsWidget::applyHistory() {
     foreach (const uint port, ports()) {
         if (_history.contains(port)) {
             _filenames[port] = _history[port];
+        }
+    }
+}
+
+void PortsWidget::applyDefaults() {
+    QList<uint> _ports = ports();
+    foreach (const uint port, _ports) {
+        if (_filenames[port].isEmpty()) {
+            _filenames[port] = QString("port%1.s2p").arg(port);
         }
     }
 }

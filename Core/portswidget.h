@@ -49,6 +49,7 @@ private:
     QMap<uint, QString> _history;
     void updateHistory();
     void applyHistory();
+    void applyDefaults();
 };
 
 #endif // PORTSWIDGET_H

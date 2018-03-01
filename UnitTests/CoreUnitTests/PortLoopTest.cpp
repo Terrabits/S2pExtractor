@@ -43,7 +43,7 @@ void PortLoopTest::oneOfTwoPortsProcessed() {
     QCOMPARE(uint(1), loop.port1());
     QCOMPARE(uint(2), loop.port2());
     QVERIFY(!loop.isPort2Unprocessed());
-    loop.usePorts();
+    loop.markBothPortsProcessed();
     loop.end();
     QVERIFY(!loop.isUnprocessedPorts());
 }
@@ -57,7 +57,7 @@ void PortLoopTest::twoPortsProcessed() {
     QCOMPARE(uint(1), loop.port1());
     QVERIFY(loop.isPort2Unprocessed());
     QCOMPARE(uint(2), loop.port2());
-    loop.usePorts();
+    loop.markBothPortsProcessed();
     loop.end();
     QVERIFY(!loop.isUnprocessedPorts());
 }
@@ -88,7 +88,7 @@ void PortLoopTest::manyPortsProcessed() {
     QCOMPARE(uint(2), loop.port1());
     QCOMPARE(uint(1), loop.port2());
     QVERIFY(!loop.isPort2Unprocessed());
-    loop.usePorts();
+    loop.markBothPortsProcessed();
     loop.end();
 
     // Ports: 3, 4
@@ -97,7 +97,7 @@ void PortLoopTest::manyPortsProcessed() {
     QCOMPARE(uint(3), loop.port1());
     QCOMPARE(uint(4), loop.port2());
     QVERIFY(loop.isPort2Unprocessed());
-    loop.usePorts();
+    loop.markBothPortsProcessed();
     loop.end();
 
     // No ports left

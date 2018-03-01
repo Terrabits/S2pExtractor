@@ -10,8 +10,9 @@ Corrections::Corrections(uint port1, Ports ports, CalibrationSource source, Vna 
     _port2(0)
 {
     int index = ports.indexOf(port1);
-    if (index != -1)
+    if (index != -1) {
         ports.remove(index);
+    }
 
     vna->isError();
     vna->clearStatus();
@@ -20,12 +21,15 @@ Corrections::Corrections(uint port1, Ports ports, CalibrationSource source, Vna 
         Corrections attempt(port1, port2, source, vna);
         if (attempt.isPort1Corrections()) {
             (*this) = attempt;
+            // clear port 2
             _port2 = 0;
             _directivity2.clear();
             _reflectionTracking2.clear();
             _sourceMatch2.clear();
             break;
         }
+        vna->isError();
+        vna->clearStatus();
     }
     vna->isError();
     vna->clearStatus();
@@ -113,13 +117,15 @@ uint Corrections::port1() const {
 }
 bool Corrections::isPort1Corrections() const {
     const int size = _directivity1.size();
-    if (size == 0)
+    if (size == 0) {
         return false;
-    if (_reflectionTracking1.size() != size)
+    }
+    if (_reflectionTracking1.size() != size) {
         return false;
-    if (_sourceMatch1.size() != size)
+    }
+    if (_sourceMatch1.size() != size) {
         return false;
-
+    }
     return true;
 }
 ComplexRowVector Corrections::directivity1() const {

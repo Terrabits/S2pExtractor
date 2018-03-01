@@ -1,8 +1,9 @@
 #include "filenamedelegate.h"
 
+#include "filenames.h"
+
 #include <QLineEdit>
 #include <QRegExpValidator>
-#include <QStringBuilder>
 
 FilenameDelegate::FilenameDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
@@ -13,11 +14,7 @@ QWidget *FilenameDelegate::createEditor(QWidget *parent, const QStyleOptionViewI
     QWidget *editor = QStyledItemDelegate::createEditor(parent, option, index);
     QLineEdit *lineEdit = qobject_cast<QLineEdit*>(editor);
     if (lineEdit) {
-        const QString onlyChar   = "[\\w-\\\\(\\)\\[\\]&%#@! ]";
-        const QString endChar    = "[\\w-\\\\(\\)\\[\\]&%#@! ]";
-        const QString middleChars = "[\\w-\\.\\(\\)\\[\\]&%#@! ]*";
-        QRegExp regex(onlyChar % "|(" % endChar % middleChars % endChar % ")");
-        QValidator *v = new QRegExpValidator(regex, lineEdit);
+        QValidator *v = new QRegExpValidator(filenameRegex(), lineEdit);
         lineEdit->setValidator(v);
     }
     return editor;

@@ -34,7 +34,7 @@ const QString INSTRUMENT_ADDRESS  = "127.0.0.1::5025";
 const unsigned int TIMEOUT_MS     = 1000;
 
 // Keys
-const QString MY_KEY = "KEY";
+//const QString MY_KEY = "KEY";
 
 
 #endif

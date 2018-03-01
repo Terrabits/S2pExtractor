@@ -20,7 +20,8 @@ public:
     bool isPort2Unprocessed() const;
     uint port2() const;
 
-    void usePorts();
+    void markPortProcessed(uint port);
+    void markBothPortsProcessed();
     bool next();
     uint percentComplete() const;
     void end();
@@ -31,7 +32,6 @@ private:
     QVector<uint> _remainderPorts;
 
     bool isPortUnprocessed(uint port) const;
-    void markPortProcessed(uint port);
 
     uint _port1;
     uint _port2;

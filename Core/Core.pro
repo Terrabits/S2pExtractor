@@ -23,7 +23,10 @@ HEADERS     += Settings.h \
     tabthroughtable.h \
     commonports.h \
     fixfilenameextensions.h \
-    saveresults.h
+    saveresults.h \
+    statuswidget.h \
+    savedirectory.h \
+    filenames.h
                ...
 INCLUDEPATH += $$PWD
 SOURCES     += \
@@ -41,11 +44,15 @@ SOURCES     += \
     tabthroughtable.cpp \
     commonports.cpp \
     fixfilenameextensions.cpp \
-    saveresults.cpp
+    saveresults.cpp \
+    statuswidget.cpp \
+    savedirectory.cpp \
+    filenames.cpp
 FORMS       += \
     CalDialog.ui \
     labeledbutton.ui \
-    portswidget.ui
+    portswidget.ui \
+    statuswidget.ui
 OTHER_FILES += core.pri
 
 DEFINES     += SOURCE_DIR=\\\"$$PWD/\\\"

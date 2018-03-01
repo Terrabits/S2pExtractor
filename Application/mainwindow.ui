@@ -100,7 +100,7 @@
     </item>
     <item>
      <widget class="QWidget" name="calSection" native="true">
-      <layout class="QGridLayout">
+      <layout class="QGridLayout" columnstretch="0,1" columnminimumwidth="0,0">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -157,13 +157,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="CalWidget" name="outerCal" native="true">
-         <property name="focusPolicy">
-          <enum>Qt::StrongFocus</enum>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="innerLabel">
          <property name="palette">
@@ -204,7 +197,7 @@
           </palette>
          </property>
          <property name="text">
-          <string>Inner Cal:</string>
+          <string>Inner Cal</string>
          </property>
         </widget>
        </item>
@@ -215,6 +208,23 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="1">
+        <widget class="CalWidget" name="outerCal" native="true">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Save location</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="SaveDirectory" name="directory" native="true"/>
+       </item>
       </layout>
      </widget>
     </item>
@@ -223,6 +233,7 @@
       <property name="focusPolicy">
        <enum>Qt::StrongFocus</enum>
       </property>
+      <zorder>directory</zorder>
      </widget>
     </item>
     <item>
@@ -233,7 +244,7 @@
      </widget>
     </item>
     <item>
-     <widget class="RsaToolbox::ErrorLabel" name="error" native="true">
+     <widget class="StatusWidget" name="status" native="true">
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -305,12 +316,6 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>RsaToolbox::ErrorLabel</class>
-   <extends>QWidget</extends>
-   <header>ErrorLabel.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>CalWidget</class>
    <extends>QWidget</extends>
    <header>CalWidget.h</header>
@@ -320,6 +325,18 @@
    <class>PortsWidget</class>
    <extends>QWidget</extends>
    <header>portswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>StatusWidget</class>
+   <extends>QWidget</extends>
+   <header>statuswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SaveDirectory</class>
+   <extends>QWidget</extends>
+   <header>savedirectory.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

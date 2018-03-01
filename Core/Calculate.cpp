@@ -106,7 +106,7 @@ bool Calculate::isReady(Error &error) {
     }
 
     // No common ports
-    if (!_commonPorts.isEmpty()) {
+    if (_commonPorts.isEmpty()) {
         error.code = Error::Code::Other;
         error.message = "*no common ports found between calibrations";
         return false;
@@ -166,20 +166,27 @@ void Calculate::run() {
 
             // Process Port 1
             success = true;
-            loop.usePorts();
             loop.end();
             setResult(loop.port1(), processPort1(outerCorrections, innerCorrections));
+            loop.markPortProcessed(loop.port1());
+            emit progress(loop.percentComplete());
 
-            if (!_ports.contains(loop.port2()))
+            if (!loop.isPort2Unprocessed()) {
                 continue;
-            if (!outerCorrections.isPort2Corrections())
+            }
+            if (!_ports.contains(loop.port2())) {
                 continue;
-            if (!innerCorrections.isPort2Corrections())
+            }
+            if (!outerCorrections.isPort2Corrections()) {
                 continue;
+            }
+            if (!innerCorrections.isPort2Corrections()) {
+                continue;
+            }
 
             // Process Port 2
             setResult(loop.port2(), processPort2(outerCorrections, innerCorrections));
-
+            loop.markPortProcessed(loop.port2());
             emit progress(loop.percentComplete());
         } while (loop.next());
 
@@ -188,10 +195,10 @@ void Calculate::run() {
             QString msg = "Could not find corrections for port %1";
             msg = msg.arg(loop.port1());
             setError(Error::Code::Other, msg);
+            emit error(msg);
             break;
         }
     }
-    emit progress(100);
     emit finished();
 }
 

@@ -48,6 +48,7 @@ private slots:
     void on_generate_clicked();
 
     void showError(const QString &message);
+    void showProgress(int percent, const QString &format = "%p%");
     void enableInputs();
     void disableInputs();
     void updateCals();
@@ -57,6 +58,9 @@ private:
 
     RsaToolbox::Vna  *_vna;
     RsaToolbox::Keys *_keys;
+    void saveKeys();
+    void loadKeys();
+    bool checkFilePaths();
 
     bool _isError;
     QScopedPointer<Calculate>   _calculate;

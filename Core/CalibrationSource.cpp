@@ -65,6 +65,27 @@ QString CalibrationSource::displayText() const {
     return QString();
 }
 
+void CalibrationSource::read(QDataStream &stream) {
+    clear();
+    quint32 _quint32;
+    stream >> _quint32;
+    _channel = _quint32;
+    stream >> _calGroup;
+}
+void CalibrationSource::write(QDataStream &stream) const {
+    stream << quint32(_channel);
+    stream << _calGroup;
+}
+
+QDataStream &operator<<(QDataStream &stream, const CalibrationSource &source) {
+    source.write(stream);
+    return stream;
+}
+QDataStream &operator>>(QDataStream &stream, CalibrationSource &source) {
+    source.read(stream);
+    return stream;
+}
+
 bool operator==(const CalibrationSource &left, const CalibrationSource &right) {
     if (left.isEmpty() && right.isEmpty()) {
         return true;

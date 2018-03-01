@@ -6,7 +6,7 @@ PortLoop::PortLoop(QVector<uint> portsToProcess, QVector<uint> allPorts) :
 {
     _unprocessedPorts = portsToProcess;
 //    _processedPorts.clear();
-    foreach (uint port, allPorts) {
+    foreach (const uint port, allPorts) {
         if (!portsToProcess.contains(port))
             _remainderPorts.append(port);
     }
@@ -20,10 +20,7 @@ bool PortLoop::isUnprocessedPorts() const {
     return !_unprocessedPorts.isEmpty();
 }
 void PortLoop::begin() {
-    _port1 = 0;
-    _port2 = 0;
     _portList.clear();
-
     _portList += _unprocessedPorts;
     _portList += _processedPorts;
     _portList += _remainderPorts;
@@ -47,7 +44,7 @@ bool PortLoop::next() {
     _port2 = _portList.takeFirst();
     return true;
 }
-void PortLoop::usePorts() {
+void PortLoop::markBothPortsProcessed() {
     markPortProcessed(port1());
     markPortProcessed(port2());
 }

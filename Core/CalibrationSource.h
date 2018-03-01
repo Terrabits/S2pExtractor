@@ -3,6 +3,7 @@
 
 
 // Qt
+#include <QDataStream>
 #include <QMetaType>
 #include <QString>
 
@@ -16,6 +17,7 @@ public:
     ~CalibrationSource();
 
     bool isEmpty() const;
+    void clear();
 
     bool isChannel() const;
     uint channel() const;
@@ -25,14 +27,18 @@ public:
     QString calGroup() const;
     void setCalGroup(QString calGroup);
 
-    void clear();
-
     QString displayText() const;
+
+    void read (QDataStream &stream);
+    void write(QDataStream &stream) const;
 
 private:
     uint _channel;
     QString _calGroup;
 };
+
+QDataStream &operator<<(QDataStream &stream, const CalibrationSource &source);
+QDataStream &operator>>(QDataStream &stream, CalibrationSource &source);
 
 bool operator==(const CalibrationSource &left, const CalibrationSource &right);
 bool operator!=(const CalibrationSource &left, const CalibrationSource &right);
