@@ -20,8 +20,8 @@ using namespace RsaToolbox;
 #include <QDebug>
 
 
-CalculateTest::CalculateTest(QObject *parent) :
-    VnaTestClass(parent)
+CalculateTest::CalculateTest(ConnectionType type, const QString &address, QObject *parent) :
+    VnaTestClass(type, address, parent)
 {
     _logDir = QDir(SOURCE_DIR);
     _logDir.mkpath("CalculateTest");

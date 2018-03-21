@@ -30,7 +30,7 @@ const QString JSON_UPDATE_URL     = "https://vna.rs-us.net/applications/s2p_extr
 // Connection settings
 const RsaToolbox::ConnectionType CONNECTION_TYPE
                                   = RsaToolbox::ConnectionType::VisaTcpSocketConnection;
-const QString INSTRUMENT_ADDRESS  = "127.0.0.1::5025";
+const QString INSTRUMENT_ADDRESS  = "192.168.86.53::5025";
 const unsigned int TIMEOUT_MS     = 1000;
 
 // Keys

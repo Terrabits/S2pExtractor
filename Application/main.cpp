@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
 
     Log log(LOG_FILENAME, APP_NAME, APP_VERSION);
     log.printHeader();
+    qDebug() << "log? " << log.isOpen() << log.filename();
 
     Vna vna(CONNECTION_TYPE, INSTRUMENT_ADDRESS);
     vna.useLog(&log);

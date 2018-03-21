@@ -14,7 +14,7 @@ class ChannelTest : public RsaToolbox::VnaTestClass
 {
     Q_OBJECT
 public:
-    explicit ChannelTest(QObject *parent = 0);
+    ChannelTest(RsaToolbox::ConnectionType type, const QString &address, QObject *parent = 0);
     ~ChannelTest();
 
 private slots:

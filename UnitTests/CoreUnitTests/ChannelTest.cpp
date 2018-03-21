@@ -9,8 +9,8 @@
 using namespace RsaToolbox;
 
 
-ChannelTest::ChannelTest(QObject *parent) :
-    VnaTestClass(parent)
+ChannelTest::ChannelTest(RsaToolbox::ConnectionType type, const QString &address, QObject *parent) :
+    VnaTestClass(type, address, parent)
 {
     _logDir = QDir(SOURCE_DIR);
     _logDir.mkpath("ChannelTest");

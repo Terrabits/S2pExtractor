@@ -28,17 +28,17 @@ public:
     // Port 1
     uint port1() const;
     bool isPort1Corrections() const;
-    RsaToolbox::ComplexRowVector directivity1() const;
+    RsaToolbox::ComplexRowVector directivity1       () const;
     RsaToolbox::ComplexRowVector reflectionTracking1() const;
-    RsaToolbox::ComplexRowVector sourceMatch1() const;
+    RsaToolbox::ComplexRowVector sourceMatch1       () const;
 
     // Port 2
     bool isPort2() const;
-    uint port2() const;
+    uint port2  () const;
     bool isPort2Corrections() const;
-    RsaToolbox::ComplexRowVector directivity2() const;
+    RsaToolbox::ComplexRowVector directivity2       () const;
     RsaToolbox::ComplexRowVector reflectionTracking2() const;
-    RsaToolbox::ComplexRowVector sourceMatch2() const;
+    RsaToolbox::ComplexRowVector sourceMatch2       () const;
 
     void operator=(const Corrections &other);
 
@@ -58,6 +58,8 @@ private:
     RsaToolbox::ComplexRowVector _directivity2;
     RsaToolbox::ComplexRowVector _reflectionTracking2;
     RsaToolbox::ComplexRowVector _sourceMatch2;
+
+    void clearCorrections();
 };
 
 #endif // CORRECTIONS_H

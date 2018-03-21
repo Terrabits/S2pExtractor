@@ -15,7 +15,7 @@ class CalculateTest : public RsaToolbox::VnaTestClass
 {
     Q_OBJECT
 public:
-    explicit CalculateTest(QObject *parent = 0);
+    explicit CalculateTest(RsaToolbox::ConnectionType type, const QString &address, QObject *parent = 0);
     ~CalculateTest();
 
 private slots:

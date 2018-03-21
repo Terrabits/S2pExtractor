@@ -15,7 +15,7 @@ class CorrectionsTest : public RsaToolbox::VnaTestClass
 {
     Q_OBJECT
 public:
-    explicit CorrectionsTest(QObject *parent = 0);
+    CorrectionsTest(RsaToolbox::ConnectionType type, const QString &address, QObject *parent = 0);
     ~CorrectionsTest();
 
 private slots:

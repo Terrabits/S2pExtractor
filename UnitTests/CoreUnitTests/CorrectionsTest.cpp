@@ -16,8 +16,8 @@ using namespace RsaToolbox;
 #include <QTest>
 
 
-CorrectionsTest::CorrectionsTest(QObject *parent) :
-    VnaTestClass(parent)
+CorrectionsTest::CorrectionsTest(ConnectionType type, const QString &address, QObject *parent) :
+    VnaTestClass(type, address, parent)
 {
     _logDir.setPath(SOURCE_DIR);
     _logDir.mkpath("CorrectionsTest");

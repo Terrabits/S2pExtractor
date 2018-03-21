@@ -6,6 +6,7 @@
 #include "CalibrationSourceTest.h"
 #include "ChannelTest.h"
 #include "PortLoopTest.h"
+#include "Settings.h"
 
 // RsaToolbox
 #include <General.h>
@@ -23,9 +24,9 @@ int main() {
     TestRunner testRunner;
     testRunner.addTest(new PortLoopTest);
     testRunner.addTest(new CalibrationSourceTest);
-    testRunner.addTest(new ChannelTest);
-    testRunner.addTest(new CorrectionsTest);
-    testRunner.addTest(new CalculateTest);
+    testRunner.addTest(new ChannelTest(CONNECTION_TYPE, INSTRUMENT_ADDRESS));
+    testRunner.addTest(new CorrectionsTest(CONNECTION_TYPE, INSTRUMENT_ADDRESS));
+    testRunner.addTest(new CalculateTest(CONNECTION_TYPE, INSTRUMENT_ADDRESS));
 
     qDebug() << "Global result: " << (testRunner.runTests() ? "PASS" : "FAIL");
     return 0;

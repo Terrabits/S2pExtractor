@@ -14,8 +14,6 @@ Corrections::Corrections(uint port1, Ports ports, CalibrationSource source, Vna 
         ports.remove(index);
     }
 
-    vna->isError();
-    vna->clearStatus();
     vna->settings().errorDisplayOff();
     foreach (uint port2, ports) {
         Corrections attempt(port1, port2, source, vna);
@@ -23,16 +21,12 @@ Corrections::Corrections(uint port1, Ports ports, CalibrationSource source, Vna 
             (*this) = attempt;
             // clear port 2
             _port2 = 0;
-            _directivity2.clear();
+            _directivity2       .clear();
             _reflectionTracking2.clear();
-            _sourceMatch2.clear();
+            _sourceMatch2       .clear();
             break;
         }
-        vna->isError();
-        vna->clearStatus();
     }
-    vna->isError();
-    vna->clearStatus();
     vna->settings().errorDisplayOn();
 }
 Corrections::Corrections(uint port1, uint port2, CalibrationSource source, Vna *vna) :
@@ -40,53 +34,62 @@ Corrections::Corrections(uint port1, uint port2, CalibrationSource source, Vna *
     _port2(port2)
 {
     Channel channel(source, vna);
-    _frequencies_Hz = channel.frequencies_Hz();
+    if (!channel.isReady()) {
+        return;
+    }
 
-    uint switchMatrices = channel.corrections().switchMatrices();
+    VnaCorrections corrections
+                    = channel.corrections();
+    _frequencies_Hz = corrections.frequencies_Hz();
+    if (_frequencies_Hz.isEmpty()) {
+        vna->clearStatus();
+        vna->isError();
+        return;
+    }
 
-    // Logical port -> Physical vna port(s)
-    QVector<uint> port1VnaPorts = findVnaPorts(channel, _port1);
-    QVector<uint> port2VnaPorts = findVnaPorts(channel, _port2);
+    uint switchMatrices = corrections.switchMatrices();
 
     // No switch matrices:
     // logical == physical
     if (!switchMatrices) {
-        _directivity1 = channel.corrections().directivity(port2, port1);
-        _reflectionTracking1 = channel.corrections().reflectionTracking(port2, port1);
-        _sourceMatch1 = channel.corrections().sourceMatch(port2, port1);
+        _directivity1        = corrections.directivity       (port2, port1);
+        _reflectionTracking1 = corrections.reflectionTracking(port2, port1);
+        _sourceMatch1        = corrections.sourceMatch       (port2, port1);
 
-        _directivity2 = channel.corrections().directivity(port1, port2);
-        _reflectionTracking2 = channel.corrections().reflectionTracking(port1, port2);
-        _sourceMatch2 = channel.corrections().sourceMatch(port1, port2);
+        _directivity2        = corrections.directivity       (port1, port2);
+        _reflectionTracking2 = corrections.reflectionTracking(port1, port2);
+        _sourceMatch2        = corrections.sourceMatch       (port1, port2);
+        vna->isError();
+        vna->clearStatus();
         return;
     }
 
     // Switch matrix
     // Find switch matrix path
     // with corrections
+    // Logical port -> Physical vna port(s)
+    QVector<uint> port1VnaPorts = findVnaPorts(channel, _port1);
+    QVector<uint> port2VnaPorts = findVnaPorts(channel, _port2);
     foreach (uint vnaPort1, port1VnaPorts) {
         foreach (uint vnaPort2, port2VnaPorts) {
-            if (vnaPort1 == vnaPort2)
+            if (vnaPort1 == vnaPort2) {
                 continue;
+            }
 
-            _directivity1 = channel.corrections().directivity(_port2, vnaPort2, _port1, vnaPort1);
-            _reflectionTracking1 = channel.corrections().reflectionTracking(_port2, vnaPort2, _port1, vnaPort1);
-            _sourceMatch1 = channel.corrections().sourceMatch(_port2, vnaPort2, _port1, vnaPort1);
-            _directivity2 = channel.corrections().directivity(_port1, vnaPort1, _port2, vnaPort2);
-            _reflectionTracking2 = channel.corrections().reflectionTracking(_port1, vnaPort1, _port2, vnaPort2);
-            _sourceMatch2 = channel.corrections().sourceMatch(_port1, vnaPort1, _port2, vnaPort2);
-
+            _directivity1        = corrections.directivity       (_port2, vnaPort2, _port1, vnaPort1);
+            _reflectionTracking1 = corrections.reflectionTracking(_port2, vnaPort2, _port1, vnaPort1);
+            _sourceMatch1        = corrections.sourceMatch       (_port2, vnaPort2, _port1, vnaPort1);
+            _directivity2        = corrections.directivity       (_port1, vnaPort1, _port2, vnaPort2);
+            _reflectionTracking2 = corrections.reflectionTracking(_port1, vnaPort1, _port2, vnaPort2);
+            _sourceMatch2        = corrections.sourceMatch       (_port1, vnaPort1, _port2, vnaPort2);
+            vna->isError();
+            vna->clearStatus();
             if (isPort1Corrections()) {
                 return;
             }
-            else {
-                _directivity1.clear();
-                _reflectionTracking1.clear();
-                _sourceMatch1.clear();
-                _directivity2.clear();
-                _reflectionTracking2.clear();
-                _sourceMatch2.clear();
-            }
+
+            // try next set of ports
+            clearCorrections();
         }
     }
 }
@@ -116,14 +119,18 @@ uint Corrections::port1() const {
     return _port1;
 }
 bool Corrections::isPort1Corrections() const {
-    const int size = _directivity1.size();
-    if (size == 0) {
+    if (_directivity1.empty()) {
         return false;
     }
-    if (_reflectionTracking1.size() != size) {
+    const int points = _frequencies_Hz.size();
+
+    if (_directivity1.size()        != points) {
         return false;
     }
-    if (_sourceMatch1.size() != size) {
+    if (_reflectionTracking1.size() != points) {
+        return false;
+    }
+    if (_sourceMatch1.size()        != points) {
         return false;
     }
     return true;
@@ -145,17 +152,20 @@ uint Corrections::port2() const {
     return _port2;
 }
 bool Corrections::isPort2Corrections() const {
-    if (!isPort2())
+    if (_directivity2.empty()) {
         return false;
+    }
+    const int points = _frequencies_Hz.size();
 
-    const int size = _directivity2.size();
-    if (size == 0)
+    if (_directivity2.size()        != points) {
         return false;
-    if (_reflectionTracking2.size() != size)
+    }
+    if (_reflectionTracking2.size() != points) {
         return false;
-    if (_sourceMatch2.size() != size)
+    }
+    if (_sourceMatch2.size()        != points) {
         return false;
-
+    }
     return true;
 }
 ComplexRowVector Corrections::directivity2() const {
@@ -202,4 +212,16 @@ Ports Corrections::findVnaPorts(Channel &channel, uint logicalPort) const {
 
     // Else: Could not find
     return ports;
+}
+
+void Corrections::clearCorrections() {
+    _frequencies_Hz.clear();
+
+    _directivity1       .clear();
+    _reflectionTracking1.clear();
+    _sourceMatch1       .clear();
+
+    _directivity2       .clear();
+    _reflectionTracking2.clear();
+    _sourceMatch2       .clear();
 }

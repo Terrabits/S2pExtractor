@@ -84,35 +84,12 @@ bool Calculate::isReady(Error &error) {
     }
 
     QVector<uint> _commonPorts = commonPorts(&inner, &outer);
-    foreach (const uint port, _ports) {
-        if (!_commonPorts.contains(port)) {
-            error.code = Error::Code::Ports;
-            error.message = "*port %1 not found in cal(s)";
-            error.message = error.message.arg(port);
-            return false;
-        }
-    }
-
-    if (outer.frequencies_Hz() != inner.frequencies_Hz()) {
-        error.code = Error::Code::Other;
-        error.message = "*frequency points do not match";
-        return false;
-    }
-
-    if (outer.corrections().switchMatrices() != inner.corrections().switchMatrices()) {
-        error.code = Error::Code::Other;
-        error.message = "*switch matrix setups don't match";
-        return false;
-    }
-
-    // No common ports
     if (_commonPorts.isEmpty()) {
         error.code = Error::Code::Other;
         error.message = "*no common ports found between calibrations";
         return false;
     }
-
-    foreach (uint port, _ports) {
+    foreach (const uint port, _ports) {
         if (!outer.ports().contains(port)) {
             error.code = Error::Code::Ports;
             error.message = "port %1 not calibrated in %2";
@@ -127,6 +104,16 @@ bool Calculate::isReady(Error &error) {
             error.message = error.message.arg(_innerSource.displayText());
             return false;
         }
+    }
+    if (outer.frequencies_Hz() != inner.frequencies_Hz()) {
+        error.code = Error::Code::Other;
+        error.message = "*frequency points do not match";
+        return false;
+    }
+    if (outer.corrections().switchMatrices() != inner.corrections().switchMatrices()) {
+        error.code = Error::Code::Other;
+        error.message = "*switch matrix setups don't match";
+        return false;
     }
 
     // Else
@@ -155,49 +142,81 @@ void Calculate::run() {
     PortLoop loop(_ports, allPorts);
     while (loop.isUnprocessedPorts()) {
         loop.begin();
-        bool success = false;
+        const uint port1 = loop.port1();
+        const uint port2 = loop.port2();
+        bool port1Processed = false;
         do {
-            Corrections outerCorrections(loop.port1(), loop.port2(), _outerSource, _vna);
-            if (!outerCorrections.isPort1Corrections())
+            Corrections outerCorrections(port1, port2, _outerSource, _vna);
+            if (!outerCorrections.isPort1Corrections()) {
                 continue;
-            Corrections innerCorrections(loop.port1(), loop.port2(), _innerSource, _vna);
-            if (!innerCorrections.isPort1Corrections())
+            }
+            Corrections innerCorrections(port1, port2, _innerSource, _vna);
+            if (!innerCorrections.isPort1Corrections()) {
                 continue;
+            }
 
             // Process Port 1
-            success = true;
+            NetworkData port1Result = processPort1(outerCorrections, innerCorrections);
+            if (port1Result.points() == 0) {
+                // error in calculation
+                continue;
+            }
+
+            port1Processed = true;
+            _error.clear();
             loop.end();
-            setResult(loop.port1(), processPort1(outerCorrections, innerCorrections));
-            loop.markPortProcessed(loop.port1());
+            setResult(port1, port1Result);
+            loop.markPortProcessed(port1);
             emit progress(loop.percentComplete());
 
+            // Process port 2?
             if (!loop.isPort2Unprocessed()) {
-                continue;
+                // already processed
+                break;
             }
-            if (!_ports.contains(loop.port2())) {
-                continue;
+            if (!_ports.contains(port2)) {
+                // not a port of interest
+                break;
             }
             if (!outerCorrections.isPort2Corrections()) {
-                continue;
+                // no outer corrections
+                break;
             }
             if (!innerCorrections.isPort2Corrections()) {
-                continue;
+                // no inner corrections
+                break;
             }
 
             // Process Port 2
-            setResult(loop.port2(), processPort2(outerCorrections, innerCorrections));
-            loop.markPortProcessed(loop.port2());
+            NetworkData port2Result
+                    = processPort2(outerCorrections, innerCorrections);
+            if (port2Result.points() == 0) {
+                // Ignore port 2 error.
+                _error.clear();
+                break;
+            }
+
+            // Accept port2 calculation
+            setResult(port2, port2Result);
+            loop.markPortProcessed(port2);
             emit progress(loop.percentComplete());
+            break;
         } while (loop.next());
 
-        // No corrections found for port 1
-        if (!success) {
-            QString msg = "Could not find corrections for port %1";
-            msg = msg.arg(loop.port1());
-            setError(Error::Code::Other, msg);
-            emit error(msg);
-            break;
+        if (!port1Processed) {
+            if (!_error.isError()) {
+                QString msg = "Could not find corrections for port %1";
+                msg = msg.arg(port1);
+                setError(Error::Code::Other, msg);
+            }
+            emit progress(100);
+            emit finished();
+            return;
         }
+    }
+
+    if (loop.percentComplete() < 100) {
+        emit progress(100);
     }
     emit finished();
 }
@@ -212,50 +231,83 @@ void Calculate::setError(Error::Code code, const QString &message) {
     _error.message = message;
 }
 
-bool Calculate::isCommonPorts(QVector<uint> a, QVector<uint> b) {
-    foreach (uint port, a) {
-        if (b.contains(port))
-            return true;
-    }
-
-    return false;
-}
-
 NetworkData Calculate::processPort1(Corrections &outer, Corrections &inner) {
-    ComplexRowVector denominator = add(outer.reflectionTracking1(), multiplyEach(outer.sourceMatch1(), subtract(inner.directivity1(), outer.directivity1())));
-    ComplexRowVector s11 = divideEach(subtract(outer.reflectionTracking1(), inner.directivity1()), denominator);
-    ComplexRowVector s22 = subtract(inner.sourceMatch1(), divideEach(multiplyEach(outer.sourceMatch1(), inner.reflectionTracking1()), denominator));
-    ComplexRowVector s21Numerator = smoothSqrt(multiplyEach(outer.reflectionTracking1(), inner.reflectionTracking1()));
-    ComplexRowVector s21 = divideEach(s21Numerator, denominator);
+    const uint             points         = outer.frequencies_Hz().size();
+    const QRowVector       frequencies_Hz = outer.frequencies_Hz();
+    const ComplexRowVector outerReflTrack = outer.reflectionTracking1();
+    const ComplexRowVector innerReflTrack = inner.reflectionTracking1();
+    const ComplexRowVector outerSrcMatch  = outer.sourceMatch1();
+    const ComplexRowVector innerSrcMatch  = inner.sourceMatch1();
+    const ComplexRowVector outerDirect    = outer.directivity1();
+    const ComplexRowVector innerDirect    = inner.directivity1();
+
+    // Calculation:
+    //   denominator = oRT + (oSM * (iDt - oDt))
+    //   s11 =         (iDt - oDt) / denominator
+    //   s21 =     sqrt(oRT * iRT) / denominator
+    //   s22 = iSM -   (oSM * iRT) / denominator
+    ComplexRowVector denominator, s11, s22, s21;
+    denominator = add(outerReflTrack, multiplyEach(outerSrcMatch, subtract(innerDirect, outerDirect)));
+    if (containsZero(denominator)) {
+        setError(Error::Code::Other, "Calculation encountered a divide by zero. Are the calibrations sufficient and plausible?");
+        return NetworkData();
+    }
+    s11 =                         divideEach(    subtract(innerDirect,   outerDirect),                     denominator);
+    s21 =                         divideEach(        sqrt(multiplyEach  (outerReflTrack, innerReflTrack)), denominator);
+    s22 = subtract(innerSrcMatch, divideEach(multiplyEach(outerSrcMatch, innerReflTrack),                  denominator));
+
+    // TODO
+    s21 = smoothPhase(s21);
 
     NetworkData data;
     data.setPorts(2);
-    data.setPoints(outer.frequencies_Hz().size());
-    data.x() = outer.frequencies_Hz();
+    data.setPoints(points);
+    data.x() = frequencies_Hz;
     for (uint i = 0; i < data.points(); i++) {
         data.y()[i][0][0] = s11[i];
-        data.y()[i][1][1] = s22[i];
         data.y()[i][0][1] = s21[i];
         data.y()[i][1][0] = s21[i];
+        data.y()[i][1][1] = s22[i];
     }
     return data;
 }
 NetworkData Calculate::processPort2(Corrections &outer, Corrections &inner) {
-    ComplexRowVector denominator = add(outer.reflectionTracking2(), multiplyEach(outer.sourceMatch2(), subtract(inner.directivity2(), outer.directivity2())));
-    ComplexRowVector s11 = divideEach(subtract(outer.reflectionTracking2(), inner.directivity2()), denominator);
-    ComplexRowVector s22 = subtract(inner.sourceMatch2(), divideEach(multiplyEach(outer.sourceMatch2(), inner.reflectionTracking2()), denominator));
-    ComplexRowVector s21Numerator = smoothSqrt(multiplyEach(outer.reflectionTracking2(), inner.reflectionTracking2()));
-    ComplexRowVector s21 = divideEach(s21Numerator, denominator);
+    const uint             points         = outer.frequencies_Hz().size();
+    const QRowVector       frequencies_Hz = outer.frequencies_Hz();
+    const ComplexRowVector outerReflTrack = outer.reflectionTracking2();
+    const ComplexRowVector innerReflTrack = inner.reflectionTracking2();
+    const ComplexRowVector outerSrcMatch  = outer.sourceMatch2();
+    const ComplexRowVector innerSrcMatch  = inner.sourceMatch2();
+    const ComplexRowVector outerDirect    = outer.directivity2();
+    const ComplexRowVector innerDirect    = inner.directivity2();
+
+    // Calculation:
+    //   denominator = oRT + (oSM * (iDt - oDt))
+    //   s11 =         (iDt - oDt) / denominator
+    //   s21 =     sqrt(oRT * iRT) / denominator
+    //   s22 = iSM -   (oSM * iRT) / denominator
+    ComplexRowVector denominator, s11, s22, s21;
+    denominator = add(outerReflTrack, multiplyEach(outerSrcMatch, subtract(innerDirect, outerDirect)));
+    if (containsZero(denominator)) {
+        setError(Error::Code::Other, "Calculation encountered a divide by zero. Are the calibrations sufficient and plausible?");
+        return NetworkData();
+    }
+    s11 =                         divideEach(    subtract(innerDirect,   outerDirect),                     denominator);
+    s21 =                         divideEach(        sqrt(multiplyEach  (outerReflTrack, innerReflTrack)), denominator);
+    s22 = subtract(innerSrcMatch, divideEach(multiplyEach(outerSrcMatch, innerReflTrack),                  denominator));
+
+    // TODO:
+    s21 = smoothPhase(s21);
 
     NetworkData data;
     data.setPorts(2);
-    data.setPoints(outer.frequencies_Hz().size());
-    data.x() = outer.frequencies_Hz();
+    data.setPoints(points);
+    data.x() = frequencies_Hz;
     for (uint i = 0; i < data.points(); i++) {
         data.y()[i][0][0] = s11[i];
-        data.y()[i][1][1] = s22[i];
         data.y()[i][0][1] = s21[i];
         data.y()[i][1][0] = s21[i];
+        data.y()[i][1][1] = s22[i];
     }
     return data;
 }
@@ -263,4 +315,14 @@ NetworkData Calculate::processPort2(Corrections &outer, Corrections &inner) {
 void Calculate::setResult(uint port, NetworkData &data) {
     const int index = _ports.indexOf(port);
     _results[index] = data;
+}
+
+bool Calculate::containsZero(const ComplexRowVector &values) {
+    foreach (const ComplexDouble value, values) {
+        if (abs(value) == 0) {
+            return true;
+        }
+    }
+
+    return false;
 }

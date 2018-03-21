@@ -32,7 +32,6 @@ public:
 signals:
     void started();
     void progress(int percent);
-    void error(QString message);
     void finished();
 
 public slots:
@@ -47,11 +46,11 @@ private:
     QVector<uint> _ports;
     RsaToolbox::Vna *_vna;
 
-    static bool isCommonPorts(QVector<uint> a, QVector<uint> b);
+    static bool containsZero(const RsaToolbox::ComplexRowVector &values);
 
     QVector<RsaToolbox::NetworkData> _results;
-    static RsaToolbox::NetworkData processPort1(Corrections &outer, Corrections &inner);
-    static RsaToolbox::NetworkData processPort2(Corrections &outer, Corrections &inner);
+    RsaToolbox::NetworkData processPort1(Corrections &outer, Corrections &inner);
+    RsaToolbox::NetworkData processPort2(Corrections &outer, Corrections &inner);
     void setResult(uint port, RsaToolbox::NetworkData &data);
 };
 
