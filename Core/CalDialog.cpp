@@ -17,12 +17,19 @@ CalDialog::CalDialog(const QStringList &calGroups, const QVector<uint> &channels
     ui(new Ui::getCalDialog)
 {
     ui->setupUi(this);
+
     setCalGroupsList(calGroups);
     setChannelsList(channels);
+    ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget->setFocus();
 
     setWindowFlags(windowFlags() | Qt::WindowTitleHint);
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    ui->tabWidget->setFocus();
+
+    connect(ui->calGroups, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this, SLOT(accept()));
+    connect(ui->channels, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+            this, SLOT(accept()));
 }
 
 CalDialog::~CalDialog()

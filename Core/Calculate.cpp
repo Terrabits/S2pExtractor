@@ -167,7 +167,7 @@ void Calculate::run() {
             loop.end();
             setResult(port1, port1Result);
             loop.markPortProcessed(port1);
-            emit progress(loop.percentComplete());
+            // TODO: emit progress
 
             // Process port 2?
             if (!loop.isPort2Unprocessed()) {
@@ -199,7 +199,7 @@ void Calculate::run() {
             // Accept port2 calculation
             setResult(port2, port2Result);
             loop.markPortProcessed(port2);
-            emit progress(loop.percentComplete());
+            // TODO: emit progress
             break;
         } while (loop.next());
 
@@ -215,9 +215,7 @@ void Calculate::run() {
         }
     }
 
-    if (loop.percentComplete() < 100) {
-        emit progress(100);
-    }
+    // TODO: emit 100% progress
     emit finished();
 }
 

@@ -31,9 +31,13 @@ MainWindow::MainWindow(Vna *vna, Keys *keys, QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle(APP_NAME + " " + APP_VERSION);
-    ui->outerCal->setFocus();
 
     ui->outerCal->setVna(_vna);
+    ui->outerCal->setDialogTitle("Choose outer cal...");
+    ui->outerCal->setFocus();
+
+    ui->innerCal->setDialogTitle("Choose inner cal...");
+
     connect(ui->outerCal, SIGNAL(sourceChanged(CalibrationSource)),
             this, SLOT(updateCals()));
     connect(ui->innerCal, SIGNAL(sourceChanged(CalibrationSource)),
@@ -288,4 +292,9 @@ bool MainWindow::checkFilePaths() {
         }
     }
     return true;
+}
+
+void MainWindow::on_close_clicked()
+{
+    close();
 }

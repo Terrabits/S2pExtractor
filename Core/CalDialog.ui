@@ -80,6 +80,11 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>calGroups</tabstop>
+  <tabstop>channels</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

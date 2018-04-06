@@ -53,6 +53,8 @@ private slots:
     void disableInputs();
     void updateCals();
 
+    void on_close_clicked();
+
 private:
     Ui::MainWindow *ui;
 

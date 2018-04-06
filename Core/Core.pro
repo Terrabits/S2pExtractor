@@ -26,7 +26,8 @@ HEADERS     += Settings.h \
     saveresults.h \
     statuswidget.h \
     savedirectory.h \
-    filenames.h
+    filenames.h \
+    progress.h
                ...
 INCLUDEPATH += $$PWD
 SOURCES     += \
@@ -47,7 +48,8 @@ SOURCES     += \
     saveresults.cpp \
     statuswidget.cpp \
     savedirectory.cpp \
-    filenames.cpp
+    filenames.cpp \
+    progress.cpp
 FORMS       += \
     CalDialog.ui \
     labeledbutton.ui \

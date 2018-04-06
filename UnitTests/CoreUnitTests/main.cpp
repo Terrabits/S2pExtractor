@@ -6,6 +6,7 @@
 #include "CalibrationSourceTest.h"
 #include "ChannelTest.h"
 #include "PortLoopTest.h"
+#include "progresstest.h"
 #include "Settings.h"
 
 // RsaToolbox
@@ -23,6 +24,7 @@ using namespace RsaToolbox;
 int main() {
     TestRunner testRunner;
     testRunner.addTest(new PortLoopTest);
+    testRunner.addTest(new ProgressTest);
     testRunner.addTest(new CalibrationSourceTest);
     testRunner.addTest(new ChannelTest(CONNECTION_TYPE, INSTRUMENT_ADDRESS));
     testRunner.addTest(new CorrectionsTest(CONNECTION_TYPE, INSTRUMENT_ADDRESS));

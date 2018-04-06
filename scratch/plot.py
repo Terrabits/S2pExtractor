@@ -5,14 +5,24 @@ from matplotlib import pyplot as plt
 from pathlib import Path
 import sys
 
-filename = Path(__file__).absolute().parent / sys.argv[1]
-filename = str(filename)
-print(filename)
+files = sys.argv[1:]
+if not files:
+    print('Usage: plot.py <filename1>[,<filename2>,...]')
+    sys.exit(1)
 
-n1 = Network(filename)
-n1.s11.plot_s_db(label='S11 dB')
-n1.s21.plot_s_db(label='S21 dB')
-n1.s21.plot_s_deg(label='S21 deg')
-n1.s22.plot_s_db(label="S22 dB")
+root = Path(__file__).absolute().parent
+files = [str(root / file) for file in files]
+
+plt.figure(1)
+for file in files:
+    n = Network(file)
+    plt.subplot(221) # s11
+    plt.plot(n.s11.f, n.s11.s_db.flatten())
+    plt.subplot(222) # s22
+    plt.plot(n.s22.f, n.s22.s_db.flatten())
+    plt.subplot(223) # s21 (dB)
+    plt.plot(n.s21.f, n.s21.s_db.flatten())
+    plt.subplot(224) # s21 (deg)
+    plt.plot(n.s21.f, n.s21.s_deg.flatten())
 
 plt.show()

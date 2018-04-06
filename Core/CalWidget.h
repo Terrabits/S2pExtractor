@@ -22,6 +22,8 @@ public:
 
     void setVna(RsaToolbox::Vna *vna);
 
+    void setDialogTitle(const QString &title);
+
     CalibrationSource source() const;
     void setSource(CalibrationSource source);
 
@@ -32,6 +34,7 @@ private slots:
     void showDialog();
 
 private:
+    QString _dialogTitle;
     void updateLabel();
 
     bool isVna() const;

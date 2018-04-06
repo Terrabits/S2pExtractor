@@ -23,7 +23,6 @@ public:
     void markPortProcessed(uint port);
     void markBothPortsProcessed();
     bool next();
-    uint percentComplete() const;
     void end();
 
 private:

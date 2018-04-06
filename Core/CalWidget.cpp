@@ -27,6 +27,10 @@ void CalWidget::setVna(Vna *vna) {
     _vna = vna;
 }
 
+void CalWidget::setDialogTitle(const QString &title) {
+    _dialogTitle = title;
+}
+
 CalibrationSource CalWidget::source() const {
     return _source;
 }
@@ -41,6 +45,7 @@ void CalWidget::setSource(CalibrationSource source) {
 
 void CalWidget::showDialog() {
     CalDialog dialog(calGroups(), calibratedChannels(), topLevelWidget());
+    dialog.setWindowTitle(_dialogTitle);
     dialog.setSource(_source);
     dialog.exec();
     if (dialog.result() == QDialog::Accepted) {
